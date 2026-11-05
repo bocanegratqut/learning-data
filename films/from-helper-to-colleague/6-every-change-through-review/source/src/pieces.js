@@ -302,8 +302,9 @@ function ec_stages(ctx,x,y,w,o){o=o||{};
     ctx.globalAlpha*=clamp((kk-0.85)/0.12,0,1);
     ag_box(ctx,S.x,S.y,S.w,S.h,18,{edge:lit>0.02?col:null,edgeA:0.35+0.6*lit,glow:lit>0.02?col:null,glowA:lit});
     ag_T(ctx,"STAGE "+(i+1),S.x+16,S.y+36,{w:700,size:28,ls:3,col:lit>0.4?col:[80,86,94]});
-    if(sm>0)ag_T(ctx,SHORT[i],S.x+16,S.y+82,{w:700,size:30,a:sm});
-    if(sm<1)NAMES[i].forEach((l,j)=>ag_T(ctx,l,S.x+16,S.y+78+j*38,{w:700,size:32,a:1-sm}));
+    const sa=clamp(sm*2-1,0,1),la=clamp(1-sm*2,0,1);
+    if(sa>0)ag_T(ctx,SHORT[i],S.x+16,S.y+82,{w:700,size:30,a:sa});
+    if(la>0)NAMES[i].forEach((l,j)=>ag_T(ctx,l,S.x+16,S.y+78+j*38,{w:700,size:32,a:la}));
     ctx.restore();}
   // the gates: a slim post and its knob before each step; a passed gate's knob turns green, with a tick
   for(let i=0;i<5;i++){const ga=arr(o.gates,i,0),G=out.gates[i];if(ga<=0)continue;const ps=clamp(arr(o.passed,i,0),0,1),top=G.y,bot=i?out.stages[i-1].top:y;

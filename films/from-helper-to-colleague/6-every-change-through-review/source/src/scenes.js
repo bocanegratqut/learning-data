@@ -196,7 +196,7 @@ scene("review",(ctx,S,t,sc)=>{const c=sc.cues,P=ec_once(sc,"P",()=>({sec:wAt(sc,
     test:wAt(sc,"rules","a test for each rule"),impact:wAt(sc,"rules","the impact named"),thing:wAt(sc,"missing","One thing"),n31:wAt(sc,"missing","thirty-one units"),stay:wAt(sc,"missing","stay at"),
     told:wAt(sc,"missing","nobody is told"),school:wAt(sc,"suggests","Each unit's school"),warn:wAt(sc,"suggests","a warning every night"),lists:wAt(sc,"suggests","lists them"),
     notf:wAt(sc,"suggests","not a failing check"),decides:wAt(sc,"who","who decides"),clara:wAt(sc,"who","Clara"),posts:wAt(sc,"who","posts its review"),comment:wAt(sc,"who","as a comment"),
-    capp:wAt(sc,"comment","can't approve"),cblock:wAt(sc,"comment","can't block"),ref:wAt(sc,"comment","only for reference"),yes:wAt(sc,"clara","yes"),adds:wAt(sc,"clara","adds the warning"),
+    capp:wAt(sc,"comment","never approves"),cblock:wAt(sc,"comment","never blocks"),ref:wAt(sc,"comment","only for reference"),yes:wAt(sc,"clara","yes"),adds:wAt(sc,"clara","adds the warning"),
     push:wAt(sc,"clara","a second push"),two:wAt(sc,"together","Two agents"),through:wAt(sc,"together","only through the pull request"),person:wAt(sc,"together","a person decided")}));
   const RX=1290,RW=570;
   ag_shots(ctx,S,t,sc.dur,[
@@ -224,7 +224,7 @@ scene("review",(ctx,S,t,sc)=>{const c=sc.cues,P=ec_once(sc,"P",()=>({sec:wAt(sc,
       ec_pillL(x,RX,520,"not a failing check",tt,P.notf,c.comment-0.3,{col:AG.mut});
       ec_card(x,RX,590,RW,{kick:"Who decides",title:"Clara, who owns the plan"},{a:ag_in(tt,P.decides,0.5)*(1-ag_in(tt,c.comment-0.3,0.4)),k:ag_spr(tt,P.decides),edge:AG.green});
       ec_pillL(x,RX,790,"posted as a comment",tt,P.comment,c.comment-0.3,{col:AG.violet});
-      // its review on GitHub: a comment; it can't approve and it can't block; for reference only
+      // its review on GitHub: a comment; by its rules it never approves and never blocks; for reference only
       ec_rows(x,RX,150,RW,{kick:"Its review, on GitHub",logo:"github",rows:[{l:"Comment",lw:700,icon:"comment",iconCol:AG.violet,hl:1,col:AG.violet},
           {l:"Approve",cross:ag_in(tt,P.capp,0.4),a:ag_in(tt,P.capp-0.3,0.4)},{l:"Request changes",r:"to block",cross:ag_in(tt,P.cblock,0.4),a:ag_in(tt,P.cblock-0.3,0.4)}],
         a:ag_in(tt,c.comment,0.5),k:ag_spr(tt,c.comment)});

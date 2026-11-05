@@ -102,74 +102,74 @@ Each unit's school should set one, so it suggests a warning every night that lis
 00:04:20.079 --> 00:04:25.423
 It says who decides: Clara, who owns the plan. And it posts its review as a comment.
 
-00:04:26.723 --> 00:04:30.904
-It can't approve, and it can't block: its review is only for reference.
+00:04:26.723 --> 00:04:31.129
+It never approves, and it never blocks: its review is only for reference.
 
-00:04:32.604 --> 00:04:37.528
+00:04:32.829 --> 00:04:37.753
 Clara decides: yes. The planning agent adds the warning, in a second push.
 
-00:04:39.228 --> 00:04:44.574
+00:04:39.453 --> 00:04:44.799
 Two agents worked together only through the pull request, and a person decided between them.
 
-00:04:48.474 --> 00:04:53.232
+00:04:48.699 --> 00:04:53.457
 Who approves is on the map. After a pull request, every step is a person's.
 
-00:04:54.732 --> 00:05:01.569
+00:04:54.957 --> 00:05:01.794
 The analytics engineer reviews the code. The product owner approves the change. The release approver releases it.
 
-00:05:03.269 --> 00:05:05.617
+00:05:03.494 --> 00:05:05.842
 And what a word means stays with its data owner.
 
-00:05:07.117 --> 00:05:12.172
+00:05:07.342 --> 00:05:12.397
 The planning contributor's steps end at the pull request. So the agent holds none of these.
 
-00:05:13.872 --> 00:05:21.038
+00:05:14.097 --> 00:05:21.263
 In GitHub, the code owners and the teams are written from those roles. When someone takes over a role, the reviews follow.
 
-00:05:22.738 --> 00:05:28.189
+00:05:22.963 --> 00:05:28.414
 And the rules on main hold for everyone: nobody can skip them, not even an administrator.
 
-00:05:29.489 --> 00:05:35.617
+00:05:29.714 --> 00:05:35.842
 An owner is a person, or a team of people. An agent can't be one, so its approval never counts.
 
-00:05:37.317 --> 00:05:43.601
+00:05:37.542 --> 00:05:43.826
 Nobody can approve their own pull request, and the latest push must be approved by someone who didn't push it.
 
-00:05:45.301 --> 00:05:51.011
+00:05:45.526 --> 00:05:51.236
 So after the second push, Jun approves the code, Clara the change, and Mei the word it copies.
 
-00:05:54.911 --> 00:06:01.858
+00:05:55.136 --> 00:06:02.083
 Approved, the change goes into main. Jun merges it; the agents don't merge. And merging isn't the release.
 
-00:06:03.558 --> 00:06:09.228
+00:06:03.783 --> 00:06:09.453
 That night, the release builds main in test. Only if test passes does it go on to production.
 
-00:06:10.928 --> 00:06:16.213
+00:06:11.153 --> 00:06:16.438
 There it waits, at an environment called production, until a release approver says yes.
 
-00:06:17.913 --> 00:06:23.482
+00:06:18.138 --> 00:06:23.707
 On Wednesday morning, Noor approves. Whoever starts a release can't approve it, even an approver.
 
-00:06:25.382 --> 00:06:31.661
+00:06:25.607 --> 00:06:31.886
 Only then can the release sign in to Databricks, as its own service principal, with no secret to steal.
 
-00:06:33.361 --> 00:06:37.321
+00:06:33.586 --> 00:06:37.546
 It deploys the project as a bundle, and runs the build in production.
 
-00:06:39.221 --> 00:06:46.788
+00:06:39.446 --> 00:06:47.013
 The planning agent's own identity only reads production. Writing there is the release's job, after a person's yes.
 
-00:06:50.688 --> 00:07:00.327
+00:06:50.913 --> 00:07:00.552
 Since Wednesday, the faculties have their plan: 263 more classes, a place for every student, and a list of the 31 units still to set.
 
-00:07:02.027 --> 00:07:07.408
+00:07:02.252 --> 00:07:07.633
 Every change takes the same path: evidence, checks, a diff, and a review for reference.
 
-00:07:08.508 --> 00:07:12.335
+00:07:08.733 --> 00:07:12.560
 Then approval from the roles on the map, and a second person's release.
 
-00:07:14.235 --> 00:07:16.004
+00:07:14.460 --> 00:07:16.229
 For agents, as for people.
 
-00:07:17.304 --> 00:07:20.005
+00:07:17.529 --> 00:07:20.230
 An agent proposes. A person releases.

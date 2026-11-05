@@ -79,8 +79,8 @@ window.CAPTIONS=Object.assign(window.CAPTIONS||{},{
 "Cada escuela debería fijarlo, así que sugiere un aviso cada noche que las liste para las facultades, no una verificación que falle.",
 "It says who decides: Clara, who owns the plan. And it posts its review as a comment.":
 "Dice quién decide: Clara, la dueña del plan. Y publica su revisión como un comentario.",
-"It can't approve, and it can't block: its review is only for reference.":
-"No puede aprobar, ni puede bloquear: su revisión es solo una referencia.",
+"It never approves, and it never blocks: its review is only for reference.":
+"Nunca aprueba, y nunca bloquea: su revisión es solo una referencia.",
 "Clara decides: yes. The planning agent adds the warning, in a second push.":
 "Clara decide: sí. El agente de Planificación agrega el aviso, en un segundo push.",
 "Two agents worked together only through the pull request, and a person decided between them.":

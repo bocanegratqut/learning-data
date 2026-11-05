@@ -102,74 +102,74 @@ Cada escuela debería fijarlo, así que sugiere un aviso cada noche que las list
 00:04:20.079 --> 00:04:25.423
 Dice quién decide: Clara, la dueña del plan. Y publica su revisión como un comentario.
 
-00:04:26.723 --> 00:04:30.904
-No puede aprobar, ni puede bloquear: su revisión es solo una referencia.
+00:04:26.723 --> 00:04:31.129
+Nunca aprueba, y nunca bloquea: su revisión es solo una referencia.
 
-00:04:32.604 --> 00:04:37.528
+00:04:32.829 --> 00:04:37.753
 Clara decide: sí. El agente de Planificación agrega el aviso, en un segundo push.
 
-00:04:39.228 --> 00:04:44.574
+00:04:39.453 --> 00:04:44.799
 Dos agentes trabajaron juntos solo a través del pull request, y una persona decidió entre ellos.
 
-00:04:48.474 --> 00:04:53.232
+00:04:48.699 --> 00:04:53.457
 Quién aprueba está en el mapa. Después de un pull request, cada paso es de una persona.
 
-00:04:54.732 --> 00:05:01.569
+00:04:54.957 --> 00:05:01.794
 El ingeniero de analítica revisa el código. El dueño del producto aprueba el cambio. El aprobador de liberación lo libera.
 
-00:05:03.269 --> 00:05:05.617
+00:05:03.494 --> 00:05:05.842
 Y lo que significa una palabra queda con su dueño de datos.
 
-00:05:07.117 --> 00:05:12.172
+00:05:07.342 --> 00:05:12.397
 Los pasos del colaborador de Planificación terminan en el pull request. El agente no tiene ninguno de estos.
 
-00:05:13.872 --> 00:05:21.038
+00:05:14.097 --> 00:05:21.263
 En GitHub, los dueños del código y los equipos se escriben a partir de esos roles. Cuando alguien asume un rol, las revisiones lo siguen.
 
-00:05:22.738 --> 00:05:28.189
+00:05:22.963 --> 00:05:28.414
 Y las reglas de main valen para todos: nadie puede saltárselas, ni siquiera un administrador.
 
-00:05:29.489 --> 00:05:35.617
+00:05:29.714 --> 00:05:35.842
 Un dueño es una persona, o un equipo de personas. Un agente no puede serlo, así que su aprobación nunca cuenta.
 
-00:05:37.317 --> 00:05:43.601
+00:05:37.542 --> 00:05:43.826
 Nadie puede aprobar su propio pull request, y el último push debe aprobarlo alguien que no lo hizo.
 
-00:05:45.301 --> 00:05:51.011
+00:05:45.526 --> 00:05:51.236
 Así que, tras el segundo push, Jun aprueba el código, Clara el cambio, y Mei la palabra que copia.
 
-00:05:54.911 --> 00:06:01.858
+00:05:55.136 --> 00:06:02.083
 Aprobado, el cambio entra en main. Jun lo fusiona; los agentes no fusionan. Y fusionar no es liberar.
 
-00:06:03.558 --> 00:06:09.228
+00:06:03.783 --> 00:06:09.453
 Esa noche, la liberación compila main en pruebas. Solo si pasa en pruebas, sigue a producción.
 
-00:06:10.928 --> 00:06:16.213
+00:06:11.153 --> 00:06:16.438
 Ahí espera, en un entorno llamado production, hasta que un aprobador de liberación dice que sí.
 
-00:06:17.913 --> 00:06:23.482
+00:06:18.138 --> 00:06:23.707
 El miércoles por la mañana, Noor aprueba. Quien inicia una liberación no puede aprobarla, aunque sea aprobador.
 
-00:06:25.382 --> 00:06:31.661
+00:06:25.607 --> 00:06:31.886
 Solo entonces la liberación puede entrar en Databricks, como su propia entidad de servicio, sin ningún secreto que robar.
 
-00:06:33.361 --> 00:06:37.321
+00:06:33.586 --> 00:06:37.546
 Despliega el proyecto como un bundle, y ejecuta la compilación en producción.
 
-00:06:39.221 --> 00:06:46.788
+00:06:39.446 --> 00:06:47.013
 La identidad propia del agente de Planificación solo lee producción. Escribir ahí es tarea de la liberación, tras el sí de una persona.
 
-00:06:50.688 --> 00:07:00.327
+00:06:50.913 --> 00:07:00.552
 Desde el miércoles, las facultades tienen su plan: 263 clases más, lugar para cada estudiante, y la lista de las 31 asignaturas por definir.
 
-00:07:02.027 --> 00:07:07.408
+00:07:02.252 --> 00:07:07.633
 Todo cambio sigue el mismo camino: evidencia, verificaciones, un diff, y una revisión como referencia.
 
-00:07:08.508 --> 00:07:12.335
+00:07:08.733 --> 00:07:12.560
 Luego, la aprobación de los roles del mapa, y la liberación de una segunda persona.
 
-00:07:14.235 --> 00:07:16.004
+00:07:14.460 --> 00:07:16.229
 Para agentes, como para personas.
 
-00:07:17.304 --> 00:07:20.005
+00:07:17.529 --> 00:07:20.230
 Un agente propone. Una persona libera.

@@ -39,7 +39,7 @@ const NARR={
  {"id":"missing","gap":0.8,"text":"One thing has no check: the 31 units with no class size stay at 25, and nobody is told.","say":"One thing has no check: the thirty-one units with no class size stay at twenty-five, and nobody is told."},
  {"id":"suggests","gap":0.8,"text":"Each unit's school should set one, so it suggests a warning every night that lists them for the faculties, not a failing check."},
  {"id":"who","gap":0.8,"text":"It says who decides: Clara, who owns the plan. And it posts its review as a comment."},
- {"id":"comment","gap":0.8,"text":"It can't approve, and it can't block: its review is only for reference."},
+ {"id":"comment","gap":0.8,"text":"It never approves, and it never blocks: its review is only for reference."},
  {"id":"clara","gap":0.8,"text":"Clara decides: yes. The planning agent adds the warning, in a second push."},
  {"id":"together","gap":0.8,"text":"Two agents worked together only through the pull request, and a person decided between them."}]},
 "rules":{"name":"Who approves, from the map","lead":1.0,"tail":1.0,"vo":[

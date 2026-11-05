@@ -302,7 +302,7 @@ card(cw('sees', 'to the data', -0.3), 0.011, px(600)); pot(G5, cw('sees', 'to th
 # =============================================================================================================================
 # 4. An agent's review, for reference: the governance review agent comes in, Yusuf beside it: E minor, an agent's chord, no bow. Its
 #    rules ticked one by one; the 31 units with no class size: A minor; its suggestion: one pot; who decides, posted as a comment; it
-#    can't approve, can't block. Clara decides yes: the pot lifted and the nail violin, a person's decision; the second push set down,
+#    never approves, never blocks. Clara decides yes: the pot lifted and the nail violin, a person's decision; the second push set down,
 #    a knock. Two agents, only through the pull request, and a person between them: the bow again, over C
 rw = lambda lid, word, off=0: W('review', lid, word, off)
 rc = lambda lid, off=0: G('review', lid, off)
@@ -319,7 +319,7 @@ card(rc('suggests', 0.0), 0.011, px(1575)); pot(G4, rc('suggests', 0.05), 0.6, p
 tap(rw('suggests', 'a warning every night', 0.05), 0.008, px(1500)); tap(rw('suggests', 'not a failing check', 0.05), 0.008, px(1450))
 card(rw('who', 'who decides', 0.0), 0.011, px(1575)); tap(rw('who', 'as a comment', 0.05), 0.008, px(1450))
 card(rc('comment', 0.0), 0.011, px(1575))
-stop(rw('comment', "can't approve", 0.1), 0.01, px(1350)); stop(rw('comment', "can't block", 0.1), 0.01, px(1350))
+stop(rw('comment', 'never approves', 0.1), 0.01, px(1350)); stop(rw('comment', 'never blocks', 0.1), 0.01, px(1350))
 tap(rw('comment', 'only for reference', 0.05), 0.008, px(1450))
 # Clara decides: yes; the planning agent adds the warning, in a second push
 card(rw('clara', 'yes', 0.0), 0.012, px(1580))
