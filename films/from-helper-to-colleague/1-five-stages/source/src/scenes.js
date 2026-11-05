@@ -233,7 +233,7 @@ scene("never",(ctx,S,t,sc)=>{const c=sc.cues,P=fs_once(sc,"P",()=>({never:wAt(sc
   ag_shots(ctx,S,t,sc.dur,[
     {at:0,place:"fsLab",keys:[[0,960,540,1]],push:0,draw:(x,tt)=>{const L=lay(tt),go=1-ag_in(tt,0.1,0.6);
       fs_plinth(x,L,{a:ag_in(tt,P.never-0.3,0.6)});
-      const R=fs_stages(x,L.x,L.y,L.w,{short:1-ag_in(tt,1.2,1.0),gates:[0,0,0,0,go],passed:[0,0,0,0,1],
+      const R=fs_stages(x,L.x,L.y,L.w,{short:1-ag_in(tt,1.9,0.8),gates:[0,0,0,0,go],passed:[0,0,0,0,1],
         lit:[0,1,2,3,4].map(i=>ag_io(tt,P.never+0.12*i,P.never+1.4+0.12*i,0.4)),col:[null,null,null,null,ag_in(tt,P.always,0.5)>0.5?AG.green:null]});
       fs_agent(x,tt,{a:go});fs_tasks(x,R.stages,{all:go});
       fs_list(x,150,128,660,"What never changes",[{t:"A person owns the agent, and answers for it",a:ag_in(tt,c.owner+0.2,0.4)},

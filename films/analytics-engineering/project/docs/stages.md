@@ -66,7 +66,7 @@ Clara Jensen owns it. It works under its own name, since Monday 2 November 2026.
 
 | Kind of task | Where | Stage | What the person does |
 |---|---|---|---|
-| Planning's tickets: a change to Planning's marts | Its own branch and development schema | 4: proposes a pull request | Clara says what Planning needs; Jun reviews the code, and Mei any meaning; Noor approves the change to production |
+| Planning's tickets: a change to Planning's marts | Its own branch and development schema | 4: proposes a pull request | Clara says what Planning needs; Jun reviews the code, and a word's owner any meaning it touches (Mei for students, HR for staff); Noor approves the change to production |
 
 Before it, Jun's helper drafted these tickets on Jun's own sign-in, at stages 1 to 3.
 
