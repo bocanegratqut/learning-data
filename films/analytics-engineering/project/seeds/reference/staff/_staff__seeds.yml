@@ -11,7 +11,7 @@ seeds:
       line, so the folder isn't added there.
     config:
       column_types: {pay_day: date, claims_close_at: timestamp, pay_run_closes_at: timestamp, note: string}
-      meta: {owner: HR, domain: hr, purpose: reference}
+      meta: {owner: HR, domain: staff, purpose: reference}
     columns:
       - name: pay_day
         description: The day the university pays its staff, a Thursday.
