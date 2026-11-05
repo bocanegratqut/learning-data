@@ -336,7 +336,80 @@ function hl_paintCase(c,w,h){let g=c.createLinearGradient(0,0,0,h);g.addColorSto
   c.fillStyle="rgba(255,240,210,0.5)";c.fillRect(540,420,840,2);
   c.save();c.globalCompositeOperation="lighter";c.fillStyle="rgba(200,240,240,0.05)";c.beginPath();c.moveTo(600,420);c.lineTo(720,420);c.lineTo(640,690);c.lineTo(520+60,690);c.closePath();c.fill();c.restore();}
 
+/* ---------------------------------------------------------------- the clerk's cabinets: a row of them, face on, close */
+// A row of four-drawer cabinets against the office's wall, seen face on from where the clerk stands (978 px a metre at their depth):
+// their top drawers along the bottom of the frame, the plaster wall above, a clock, a window on the night, a gooseneck lamp on one.
+// The top drawers are drawn live (hl_wallDrawer), so they can open, close, fill and empty; the place paints the rest.
+const HL_WALL={eye:[960,352],top:724,w:372,gap:12,x0:253,n:5,dTop:744,dH:293};
+const hl_wallX=i=>HL_WALL.x0+i*(HL_WALL.w+HL_WALL.gap);
+function hl_steelGrad(c,x,y0,y1,k){const g=c.createLinearGradient(0,y0,0,y1);g.addColorStop(0,hl_rgb(mix(HL_STEEL.face,[170,140,100],0.22*k)));g.addColorStop(1,hl_rgb(mix(HL_STEEL.lo,[60,50,40],0.2)));return g;}
+function hl_paintWall(c,w,h){const R=hl_rnd(4318),T=HL_WALL.top;
+  // the wall: plaster, warm where the lamp lights it, a dark wainscot rail behind the cabinets
+  let g=c.createLinearGradient(0,0,0,T);g.addColorStop(0,"rgb(30,32,30)");g.addColorStop(1,"rgb(52,50,44)");c.fillStyle=g;c.fillRect(0,0,w,T+40);
+  hl_glow(c,1500,300,900,[255,206,140],0.20);hl_glow(c,1500,520,420,[255,222,170],0.14);
+  c.fillStyle="rgb(36,30,24)";c.fillRect(0,T-130,w,34);c.fillStyle="rgba(255,220,180,0.10)";c.fillRect(0,T-130,w,2);
+  // a window on the night at the left: the dark sky, a lit window far off, the glazing bars
+  {const x=40,y=60,ww=300,hh=470;c.fillStyle="rgb(40,34,28)";c.fillRect(x-16,y-16,ww+32,hh+32);g=c.createLinearGradient(0,y,0,y+hh);g.addColorStop(0,"rgb(8,22,30)");g.addColorStop(1,"rgb(22,46,54)");c.fillStyle=g;c.fillRect(x,y,ww,hh);
+    for(let i=0;i<5;i++){c.fillStyle=rgba(HL_WARM.win,0.6);c.fillRect(x+30+R()*240,y+250+R()*180,5,7);}c.fillStyle="rgb(36,30,24)";c.fillRect(x+ww/2-4,y,8,hh);c.fillRect(x,y+hh/2-4,ww,8);}
+  // a clock, its hands at twenty to ten
+  {const cx=1090,cy=250,r=62;c.fillStyle="rgb(40,32,24)";c.beginPath();c.arc(cx,cy,r+8,0,TAU);c.fill();c.fillStyle="rgb(214,204,180)";c.beginPath();c.arc(cx,cy,r,0,TAU);c.fill();
+    c.strokeStyle="rgb(40,34,28)";c.lineCap="round";for(let k=0;k<12;k++){const a=k*TAU/12;c.lineWidth=k%3?2:4;c.beginPath();c.moveTo(cx+Math.cos(a)*(r-12),cy+Math.sin(a)*(r-12));c.lineTo(cx+Math.cos(a)*(r-4),cy+Math.sin(a)*(r-4));c.stroke();}
+    const hand=(a,l,lw)=>{c.lineWidth=lw;c.beginPath();c.moveTo(cx,cy);c.lineTo(cx+Math.sin(a)*l,cy-Math.cos(a)*l);c.stroke();};hand(TAU*(9.67/12),34,6);hand(TAU*(40/60),50,4);}
+  // the cabinets: each its top, its frame, the slots of its top two drawers (the fronts are drawn live), its lower drawers
+  for(let i=0;i<HL_WALL.n;i++){const x=hl_wallX(i),W2=HL_WALL.w,k=Math.max(0.25,1-Math.abs(x+W2/2-1500)/1400);
+    c.save();c.shadowColor="rgba(0,0,0,0.5)";c.shadowBlur=30;c.fillStyle=hl_steelGrad(c,x,T,h,k);c.fillRect(x,T,W2,h-T+20);c.restore();
+    c.fillStyle=hl_rgb(mix(HL_STEEL.hi,[255,226,180],0.25*k));c.fillRect(x,T-16,W2,16);c.fillStyle="rgba(255,236,210,"+(0.25*k+0.08).toFixed(3)+")";c.fillRect(x,T-16,W2,2);
+    c.fillStyle="rgba(0,0,0,0.55)";c.fillRect(x+12,HL_WALL.dTop-4,W2-24,HL_WALL.dH+8);
+    const y2=HL_WALL.dTop+HL_WALL.dH+12;c.fillStyle=hl_steelGrad(c,x,y2,y2+HL_WALL.dH,k*0.8);c.fillRect(x+14,y2,W2-28,HL_WALL.dH);
+    c.fillStyle="rgba(255,236,210,0.16)";c.fillRect(x+14,y2,W2-28,2);rr(c,x+W2/2-85,y2+40,170,50,4);c.fillStyle=rgba(HL_STEEL.brass,0.55*k+0.2);c.fill();
+    rr(c,x+W2/2-60,y2+124,120,18,9);c.fillStyle=rgba(HL_STEEL.brass,0.6*k+0.25);c.fill();}
+  // the lamp on the fourth cabinet: a gooseneck and a green-black shade, its light on the wall
+  {const bx=1600,by=T-16;c.fillStyle="rgb(24,22,20)";c.beginPath();c.ellipse(bx,by-6,46,12,0,0,TAU);c.fill();c.strokeStyle="rgb(24,22,20)";c.lineWidth=9;c.beginPath();c.moveTo(bx,by-10);c.bezierCurveTo(bx-10,by-160,bx-120,by-230,bx-170,by-200);c.stroke();
+    c.save();c.translate(bx-180,by-196);c.rotate(0.5);c.fillStyle="rgb(30,28,26)";c.beginPath();c.moveTo(-50,0);c.lineTo(50,0);c.lineTo(30,-44);c.lineTo(-30,-44);c.closePath();c.fill();c.restore();
+    hl_glow(c,bx-196,by-160,260,[255,226,178],0.35);c.save();c.shadowColor="rgba(255,226,178,1)";c.shadowBlur=20;c.fillStyle="rgb(255,236,206)";c.beginPath();c.ellipse(bx-196,by-168,30,9,0.5,0,TAU);c.fill();c.restore();}
+  // the floor's dark at the very bottom, and a soft dark round the edges
+  g=c.createRadialGradient(1100,520,420,1100,520,1300);g.addColorStop(0,"rgba(0,0,0,0)");g.addColorStop(1,"rgba(0,4,6,0.5)");c.fillStyle=g;c.fillRect(0,0,w,h);}
+// a top drawer of cabinet i, drawn live: out (0 shut, 1 pulled 0.25 m towards us), its label card (words, or null), how full (0 to 1),
+// o.a its light. Returns its front's box and its handle, for a hand or a folder. Drawn about the eye, as the place's own perspective.
+function hl_wallDrawer(c,i,o){o=o||{};const x=hl_wallX(i)+14,w=HL_WALL.w-28,y=HL_WALL.dTop,h=HL_WALL.dH,E=HL_WALL.eye,k=1+0.12*clamp(o.out||0,0,1.6),
+    P=(px,py)=>[E[0]+(px-E[0])*k,E[1]+(py-E[1])*k],a=P(x,y),b=P(x+w,y+h),lit=o.lit==null?1:o.lit,warm=Math.max(0.3,1-Math.abs(x+w/2-1500)/1400);
+  if(k>1.001){// the drawer's sides and the inside, seen from above
+    c.fillStyle="rgb(14,14,12)";c.beginPath();c.moveTo(x,y);c.lineTo(x+w,y);c.lineTo(b[0],a[1]);c.lineTo(a[0],a[1]);c.closePath();c.fill();
+    c.fillStyle=hl_rgb(mix(HL_STEEL.lo,[0,0,0],0.3));c.beginPath();c.moveTo(x,y);c.lineTo(a[0],a[1]);c.lineTo(a[0],b[1]);c.lineTo(x,y+h);c.closePath();c.fill();
+    c.beginPath();c.moveTo(x+w,y);c.lineTo(b[0],a[1]);c.lineTo(b[0],b[1]);c.lineTo(x+w,y+h);c.closePath();c.fill();
+    // the folders inside: manila edges, standing, seen from above, as many as it is full
+    const n=Math.round(14*clamp(o.full==null?1:o.full,0,1));for(let f=0;f<n;f++){const u=(f+0.5)/14,yy=lerp(y+4,a[1]-4,u),xx0=lerp(x+10,a[0]+10,u),xx1=lerp(x+w-10,b[0]-10,u);
+      c.fillStyle=hl_rgb(mix([206,180,128],[120,100,70],0.4+0.4*(1-u)));c.fillRect(xx0,yy-3,xx1-xx0,4);}}
+  // the front
+  c.save();c.shadowColor="rgba(0,0,0,0.5)";c.shadowBlur=k>1.001?24:0;c.shadowOffsetY=k>1.001?10:0;c.fillStyle=hl_steelGrad(c,a[0],a[1],b[1],warm*lit);c.fillRect(a[0],a[1],b[0]-a[0],b[1]-a[1]);c.restore();
+  c.fillStyle="rgba(255,236,210,"+(0.22*lit).toFixed(3)+")";c.fillRect(a[0],a[1],b[0]-a[0],2);c.fillStyle="rgba(0,0,0,0.35)";c.fillRect(a[0],b[1]-3,b[0]-a[0],3);
+  const cx=(a[0]+b[0])/2,big=o.big||o.label,lw=(big?280:150)*k,lh=(big?56:40)*k,ly=a[1]+(big?24:30)*k,hy=a[1]+(0.45*h)*k;
+  // the label holder: a brass frame and its card, and on the card its words, typed
+  rr(c,cx-lw/2-6*k,ly-6*k,lw+12*k,lh+12*k,4);c.fillStyle=rgba(HL_STEEL.brass,0.5*warm*lit+0.25);c.fill();
+  rr(c,cx-lw/2,ly,lw,lh,2);c.fillStyle=hl_rgb(mix(HL_STEEL.card,[120,110,90],1-lit));c.fill();
+  if(o.label){const la=o.labelA==null?1:o.labelA;if(la>0)withA(c,la,()=>dp_T(c,o.label,cx,ly+lh*0.7,{w:600,size:Math.round(28*k),f:"mono",align:"center",col:[34,26,18]}));}
+  // the handle, a brass pull
+  rr(c,cx-66*k,hy-11*k,132*k,22*k,11*k);c.fillStyle=rgba(HL_STEEL.brass,0.65*warm*lit+0.3);c.fill();c.fillStyle="rgba(255,240,200,0.4)";c.fillRect(cx-56*k,hy-9*k,112*k,2);
+  return{x:a[0],y:a[1],w:b[0]-a[0],h:b[1]-a[1],handle:[cx,hy],inside:[(x+a[0])/2,(y+a[1])/2]};}
+
+/* ---------------------------------------------------------------- the clerk of 1943 */
+// One of the war offices' clerks, as the agent films draw people (one three-quarter head, arms down, a hand only on a drawer's handle):
+// a cream blouse with a pointed collar; her hair to the collar, its ends rolled under, and a roll swept up from the forehead, as women
+// wore it in 1943. The rolls are painted with the head, inside its picture.
+function hl_rolls(c,P){const h=P.hair.c,hi=ag_lt(h,0.30),sh="rgba(0,0,0,0.40)",line=rgba(ag_dk(h,0.5),0.5);c.lineCap="round";
+  // the ends, rolled under along the collar
+  ag_soft(c,cc=>{cc.moveTo(214,488);cc.bezierCurveTo(212,520,240,546,276,542);cc.bezierCurveTo(300,540,318,528,318,512);cc.bezierCurveTo(300,520,276,524,252,516);cc.bezierCurveTo(232,510,220,500,214,488);cc.closePath();},
+    h,hi,262,520,40,sh,8);
+  c.strokeStyle=line;c.lineWidth=2;c.beginPath();c.moveTo(226,508);c.bezierCurveTo(240,526,272,532,306,522);c.stroke();
+  // the roll swept up and back from the forehead, its open end towards us
+  ag_soft(c,cc=>{cc.moveTo(392,346);cc.bezierCurveTo(400,318,384,286,350,276);cc.bezierCurveTo(316,266,272,272,250,290);cc.bezierCurveTo(262,300,286,304,306,312);
+      cc.bezierCurveTo(330,322,352,330,368,342);cc.bezierCurveTo(378,348,386,350,392,346);cc.closePath();},h,hi,330,284,46,sh,12);
+  c.strokeStyle=line;c.lineWidth=2.2;c.beginPath();c.moveTo(262,288);c.bezierCurveTo(300,282,346,290,384,326);c.stroke();
+  c.strokeStyle=rgba(ag_lt(h,0.5),0.25);c.lineWidth=1.8;c.beginPath();c.moveTo(276,280);c.bezierCurveTo(310,274,348,282,378,306);c.stroke();}
+const HL_CLERK={name:"A clerk",key:"hl-clerk",skin:[236,204,178],hair:{style:"bob",c:[96,64,44]},top:{kind:"shirt",c:[206,192,166]},hat:{paint:hl_rolls},breath:0.26};
+
 AG_PLACES.hlStreet=c=>hl_paintStreet(c,W,H);
+AG_PLACES.hlWall=c=>hl_paintWall(c,W,H);
 AG_PLACES.hlOffice=c=>hl_paintOffice(c,W,H);
 AG_PLACES.hlNight=c=>hl_paintNight(c,W,H);
 AG_PLACES.hlPlatform=c=>hl_paintPlatform(c,W,H);
