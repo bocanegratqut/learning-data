@@ -13,7 +13,7 @@ the way it did, and no test to say whether a change broke it.
 In March 2026, Sam Okafor, who runs the data platform, and Jun Park moved it into the project. Jun
 wrote the model and its tests, Sam the job, and each reviewed the other's pull request. Ingrid
 Holm, in HR, confirmed the rule, and HR owns the calendar of pay days. Noor approved it for
-production. *Scripts became software*, the first film of *Data as software*, follows it.
+production. *Scripts became software*, which opens the series *Data as software*, follows it.
 
 | | The script on a laptop | In the project |
 |---|---|---|
