@@ -243,7 +243,7 @@ function mr_words(ctx,x,y,w,o){o=o||{};const a=o.a==null?1:o.a,h=430,box={x,y,w,
   md_T(ctx,"METRIC VIEW",x+28,y+52,{w:800,size:28,ls:4,col:MD.agreed});
   const row=(i,label,yy,draw)=>{if(L[i]>0){ctx.save();ctx.globalAlpha*=L[i];ctx.fillStyle=rgba(MD.agreed,0.1);rr(ctx,x+12,yy-38,w-24,draw.h,10);ctx.fill();ctx.restore();}md_T(ctx,label,x+28,yy,{w:600,size:28,col:MD.soft});draw(yy);};
   row(0,"Name",y+112,Object.assign(yy=>md_T(ctx,MR_NAME,x+250,yy,{w:500,size:28,f:"mono"}),{h:56}));
-  row(1,"Description",y+180,Object.assign(yy=>{md_T(ctx,"What a teaching period's casual",x+250,yy,{w:600,size:28});md_T(ctx,"teaching costs: approved claims,",x+250,yy+38,{w:600,size:28});md_T(ctx,"plus on-costs",x+250,yy+76,{w:600,size:28});},{h:132}));
+  row(1,"Description",y+180,Object.assign(yy=>{md_T(ctx,"What the casual teaching in a",x+250,yy,{w:600,size:28});md_T(ctx,"teaching period costs: approved",x+250,yy+38,{w:600,size:28});md_T(ctx,"claims, plus on-costs",x+250,yy+76,{w:600,size:28});},{h:132}));
   row(2,"Synonyms",y+330,Object.assign(yy=>{const sl=o.synLit||0;if(sl>0){ctx.save();ctx.globalAlpha*=sl;glow(ctx,x+400,yy-10,190,MD.agreed,0.3);ctx.restore();}
     md_T(ctx,"sessional teaching cost",x+250,yy,{w:700,size:28,col:sl>0.5?MD.agreed:MD.ink});md_T(ctx,"casual teaching spend",x+250,yy+40,{w:600,size:28});},{h:94}));
   ctx.restore();return box;}
