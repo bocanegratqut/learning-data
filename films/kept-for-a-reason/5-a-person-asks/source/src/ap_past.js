@@ -152,7 +152,7 @@ function ap_seal(c,x,y,r,p){if(p<=0)return;const k=lerp(0.5,1,ag_eo(p));c.save()
 // words in ink on parchment
 function ap_ink(c,s,x,y,o){o=o||{};dp_T(c,s,x,y,Object.assign({w:o.w||600,size:o.size||30,col:AP_INK},o));}
 // the warrant of the King's Council, 28 June 1676: sealed; a, k (springs in)
-function ap_warrant(c,x,y,o){o=o||{};const a=o.a==null?1:o.a;if(a<=0)return;const w=640,h=330;c.save();c.globalAlpha*=a;if(o.k!=null)ag_about(c,x+w/2,y+h/2,lerp(0.7,1,o.k));
+function ap_warrant(c,x,y,o){o=o||{};const a=o.a==null?1:o.a;if(a<=0)return;const w=o.w||640,h=o.h||330;c.save();c.globalAlpha*=a;if(o.k!=null)ag_about(c,x+w/2,y+h/2,lerp(0.7,1,o.k));
   c.save();c.translate(x+w/2,y+h/2);c.rotate(-0.02);c.translate(-x-w/2,-y-h/2);ap_parch(c,x,y,w,h,{seal:[x+w-80,y+h-70],sealR:34,sealP:o.seal});
   ap_ink(c,"By the King's Council",x+44,y+66,{w:700,size:30});ap_ink(c,"Keep him until delivered",x+44,y+136,{w:600,size:34});ap_ink(c,"by due course of law",x+44,y+186,{w:600,size:34});
   ap_ink(c,"28 June 1676",x+44,y+268,{w:600,size:28});c.restore();c.restore();}
@@ -192,8 +192,11 @@ function ap_page1787(c,x,y,o){o=o||{};const a=o.a==null?1:o.a;if(a<=0)return;con
   ap_parch(c,x,y,w,h);ap_ink(c,"United States Constitution · 1787",x+44,y+70,{w:800,size:34});c.fillStyle="rgba(50,34,20,0.45)";c.fillRect(x+44,y+92,w-88,2);
   ap_ink(c,"“The privilege of the writ of",x+44,y+160,{w:600,size:32});ap_ink(c,"habeas corpus shall not be",x+44,y+206,{w:600,size:32});ap_ink(c,"suspended…”",x+44,y+252,{w:600,size:32});
   ap_ink(c,"Article I, Section 9",x+44,y+316,{w:600,size:28});c.restore();}
-// the window's light moving across the cell's wall, day after day (d the day, a fraction of it each second)
-function ap_dayLight(c,d,a){if(a<=0)return;const f=d%1,x=lerp(1500,300,f),w=AP_WIN;c.save();c.globalCompositeOperation="lighter";c.globalAlpha*=a*Math.sin(Math.PI*clamp(f,0,1));
-  const g=c.createLinearGradient(x-200,0,x+200,0);g.addColorStop(0,"rgba(255,226,170,0)");g.addColorStop(0.5,"rgba(255,226,170,0.16)");g.addColorStop(1,"rgba(255,226,170,0)");c.fillStyle=g;
-  c.beginPath();c.moveTo(x-170,380);c.lineTo(x+170,380);c.lineTo(x+110,620);c.lineTo(x-230,620);c.closePath();c.fill();c.fillStyle="rgba(0,0,0,0.6)";for(let k=0;k<6;k++){const bx=x-150+k*56;c.beginPath();c.moveTo(bx,380);c.lineTo(bx+12,380);c.lineTo(bx-12,620);c.lineTo(bx-24,620);c.closePath();c.fill();}
+// the days going by: the cell's window lit and dark again, its light falling through the bars to the floor, the sun moving along (d the day)
+function ap_dayLight(c,d,a){if(a<=0)return;const f=d%1,b=a*Math.sin(Math.PI*clamp(f,0,1));if(b<=0.002)return;const w=AP_WIN;c.save();c.globalCompositeOperation="lighter";c.globalAlpha*=b;
+  const pane=k=>[k?18+(k-1)*40+9:0,k<6?18+k*40:w.w];
+  c.fillStyle="rgba(255,236,196,0.5)";for(let k=0;k<7;k++){const [u0,u1]=pane(k);c.fillRect(w.x+u0,w.y,u1-u0,w.h);}
+  const sx=lerp(1180,720,f),top=w.y+w.h,bw=380;c.beginPath();
+  for(let k=0;k<7;k++){const [u0,u1]=pane(k);c.moveTo(w.x+u0,top);c.lineTo(w.x+u1,top);c.lineTo(sx-bw/2+u1/w.w*bw,H);c.lineTo(sx-bw/2+u0/w.w*bw,H);c.closePath();}
+  const g=c.createLinearGradient(0,top,0,H);g.addColorStop(0,"rgba(255,226,170,0.24)");g.addColorStop(1,"rgba(255,226,170,0.04)");c.fillStyle=g;c.fill();
   c.restore();}
