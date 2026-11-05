@@ -39,6 +39,7 @@
 
 # What comes in: each source's owner
 /sources/alumni_system/                                  alumni@uni.example jun.park@uni.example
+/sources/claims_app/                                     hr@uni.example jun.park@uni.example
 /sources/hr_system/                                      hr@uni.example jun.park@uni.example
 /sources/learning_platform/                              learning@uni.example jun.park@uni.example
 /sources/research_system/                                research@uni.example jun.park@uni.example
