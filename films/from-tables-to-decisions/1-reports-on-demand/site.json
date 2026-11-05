@@ -62,19 +62,19 @@
       },
       {
         "title": "Curate an effective Genie Agent",
-        "title_es": "Curate an effective Genie Agent (en inglés)",
+        "title_es": "Optimiza un Genie Agent eficaz",
         "line": "Start small, let a domain expert define it, and be its first user.",
         "line_es": "Empieza con poco, que lo defina quien conoce el tema, y sé su primer usuario.",
         "href": "https://docs.databricks.com/aws/en/genie/best-practices",
-        "href_es": "https://docs.databricks.com/aws/en/genie/best-practices"
+        "href_es": "https://learn.microsoft.com/es-es/azure/databricks/genie-agents/best-practices"
       },
       {
         "title": "Test and monitor a Genie Agent",
-        "title_es": "Test and monitor a Genie Agent (en inglés)",
+        "title_es": "Prueba y supervisión de un agente de Genie",
         "line": "Benchmarks: questions with their SQL answers, run after each change and rated Good or Bad.",
-        "line_es": "Benchmarks: preguntas con su respuesta en SQL, que se corren tras cada cambio y se califican Good o Bad.",
+        "line_es": "Pruebas comparativas: preguntas con su respuesta en SQL, que se corren tras cada cambio y se califican Bueno o Malo.",
         "href": "https://docs.databricks.com/aws/en/genie/benchmarks",
-        "href_es": "https://docs.databricks.com/aws/en/genie/benchmarks"
+        "href_es": "https://learn.microsoft.com/es-es/azure/databricks/genie-agents/monitor"
       },
       {
         "title": "Dashboards",
