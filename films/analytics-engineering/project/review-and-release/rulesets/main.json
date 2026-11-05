@@ -1,0 +1,75 @@
+{
+  "name": "main: every change through review",
+  "target": "branch",
+  "enforcement": "active",
+  "conditions": {
+    "ref_name": {
+      "include": ["~DEFAULT_BRANCH"],
+      "exclude": []
+    }
+  },
+  "bypass_actors": [],
+  "rules": [
+    {"type": "deletion"},
+    {"type": "non_fast_forward"},
+    {
+      "type": "pull_request",
+      "parameters": {
+        "required_approving_review_count": 1,
+        "dismiss_stale_reviews_on_push": true,
+        "require_code_owner_review": true,
+        "require_last_push_approval": true,
+        "required_review_thread_resolution": true,
+        "allowed_merge_methods": ["squash"],
+        "required_reviewers": [
+          {
+            "file_patterns": [
+              "models/core/student/_student__conceptual.yml",
+              "models/core/course/_course__conceptual.yml",
+              "models/core/person/_person__conceptual.yml",
+              "models/marts/planning/_planning__conceptual.yml"
+            ],
+            "minimum_approvals": 1,
+            "reviewer": {"id": 7300101, "type": "Team"}
+          },
+          {
+            "file_patterns": [
+              "review-and-release/**",
+              "databricks.yml",
+              "CODEOWNERS",
+              "AGENTS.md",
+              "agents/**",
+              "governance/2-owners/owners.yml",
+              "scripts/generate/codeowners.py"
+            ],
+            "minimum_approvals": 1,
+            "reviewer": {"id": 7300103, "type": "Team"}
+          },
+          {
+            "file_patterns": [
+              "review-and-release/**",
+              "databricks.yml",
+              "CODEOWNERS",
+              "AGENTS.md",
+              "agents/**",
+              "governance/2-owners/owners.yml",
+              "scripts/generate/codeowners.py"
+            ],
+            "minimum_approvals": 1,
+            "reviewer": {"id": 7300102, "type": "Team"}
+          }
+        ]
+      }
+    },
+    {
+      "type": "required_status_checks",
+      "parameters": {
+        "strict_required_status_checks_policy": true,
+        "required_status_checks": [
+          {"context": "build", "integration_id": 15368},
+          {"context": "databricks-parse", "integration_id": 15368}
+        ]
+      }
+    }
+  ]
+}

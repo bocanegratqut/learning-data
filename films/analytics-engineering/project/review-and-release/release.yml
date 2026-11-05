@@ -1,0 +1,51 @@
+# The release: how a change merged into main reaches production. In the project's own repository this file is
+# .github/workflows/release.yml; here it's an example, and GitHub runs nothing from it (review-and-release/README.md).
+#
+# The job runs in the environment production (production.json), so it waits until a release approver approves it,
+# and whoever started the run can't approve it (Prevent self-review). Only then does it sign in to Databricks, as the
+# release's own service principal, with no secret: workload identity federation, whose policy accepts only a job of
+# this repository in its production environment. It deploys the bundle (databricks.yml) and runs the build there.
+# No agent's identity can do either: the agents' groups only read production.
+name: Release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write   # the job's token from GitHub, which Databricks trusts in place of a secret
+
+concurrency:
+  group: release
+  cancel-in-progress: false   # a release runs to its end; the next one waits its turn
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      # None of these is secret: the workspace, the release's own service principal (its application ID), and where
+      # the build goes. They're the repository's variables, set once by the platform team. BUNDLE_VAR_ sets the
+      # bundle's variables (databricks.yml): the job runs as the release, in the production catalog.
+      DATABRICKS_AUTH_TYPE: github-oidc
+      DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
+      DATABRICKS_CLIENT_ID: ${{ vars.RELEASE_CLIENT_ID }}
+      BUNDLE_VAR_release: ${{ vars.RELEASE_CLIENT_ID }}
+      BUNDLE_VAR_catalog: ${{ vars.PRODUCTION_CATALOG }}
+      BUNDLE_VAR_warehouse_id: ${{ vars.PRODUCTION_WAREHOUSE_ID }}
+    steps:
+      - uses: actions/checkout@v7
+
+      # The Databricks CLI, as Databricks' own examples install it
+      - uses: databricks/setup-cli@main
+
+      - name: Check the bundle
+        run: databricks bundle validate -t production
+
+      - name: Deploy the bundle to production
+        run: databricks bundle deploy -t production
+
+      - name: Run the build in production
+        run: databricks bundle run -t production build
