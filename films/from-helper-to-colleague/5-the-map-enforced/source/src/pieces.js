@@ -160,7 +160,7 @@ function ob_idCard(ctx,x,y,w,rows,o){o=o||{};const a=o.a==null?1:o.a,rh=74,h=160
   rows.forEach((r,i)=>{const ry=y+160+i*rh,ra=r[2]==null?1:r[2];if(ra<=0)return;const hl=r[3]||0;
     withA(ctx,ra,()=>{ctx.strokeStyle="rgba(87,82,76,0.16)";ctx.lineWidth=1.2;ctx.beginPath();ctx.moveTo(x+24,ry+4);ctx.lineTo(x+w-24,ry+4);ctx.stroke();
       if(hl>0){ctx.fillStyle=rgba(AG.blue,0.08*hl);rr(ctx,x+14,ry+10,w-28,rh-10,12);ctx.fill();}
-      const lw=r[6]?logo(ctx,r[6],x+28,ry+22,40):0;ag_T(ctx,r[0],x+28+(lw?lw+14:0),ry+52,{w:700,size:30});
+      const lock=/Lockup$/.test(r[6]||""),lw=r[6]?logo(ctx,r[6],x+28,ry+(lock?25:22),lock?34:40):0;if(!(lock&&lw))ag_T(ctx,r[0],x+28+(lw?lw+14:0),ry+52,{w:700,size:30});
       ag_T(ctx,r[1],x+w-28,ry+52,{w:500,size:28,f:r[4]?"mono":undefined,align:"right",col:r[5]||AG.ink});});});
   ctx.restore();return{x,y,w,h};}
 
@@ -187,10 +187,13 @@ function ob_grants(ctx,x,y,w,who,lines,o){o=o||{};const a=o.a==null?1:o.a;if(a<=
 /* ---------------------------------------------------------------- the logs
    ob_log(ctx, x, y, w, head, sub, rows, o): a log card, its head and its source (sub, in mono), and its rows [{when, who, text, tag (a
    pill after who), col (who's colour), hl (lit violet), warn (lit amber), ok (a green "Verified" pill at the row's end), a}]. A row
-   with text is two lines tall: the change, then who. o.a, o.k, o.edge */
+   with text is two lines tall: the change, then who. o.logo, a tool's mark before the head; o.mark, a tool's own lockup at the head's
+   right, where the head doesn't name the tool (GitHub's, never beside its typed name); o.a, o.k, o.edge */
 function ob_log(ctx,x,y,w,head,sub,rows,o){o=o||{};const a=o.a==null?1:o.a,rh=r=>r.text?96:52,h=28+38+(sub?46:4)+rows.reduce((s,r)=>s+rh(r),0)+22;if(a<=0)return{x,y,w,h};
   ctx.save();ctx.globalAlpha*=a;if(o.k!=null)ag_about(ctx,x+w/2,y+h/2,lerp(0.6,1,o.k));
-  ag_box(ctx,x,y,w,h,22,{edge:o.edge,edgeA:0.8});ag_T(ctx,head.toUpperCase(),x+28,y+50,{w:700,size:28,ls:4,col:AG.kick});
+  ag_box(ctx,x,y,w,h,22,{edge:o.edge,edgeA:0.8});let hx=x+28;if(o.logo){const lw=logo(ctx,o.logo,x+28,y+22,36);if(lw)hx+=lw+14;}
+  ag_T(ctx,head.toUpperCase(),hx,y+50,{w:700,size:28,ls:4,col:AG.kick});
+  if(o.mark&&LOGO[o.mark]){const im=LOGO[o.mark];logo(ctx,o.mark,x+w-28-32*im.width/im.height,y+24,32);}
   if(sub)ag_T(ctx,sub,x+28,y+94,{w:500,size:28,f:"mono",col:AG.mut});
   let ry=y+(sub?112:70);
   rows.forEach(r=>{const ra=r.a==null?1:r.a,hh=rh(r);if(ra>0)withA(ctx,ra,()=>{

@@ -119,15 +119,15 @@ scene("whose",(ctx,S,t,sc)=>{const c=sc.cues,P=ob_once(sc,"P",()=>({col:wAt(sc,"
     {later:true,at:c.three,place:"obLab",keys:[[c.three,960,540,1]],push:0.02,draw:(x,tt)=>{
       ob_agentWith(x,tt,{think:0.2,name:"planning agent",nameA:1-ag_in(tt,P.own,0.4),badge:"planning agent",bk:(tt-P.own-0.2)/0.9,tag:"owner · Clara Jensen",dx:-260});
       ob_person(x,"sam",tt,{});ag_roomLight(x,1);ob_personCard(x,"sam",ag_in(tt,c.three+0.3,0.5));
-      ob_idCard(x,1296,170,570,[["Databricks","service principal",ag_in(tt,P.dbx,0.4),0,false,null,"databricks"],["GitHub","planning-agent[bot]",ag_in(tt,P.gh,0.4),0,true,null,"github"],
+      ob_idCard(x,1296,170,570,[["Databricks","service principal",ag_in(tt,P.dbx,0.4),0,false,null,"databricks"],["GitHub","planning-agent[bot]",ag_in(tt,P.gh,0.4),0,true,null,"githubLockup"],
         ["dbt","signs in as it",ag_in(tt,P.dbt,0.4),0,false,null,"dbt"]],{name:"planning agent",owner:"Clara Jensen",a:ag_in(tt,P.own,0.5),k:ag_spr(tt,P.own)});
       ob_pillL(x,1296,640,"written from the map",tt,P.wrote,null,{col:AG.blue});}},
     // since Monday, every change it makes says planning-agent[bot], every query names it (the card goes, two logs come in)
     {at:c.since,place:"obLab",keys:[[c.since,960,540,1]],push:0.02,draw:(x,tt)=>{
       ob_agentWith(x,tt,{think:0.2,badge:"planning agent",tag:"owner · Clara Jensen",dx:-260});
       ob_person(x,"sam",tt,{});ag_roomLight(x,1);ob_personCard(x,"sam",1);ob_corner(x,"Since Monday",ag_in(tt,c.since+0.2,0.5));
-      ob_log(x,1296,170,570,"GitHub · commits",null,[Object.assign({},OB_COMMITS[0],{hl:ag_in(tt,P.bot,0.5)})],{a:ag_in(tt,P.bot-0.6,0.5),k:ag_spr(tt,P.bot-0.6)});
-      ob_log(x,1296,400,570,"Query history",null,[{who:OB_ID,tag:"planning agent",col:AG.violet,hl:ag_in(tt,P.query+0.6,0.5)}],{a:ag_in(tt,P.query,0.5),k:ag_spr(tt,P.query)});}},
+      ob_log(x,1296,170,570,"Commits",null,[Object.assign({},OB_COMMITS[0],{hl:ag_in(tt,P.bot,0.5)})],{mark:"githubLockup",a:ag_in(tt,P.bot-0.6,0.5),k:ag_spr(tt,P.bot-0.6)});
+      ob_log(x,1296,400,570,"Query history",null,[{who:OB_ID,tag:"planning agent",col:AG.violet,hl:ag_in(tt,P.query+0.6,0.5)}],{logo:"databricks",a:ag_in(tt,P.query,0.5),k:ag_spr(tt,P.query)});}},
     // Wednesday: Sam tries the switch; for ten minutes the planning agent stops, and Jun, Lucía and Anil's workload agent work on
     // (later:true: Sam's moment with one agent leaves, then the two agents come in)
     {later:true,at:c.tried,place:"obLab",keys:[[c.tried,960,540,1]],push:0.02,draw:(x,tt)=>{const off=ag_in(tt,P.stopped-0.2,0.6);
@@ -160,7 +160,7 @@ scene("name",(ctx,S,t,sc)=>{const c=sc.cues,P=ob_once(sc,"P",()=>({every:wAt(sc,
     end:wAt(sc,"pass","end on their own"),none:wAt(sc,"so","no secret")}));
   // the agent's badge card, its rows as each tool is named (drawn the same in every shot that shows it)
   const card=(x,tt,a)=>ob_idCard(x,1296,170,570,[["Databricks","service principal",ag_in(tt,P.sp,0.4),ag_io(tt,P.sp,c.gh,0.4),false,null,"databricks"],
-    ["GitHub","planning-agent[bot]",ag_in(tt,P.bot,0.4),ag_io(tt,P.bot,c.dbt,0.4),true,null,"github"],["dbt","the same service principal",ag_in(tt,P.same,0.4),ag_io(tt,P.same,c.keys,0.4),false,null,"dbt"]],
+    ["GitHub","planning-agent[bot]",ag_in(tt,P.bot,0.4),ag_io(tt,P.bot,c.dbt,0.4),true,null,"githubLockup"],["dbt","the same service principal",ag_in(tt,P.same,0.4),ag_io(tt,P.same,c.keys,0.4),false,null,"dbt"]],
     {name:"planning agent",owner:"Clara Jensen",a});
   const agent=(x,tt)=>ob_agentWith(x,tt,Object.assign({},OB_AL,{think:0.2,badge:"planning agent"}));
   const arrow=(x,x0,y0,x1,y1,t0,tt)=>ob_line(x,x0,y0,x1,y1,clamp((tt-t0)/0.6,0,1),{col:AG.blue,lw:3});
@@ -168,7 +168,7 @@ scene("name",(ctx,S,t,sc)=>{const c=sc.cues,P=ob_once(sc,"P",()=>({every:wAt(sc,
     // a person has one name in every tool: Lucía's, in Databricks, GitHub and dbt (later:true: the title leaves first)
     {later:true,at:0,place:"obLab",keys:[[0,960,540,1]],push:0.02,draw:(x,tt)=>{
       ob_person(x,"lucia",tt,{});ag_roomLight(x,1);ob_personCard(x,"lucia",ag_in(tt,0.3,0.5));
-      ob_idCard(x,476,200,740,[["Databricks","lucia.ortega@uni.example",ag_in(tt,P.every+0.2,0.4),0,true,null,"databricks"],["GitHub","lucia-ortega",ag_in(tt,P.every+0.5,0.4),0,true,null,"github"],
+      ob_idCard(x,476,200,740,[["Databricks","lucia.ortega@uni.example",ag_in(tt,P.every+0.2,0.4),0,true,null,"databricks"],["GitHub","lucia-ortega",ag_in(tt,P.every+0.5,0.4),0,true,null,"githubLockup"],
         ["dbt","her Databricks sign-in",ag_in(tt,P.every+0.8,0.4),0,false,null,"dbt"]],{name:"Lucía Ortega",owner:"Planning",a:ag_in(tt,P.every-0.4,0.5),k:ag_spr(tt,P.every-0.4)});}},
     // now the planning agent does too: Sam, who set it up, and the agent's own card; a service principal, as Anil's workload agent
     // has (later:true: Lucía leaves, then Sam comes in)
@@ -259,7 +259,7 @@ scene("map",(ctx,S,t,sc)=>{const c=sc.cues,P=ob_once(sc,"P",()=>({name:wAt(sc,"w
       ob_list(x,1220,320,640,{kick:"Unity Gateway",logo:"databricks",title:"part of the catalog",a:ag_in(tt,P.ug,0.5),k:ag_spr(tt,P.ug),
         rows:[{text:"call · the one model its steps use",a:ag_in(tt,P.model,0.4)},{text:"call · the tool servers they name",a:ag_in(tt,P.servers,0.4)}]});
       // GitHub, its App; and dbt, a target of its own
-      ob_list(x,1220,590,640,{kick:"GitHub",logo:"github",label:"App",title:"planning-agent",titleF:"mono",a:ag_in(tt,c.gh,0.5),k:ag_spr(tt,c.gh),
+      ob_list(x,1220,590,640,{kick:"",logo:"githubLockup",label:"App",title:"planning-agent",titleF:"mono",a:ag_in(tt,c.gh,0.5),k:ag_spr(tt,c.gh),
         rows:[{text:"repositories · one",a:ag_in(tt,P.repo,0.4)},{text:"permissions · two",a:ag_in(tt,P.perm,0.4)}]});
       ob_list(x,520,670,640,{kick:"dbt",logo:"dbt",label:"target",title:"agent",titleF:"mono",a:ag_in(tt,P.dbt,0.5),k:ag_spr(tt,P.dbt),
         rows:[{text:"schemas · planning_agent_…",a:ag_in(tt,P.target,0.4)}]});}},
@@ -353,17 +353,17 @@ scene("logs",(ctx,S,t,sc)=>{const c=sc.cues,P=ob_once(sc,"P",()=>({every:wAt(sc,
     // then GitHub's log comes in)
     {later:true,at:0,place:"obLab",keys:[[0,960,540,1]],push:0.02,draw:(x,tt)=>{agent(x,tt);ag_roomLight(x,1);
       const fake=ag_in(tt,P.type,0.5),ok=ag_in(tt,P.ver,0.4);
-      ob_log(x,560,170,1280,"GitHub · commits",null,[Object.assign({},OB_COMMITS[0],{hl:ag_io(tt,P.pa,P.pa+2.2,0.4),ok,a:ag_in(tt,P.every+0.4,0.4)}),
+      ob_log(x,560,170,1280,"Commits",null,[Object.assign({},OB_COMMITS[0],{hl:ag_io(tt,P.pa,P.pa+2.2,0.4),ok,a:ag_in(tt,P.every+0.4,0.4)}),
         Object.assign({},OB_COMMITS[1],{hl:ag_io(tt,P.wa,P.wa+2.2,0.4),ok,a:ag_in(tt,P.every+0.7,0.4)}),Object.assign({},OB_COMMITS[2],{a:ag_in(tt,P.every+1.0,0.4)}),
-        {text:"Change the class plan",who:"planning-agent[bot]",col:AG.amber,tag:"typed by anyone",warn:fake,a:fake}],{a:ag_in(tt,P.every,0.5),k:ag_spr(tt,P.every)});
+        {text:"Change the class plan",who:"planning-agent[bot]",col:AG.amber,tag:"typed by anyone",warn:fake,a:fake}],{mark:"githubLockup",a:ag_in(tt,P.every,0.5),k:ag_spr(tt,P.every)});
       ob_pillL(x,560,700,"made through its App",tt,P.app,null,{col:AG.violet});}},
     // in Databricks every query it runs is in the query history, under its service principal, and the audit log's table lists what
-    // else it does (later:true: GitHub's log leaves, then Databricks' two come in)
+    // else it does (later:true: GitHub's log leaves, then Databricks' two come in, each with Databricks' mark)
     {later:true,at:c.qh,place:"obLab",keys:[[c.qh,960,540,1]],push:0.02,draw:(x,tt)=>{agent(x,tt);ag_roomLight(x,1);
       ob_log(x,560,170,1280,"Query history","system.query.history",[{when:"Wed 10:02",who:OB_ID,tag:"planning agent",hl:ag_io(tt,P.sp,P.sp+2,0.4)},
-        {when:"Wed 10:04",who:OB_ID,tag:"planning agent",hl:ag_io(tt,P.sp+0.2,P.sp+2.2,0.4)},{when:"Wed 10:05",who:"jun.park@uni.example"}],{a:ag_in(tt,P.qh-0.3,0.5),k:ag_spr(tt,P.qh-0.3)});
+        {when:"Wed 10:04",who:OB_ID,tag:"planning agent",hl:ag_io(tt,P.sp+0.2,P.sp+2.2,0.4)},{when:"Wed 10:05",who:"jun.park@uni.example"}],{logo:"databricks",a:ag_in(tt,P.qh-0.3,0.5),k:ag_spr(tt,P.qh-0.3)});
       ob_log(x,560,490,1280,"Audit log","system.access.audit",[{text:"getTable · prod_marts.mart_planning__class_plan",who:OB_ID,tag:"planning agent",a:ag_in(tt,P.table,0.4)},
-        {text:"createSchema · planning_agent_marts",who:OB_ID,tag:"planning agent",a:ag_in(tt,P.schema,0.4)}],{a:ag_in(tt,c.audit,0.5),k:ag_spr(tt,c.audit)});}},
+        {text:"createSchema · planning_agent_marts",who:OB_ID,tag:"planning agent",a:ag_in(tt,P.schema,0.4)}],{logo:"databricks",a:ag_in(tt,c.audit,0.5),k:ag_spr(tt,c.audit)});}},
     // so the auditors' question is one search: every pull request by planning-agent[bot], and what each one changed (later:true:
     // Databricks' logs leave, then the search comes in)
     {later:true,at:c.search,place:"obLab",keys:[[c.search,960,540,1]],push:0.02,draw:(x,tt)=>{agent(x,tt);ag_roomLight(x,1);
