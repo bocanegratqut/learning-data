@@ -12,7 +12,7 @@ const BP_ROOM={dev:{x:640,y:350,w:330,h:290,label:"development",block:[728,438,1
                test:{x:1030,y:350,w:330,h:290,label:"test",block:[1118,438,154,202],door:1195},
                prod:{x:1420,y:300,w:450,h:340,label:"production",block:[1548,352,196,288],door:1646}};
 // where the track's stations are: main at its left end, the gates between, the test room's door, the production room's door
-const BP_AT={main:470,pr:640,owner:800,checks:960,test:1195,approver:1420,prod:1646};
+const BP_AT={main:440,pr:610,owner:790,checks:960,test:1195,approver:1420,prod:1646};
 AG_PLACES.bpHall=c=>{dp_paintHall(c,{seed:12,horizon:650,vx:1040,lights:14,panes:6,haze:0.08,pools:[[260,980,520,0.10],[1650,900,520,0.08],[1080,800,760,0.05]]});
   // each room: a box of glass on the floor, clear, its edges catching the light, and in it its workspace, a block of clear glass
   for(const k of ["dev","test","prod"]){const r=BP_ROOM[k],[bx,by,bw,bh]=r.block;
@@ -117,7 +117,7 @@ function bp_poly(ctx,pts,u,col,o){o=o||{};if(u<=0)return;const L=[];let tot=0;fo
 /* ---------------------------------------------------------------- the tools' pages, drawn as their docs show them on the day */
 // GitHub's ruleset, as Settings shows it: its name, that it's active, its target, its rules, each with a tick as it's said, and its
 // bypass list (empty: nobody)
-const BP_RULES=["Restrict deletions","Block force pushes","Require a pull request before merging","Require review from Code Owners","Require approval of the most recent reviewable push","Require status checks to pass"];
+const BP_RULES=["Require a pull request before merging","Block force pushes","Restrict deletions","Require review from Code Owners","Require approval of the most recent reviewable push","Require status checks to pass"];
 function bp_ghRuleset(ctx,x,y,o){o=o||{};const a=o.a==null?1:o.a;if(a<=0)return;ctx.save();ctx.globalAlpha*=a;
   const b=dp_page(ctx,x,y,1240,700,{tool:"github",name:"GitHub",where:"Settings · Rules · Rulesets",title:"main: every change through review"});
   dp_field(ctx,b.x,b.y+10,"Enforcement status","Active",{col:"green"});dp_field(ctx,b.x+380,b.y+10,"Target branches","main",{mono:true});

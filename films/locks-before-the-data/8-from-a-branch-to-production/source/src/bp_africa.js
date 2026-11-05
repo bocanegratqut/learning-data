@@ -17,12 +17,15 @@ AG_PLACES.bpTable=c=>{dp_paintHall(c,{seed:31,horizon:520,vx:960,lights:12,panes
   // the chairs on the far side of each edge first (the far ones first), then the table over their seats
   const chairs=[];for(const side of [-1,1])for(let i=0;i<9;i++){const z=1.32+i*0.42;chairs.push([side,z]);}
   chairs.sort((a,b)=>b[1]-a[1]);
-  const chair=(side,z)=>{const [x,y]=P(side*1.2,z),k=1/z,w=128*k,h=250*k,lean=side*14*k;c.save();
-    // a high-backed chair turned towards the table: its back a dark rounded shape, lit along its top and its outer edge
-    const g=c.createLinearGradient(x,y-h,x,y);g.addColorStop(0,"rgb(26,40,44)");g.addColorStop(1,"rgb(12,22,26)");c.fillStyle=g;
-    c.beginPath();c.moveTo(x-w/2+lean,y-h);c.quadraticCurveTo(x+lean,y-h-14*k,x+w/2+lean,y-h);c.lineTo(x+w/2,y-34*k);c.lineTo(x-w/2,y-34*k);c.closePath();c.fill();
-    c.strokeStyle="rgba(150,220,225,"+(0.10+0.25*k).toFixed(3)+")";c.lineWidth=Math.max(1,2.2*k);c.beginPath();c.moveTo(x-w/2+lean,y-h);c.quadraticCurveTo(x+lean,y-h-14*k,x+w/2+lean,y-h);c.stroke();
-    c.fillStyle="rgb(10,18,22)";c.fillRect(x-w/2-6*k,y-40*k,w+12*k,16*k);c.restore();};
+  const chair=(side,z)=>{const [x,y]=P(side*1.2,z),k=1/z,w=118*k,h=196*k,lean=side*10*k,sy=y-70*k;c.save();
+    // an office chair turned towards the table: a padded back, a seat reaching in under the table's edge, a post and a foot
+    c.fillStyle="rgb(9,16,20)";c.fillRect(x-4*k,sy,8*k,62*k);c.beginPath();c.ellipse(x,y-6*k,40*k,8*k,0,0,TAU);c.fill();
+    c.fillStyle="rgb(18,30,34)";c.beginPath();c.moveTo(x-w*0.5,sy);c.lineTo(x+w*0.5,sy);c.lineTo(x+w*0.5-side*26*k,sy+16*k);c.lineTo(x-w*0.5-side*26*k,sy+16*k);c.closePath();c.fill();
+    const g=c.createLinearGradient(x,sy-h,x,sy);g.addColorStop(0,"rgb(30,46,50)");g.addColorStop(1,"rgb(14,24,28)");c.fillStyle=g;
+    c.beginPath();c.moveTo(x-w*0.42+lean,sy-h);c.quadraticCurveTo(x+lean,sy-h-18*k,x+w*0.42+lean,sy-h);c.quadraticCurveTo(x+w*0.5+lean*0.5,sy-h*0.5,x+w*0.44,sy-6*k);
+    c.lineTo(x-w*0.44,sy-6*k);c.quadraticCurveTo(x-w*0.5+lean*0.5,sy-h*0.5,x-w*0.42+lean,sy-h);c.closePath();c.fill();
+    c.strokeStyle="rgba(150,220,225,"+(0.10+0.28*k).toFixed(3)+")";c.lineWidth=Math.max(1,2.2*k);c.beginPath();c.moveTo(x-w*0.42+lean,sy-h);c.quadraticCurveTo(x+lean,sy-h-18*k,x+w*0.42+lean,sy-h);c.stroke();
+    c.strokeStyle="rgba(0,0,0,0.35)";c.lineWidth=Math.max(0.8,1.6*k);c.beginPath();c.moveTo(x+lean*0.6,sy-h*0.86);c.lineTo(x,sy-h*0.18);c.stroke();c.restore();};
   chairs.forEach(([s,z])=>chair(s,z));
   // the table top, dark wood with the room's cool light along it
   const q=[P(-1,Z0),P(1,Z0),P(1,Z1),P(-1,Z1)];c.save();c.beginPath();q.forEach((p,i)=>i?c.lineTo(p[0],p[1]):c.moveTo(p[0],p[1]));c.closePath();
@@ -71,8 +74,7 @@ function bp_voter(ctx,x,y,h,v,sway){const k=h/180,hw=v.wide*k;ctx.save();ctx.tra
   ctx.fillStyle=dark;if(v.skirt){ctx.beginPath();ctx.moveTo(-hw*0.62,-74*k);ctx.lineTo(hw*0.62,-74*k);ctx.lineTo(hw*0.5,-18*k);ctx.lineTo(-hw*0.5,-18*k);ctx.closePath();ctx.fill();ctx.fillRect(-12*k,-18*k,7*k,18*k);ctx.fillRect(5*k,-18*k,7*k,18*k);}
   else{ctx.fillRect(-14*k,-70*k,12*k,70*k);ctx.fillRect(2*k,-70*k,12*k,70*k);}
   ctx.fillStyle=coat;ctx.beginPath();ctx.moveTo(-hw*0.5,-140*k);ctx.quadraticCurveTo(-hw*0.62,-144*k,-hw*0.66,-128*k);ctx.lineTo(-hw*0.6,(v.long?-36:-66)*k);ctx.lineTo(hw*0.6,(v.long?-36:-66)*k);ctx.lineTo(hw*0.66,-128*k);ctx.quadraticCurveTo(hw*0.62,-144*k,hw*0.5,-140*k);ctx.closePath();ctx.fill();
-  ctx.fillStyle=dark;ctx.fillRect(-6*k,-146*k,12*k,8*k);
-  ctx.fillStyle=v.hair?rgba(v.hair,1):skin;ctx.beginPath();ctx.ellipse(0,-158*k,13*k,16*k,0,0,TAU);ctx.fill();
+  ctx.fillStyle=skin;ctx.fillRect(-5*k,-148*k,10*k,8*k);ctx.fillStyle=rgba(v.hair,1);ctx.beginPath();ctx.ellipse(0,-158*k,13*k,16*k,0,0,TAU);ctx.fill();
   if(v.hat==="brim"){ctx.fillStyle=dark;ctx.beginPath();ctx.ellipse(0,-168*k,22*k,5*k,0,0,TAU);ctx.fill();ctx.fillRect(-12*k,-182*k,24*k,14*k);}
   else if(v.hat==="scarf"){ctx.fillStyle=rgba(v.scarf,1);ctx.beginPath();ctx.ellipse(0,-164*k,16*k,14*k,0,0,TAU);ctx.fill();ctx.beginPath();ctx.ellipse(4*k,-176*k,14*k,8*k,0.3,0,TAU);ctx.fill();}
   else if(v.hat==="cap"){ctx.fillStyle=dark;ctx.beginPath();ctx.ellipse(0,-168*k,14*k,9*k,0,Math.PI,TAU);ctx.fill();}
@@ -82,8 +84,8 @@ function bp_voter(ctx,x,y,h,v,sway){const k=h/180,hw=v.wide*k;ctx.save();ctx.tra
   ctx.restore();}
 // the queue along the road, from our feet to the hall: about 70 people of every age, moving up slowly
 const BP_QUEUE=(()=>{const R=ag_rnd(1994),Q=[],cols=[[92,70,58],[60,66,78],[110,90,70],[74,58,62],[84,86,80],[54,48,46],[120,104,88],[66,76,70]],
-    skins=[[96,64,46],[120,82,58],[84,56,40],[140,100,76],[160,120,96]],scarves=[[140,96,70],[96,110,120],[150,130,100]];
-  let u=0.10;while(u<0.97){const r=R();Q.push({u,wide:lerp(46,64,R()),col:cols[(R()*cols.length)|0],skin:skins[(R()*skins.length)|0],hair:R()<0.5?[24,20,20]:null,
+    skins=[[96,64,46],[120,82,58],[84,56,40],[140,100,76],[160,120,96]],hairs=[[22,18,18],[30,24,22],[40,32,28],[150,146,140],[60,48,40]],scarves=[[140,96,70],[96,110,120],[150,130,100]];
+  let u=0.10;while(u<0.97){const r=R();Q.push({u,wide:lerp(46,64,R()),col:cols[(R()*cols.length)|0],skin:skins[(R()*skins.length)|0],hair:hairs[R()<0.86?((R()*3)|0):3+((R()*2)|0)],
       skirt:r<0.45,long:R()<0.4,hat:R()<0.18?"brim":R()<0.3?"scarf":R()<0.2?"cap":null,scarf:scarves[(R()*3)|0],stick:R()<0.07,tall:lerp(0.86,1.08,R()),ph:R()*TAU});
     u+=lerp(0.026,0.006,u)*lerp(0.8,1.25,R());}return Q;})();
 function bp_voters(ctx,t,o){o=o||{};const a=o.a==null?1:o.a;if(a<=0)return;ctx.save();ctx.globalAlpha*=a;
@@ -112,9 +114,10 @@ AG_PLACES.bpChamber=c=>{dp_paintHall(c,{seed:44,horizon:600,vx:1000,lights:10,pa
   c.fillStyle="rgb(18,32,36)";rr(c,500,700,120,30,6);c.fill();c.strokeStyle="rgba(150,220,225,0.25)";c.lineWidth=1.4;rr(c,500,700,120,30,6);c.stroke();
   // the bench: eleven high-backed chairs behind a long desk on a dais
   const B=BP_BENCH,cw=(B.x1-B.x0)/B.chairs;c.fillStyle="rgb(14,26,30)";c.fillRect(B.x0-30,B.y+64,B.x1-B.x0+60,40);
-  for(let i=0;i<B.chairs;i++){const x=B.x0+cw*(i+0.5);const g=c.createLinearGradient(0,B.y-110,0,B.y);g.addColorStop(0,"rgb(34,48,52)");g.addColorStop(1,"rgb(16,26,30)");c.fillStyle=g;
-    c.beginPath();c.moveTo(x-18,B.y);c.lineTo(x-20,B.y-96);c.quadraticCurveTo(x,B.y-118,x+20,B.y-96);c.lineTo(x+18,B.y);c.closePath();c.fill();
-    c.strokeStyle="rgba(150,220,225,0.22)";c.lineWidth=1.6;c.beginPath();c.moveTo(x-20,B.y-96);c.quadraticCurveTo(x,B.y-118,x+20,B.y-96);c.stroke();}
+  for(let i=0;i<B.chairs;i++){const x=B.x0+cw*(i+0.5),hw=cw*0.36,top=B.y-128;const g=c.createLinearGradient(x-hw,0,x+hw,0);g.addColorStop(0,"rgb(26,40,44)");g.addColorStop(0.5,"rgb(38,54,58)");g.addColorStop(1,"rgb(20,32,36)");c.fillStyle=g;
+    c.beginPath();c.moveTo(x-hw,B.y);c.lineTo(x-hw,top+26);c.quadraticCurveTo(x-hw,top,x,top-4);c.quadraticCurveTo(x+hw,top,x+hw,top+26);c.lineTo(x+hw,B.y);c.closePath();c.fill();
+    c.strokeStyle="rgba(150,220,225,0.26)";c.lineWidth=1.6;c.beginPath();c.moveTo(x-hw,top+26);c.quadraticCurveTo(x-hw,top,x,top-4);c.quadraticCurveTo(x+hw,top,x+hw,top+26);c.stroke();
+    c.strokeStyle="rgba(0,0,0,0.3)";c.lineWidth=1.2;for(const dy of [30,62,94]){c.beginPath();c.moveTo(x-hw+5,top+dy);c.lineTo(x+hw-5,top+dy);c.stroke();}}
   const dg=c.createLinearGradient(0,B.y,0,B.y+64);dg.addColorStop(0,"rgb(40,52,54)");dg.addColorStop(1,"rgb(20,30,32)");c.fillStyle=dg;c.fillRect(B.x0-16,B.y,B.x1-B.x0+32,64);
   c.fillStyle="rgba(170,235,235,0.30)";c.fillRect(B.x0-16,B.y,B.x1-B.x0+32,2);};
 // the seats lit: o.blocks [a for each block], o.all (every seat in one light: the Assembly sitting together), o.boost [a for each block]
@@ -175,11 +178,11 @@ function bp_goldSeal(ctx,x,y,r,a){if(a<=0)return;ctx.save();ctx.globalAlpha*=a;c
   const g=ctx.createRadialGradient(x-r*0.3,y-r*0.3,r*0.1,x,y,r);g.addColorStop(0,"rgb(255,232,150)");g.addColorStop(0.6,"rgb(232,178,60)");g.addColorStop(1,"rgb(190,140,40)");ctx.fillStyle=g;
   ctx.beginPath();for(let i=0;i<=48;i++){const th=i/48*TAU,rr2=r*(i%2?0.94:1);i?ctx.lineTo(x+Math.cos(th)*rr2,y+Math.sin(th)*rr2):ctx.moveTo(x+rr2,y);}ctx.closePath();ctx.fill();ctx.shadowBlur=0;
   ctx.strokeStyle="rgba(150,100,24,0.8)";ctx.lineWidth=2;ctx.beginPath();ctx.arc(x,y,r*0.7,0,TAU);ctx.stroke();ctx.beginPath();ctx.arc(x,y,r*0.5,0,TAU);ctx.stroke();ctx.restore();}
-// the desk where the text is signed, under a lamp at night
-AG_PLACES.bpSigning=c=>{dp_paintHall(c,{seed:52,horizon:430,vx:960,lights:8,panes:4,haze:0.05,pools:[]});
-  const g=c.createLinearGradient(0,470,0,H);g.addColorStop(0,"rgb(30,30,28)");g.addColorStop(1,"rgb(48,40,34)");c.fillStyle=g;c.beginPath();c.moveTo(180,470);c.lineTo(1740,470);c.lineTo(1920,H);c.lineTo(0,H);c.closePath();c.fill();
-  c.fillStyle="rgba(255,226,180,0.14)";c.fillRect(180,470,1560,2);
-  const lg=c.createRadialGradient(760,520,0,760,600,820);lg.addColorStop(0,"rgba(255,214,160,0.26)");lg.addColorStop(1,"rgba(255,214,160,0)");c.fillStyle=lg;c.fillRect(0,200,1920,880);
-  // a brass lamp on the left
-  c.fillStyle="rgb(40,34,26)";c.fillRect(330,350,10,150);c.beginPath();c.ellipse(335,500,60,12,0,0,TAU);c.fill();c.fillStyle="rgb(60,48,30)";c.beginPath();c.moveTo(270,350);c.lineTo(400,350);c.lineTo(370,300);c.lineTo(300,300);c.closePath();c.fill();
-  const bg=c.createRadialGradient(335,360,0,335,360,90);bg.addColorStop(0,"rgba(255,226,170,0.8)");bg.addColorStop(1,"rgba(255,226,170,0)");c.fillStyle=bg;c.fillRect(245,330,180,120);};
+// the desk where the text is signed, seen from above at night: dark wood with its grain, a leather blotter, the lamp's light pooled on it
+AG_PLACES.bpSigning=c=>{let g=c.createLinearGradient(0,0,W,H);g.addColorStop(0,"rgb(40,32,26)");g.addColorStop(1,"rgb(22,18,16)");c.fillStyle=g;c.fillRect(0,0,W,H);
+  const R=ag_rnd(1996);c.lineWidth=1.4;for(let i=0;i<70;i++){const y=R()*H,a=0.03+R()*0.05;c.strokeStyle="rgba("+(R()<0.5?"0,0,0":"120,96,72")+","+a.toFixed(3)+")";c.beginPath();c.moveTo(0,y);
+    c.bezierCurveTo(500,y+(R()-0.5)*30,1300,y+(R()-0.5)*30,W,y+(R()-0.5)*20);c.stroke();}
+  c.save();c.shadowColor="rgba(0,0,0,0.5)";c.shadowBlur=30;rr(c,520,230,880,620,16);c.fillStyle="rgb(20,40,42)";c.fill();c.restore();
+  rr(c,536,246,848,588,10);c.strokeStyle="rgba(200,236,232,0.12)";c.lineWidth=2;c.stroke();
+  const lg=c.createRadialGradient(560,300,0,700,420,980);lg.addColorStop(0,"rgba(255,220,170,0.30)");lg.addColorStop(0.5,"rgba(255,210,160,0.10)");lg.addColorStop(1,"rgba(255,210,160,0)");c.fillStyle=lg;c.fillRect(0,0,W,H);
+  const vg=c.createRadialGradient(960,540,500,960,540,1250);vg.addColorStop(0,"rgba(0,0,0,0)");vg.addColorStop(1,"rgba(0,0,0,0.5)");c.fillStyle=vg;c.fillRect(0,0,W,H);};
