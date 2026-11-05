@@ -81,7 +81,7 @@ scene("signs",(ctx,S,t,sc)=>{const c=sc.cues,T=mr_once(sc,"T",()=>({
         if(isBad&&bad>0)mr_says(cx,R,"A$1.56M",{col:MD.fail,icon:"cross",a:bad});
         if(isAs&&as>0){mr_key(cx,R.x+R.w-30,R.y-4,MD.fail,as);md_tag(cx,R.x+60,R.y+150,"other faculties' claims",{col:MD.personal,icon:"lock",a:as});}
         if(good>0){mr_key(cx,R.x+R.w-30,R.y-4,MD.pass,good);
-          if(R.k!=="partner")mr_says(cx,R,"A$1.84M",{a:ag_in(tt,T.sameN-0.2+i*0.12,0.4)});else mr_says(cx,R,"totals by faculty",{a:ag_in(tt,T.sameN+0.4,0.4),inset:170});}});}}],0.5);
+          if(R.k!=="partner")mr_says(cx,R,"A$1.84M",{a:ag_in(tt,T.sameN-0.2+i*0.12,0.4)});else mr_says(cx,R,"totals by faculty",{a:ag_in(tt,T.sameN+0.4,0.4)});}});}}],0.5);
   md_title(ctx,S,t,c.breath,"More readers than people","One definition, every reader","FILM 3 OF 3 · FROM TABLES TO DECISIONS");
 });
 
@@ -211,3 +211,182 @@ scene("app",(ctx,S,t,sc)=>{const c=sc.cues,T=mr_once(sc,"T",()=>({
       mr_rule(cx,150,360,900,["Let an app read as the person using it.","Keep the rules where the data lives."],{a:ag_in(tt,T.r1-0.5,0.5),k:mr_k(tt,T.r1-0.5),lineA:[ag_in(tt,T.r1-0.2,0.4),ag_in(tt,T.r2-0.2,0.4)]});}}],0.5);
   MR_KICK(ctx,1);
 });
+
+/* ---------------------------------------------------------------- 4 · An agent reads the words too
+   Rohan's pay-day note to the deans, now drafted by Finance's pay-day agent; it asks Genie One through a tool server, and Genie One
+   knows the word its instructions use, one of the measure's synonyms; like a car reading the signs, an agent reads a measure's words;
+   it works alone, so it has a name of its own and only what its job reads; it drafts, and Rohan checks the note and sends it. */
+const MR_NOTE=[["Engineering and IT","A$2.05M"],["Health","A$1.84M"],["Arts and Education","A$1.62M"],["Business","A$1.14M"]];
+function mr_note(ctx,x,y,w,o){o=o||{};const rows=[["Casual teaching cost, so far",MD.soft]].concat(MR_NOTE.map((r,i)=>[r,null,null,o.rowA?o.rowA[i]:1]));
+  return mr_list(ctx,x,y,w,"Note to the deans",rows,{a:o.a,k:o.k,edge:o.edge,kickCol:o.kickCol||MD.soft});}
+scene("agent",(ctx,S,t,sc)=>{const c=sc.cues,T=mr_once(sc,"T",()=>({
+    deans:wAt(sc,"note","the deans"),each:wAt(sc,"note","each faculty's"),agentW:wAt(sc,"drafts","pay-day agent"),draftsW:wAt(sc,"drafts","drafts the note"),
+    genie:wAt(sc,"asks","Genie One"),tool:wAt(sc,"asks","a tool server"),any:wAt(sc,"asks","as any agent"),answers:wAt(sc,"asks","answers"),same:wAt(sc,"asks","same definition"),
+    instr:wAt(sc,"words","Its instructions"),sess:wAt(sc,"words","sessional"),knows:wAt(sc,"words","knows the word"),syn:wAt(sc,"words","synonyms"),
+    carW:wAt(sc,"car","Like a car"),reads:wAt(sc,"car","an agent reads"),nameW:wAt(sc,"car","its name"),desc:wAt(sc,"car","its description"),synW:wAt(sc,"car","its synonyms"),
+    alone:wAt(sc,"alone","works alone"),sched:wAt(sc,"alone","on a schedule"),own:wAt(sc,"alone","a name of its own"),rules:wAt(sc,"alone","same rules"),
+    may:wAt(sc,"grants","It may ask"),measure:wAt(sc,"grants","read the measure"),cant:wAt(sc,"grants","can't read the claims"),
+    draftsS:wAt(sc,"sends","It drafts"),checks:wAt(sc,"sends","Rohan checks"),sendsW:wAt(sc,"sends","and sends it"),
+    r1:wAt(sc,"rule","Give every reader"),r2:wAt(sc,"rule","and only what")}));
+  ag_shots(ctx,S,t,sc.dur,[
+    // every pay day, Rohan's note to the deans; now the pay-day agent drafts it
+    {later:true,at:0,place:"map",keys:[[0,960,540,1.0]],push:0.02,draw:(cx,tt)=>{
+      const pa=ag_in(tt,0.7,0.7);if(pa>0){cx.save();cx.globalAlpha*=pa;md_person(cx,"rohan",300,740,0.8,{t:tt,gaze:[3,0]});cx.restore();md_nameTag(cx,160,392,"rohan",{col:MD.dom.finance,a:pa});}
+      const na=ag_in(tt,T.deans-0.4,0.5);mr_note(cx,600,250,760,{a:na,k:mr_k(tt,T.deans-0.4),rowA:MR_NOTE.map((r,i)=>ag_in(tt,T.each-0.2+i*0.3,0.4))});
+      const aa=ag_in(tt,T.agentW-0.4,0.6);if(aa>0){cx.save();cx.globalAlpha*=aa;ag_model(cx,1600,420,80,{t:tt,core:0.8,think:ag_io(tt,T.draftsW-0.2,T.draftsW+2.4,0.4)});cx.restore();
+        md_T(cx,"Finance's pay-day agent",1600,560,{w:700,size:28,align:"center",a:aa});}
+      md_lane(cx,md_curve([1510,420],[1360,400],{bend:0.5}),MD.wait,ag_in(tt,T.draftsW-0.3,0.4),{u:ag_sine(clamp((tt-T.draftsW+0.3)/0.7,0,1)),dash:true,t:tt});
+      md_pill(cx,1250,250,"Draft",{col:MD.wait,size:28,a:ag_in(tt,T.draftsW,0.4),k:mr_k(tt,T.draftsW)});}},
+    // later: it asks Genie One through a tool server, and Genie One answers from the same definition
+    {later:true,at:c.asks-0.6,place:"map",keys:[[0,960,540,1.0]],push:0.02,draw:(cx,tt)=>{
+      const aa=ag_in(tt,c.asks-0.1,0.5);if(aa>0){cx.save();cx.globalAlpha*=aa;ag_model(cx,200,480,70,{t:tt,core:0.8,think:ag_io(tt,T.tool,T.same+1,0.4)});cx.restore();md_T(cx,"The agent",200,600,{w:700,size:28,align:"center",a:aa});}
+      const ts=mr_box(cx,360,425,330,{icon:"api",iconCol:MD.flow,title:"Tool server",sub:"for Genie One",a:ag_in(tt,T.tool-0.3,0.5),k:mr_k(tt,T.tool-0.3)});
+      md_T(cx,"any agent can ask through it",525,580,{w:600,size:28,align:"center",col:MD.soft,a:ag_in(tt,T.any-0.2,0.5)});
+      const gb=mr_box(cx,800,425,370,{logo:"databricks",title:"Genie One",sub:"answers questions",a:ag_in(tt,T.genie-0.3,0.5),k:mr_k(tt,T.genie-0.3),edge:ag_in(tt,T.answers,0.4)>0.5?MD.pass:null});
+      const m=mr_measure(cx,1260,396,560,{a:ag_in(tt,T.answers-0.4,0.5),k:mr_k(tt,T.answers-0.4),lit:ag_io(tt,T.same-0.2,T.same+1.8,0.4)});
+      md_way(cx,"api",[270,480],ts.l,tt,{u:ag_sine(clamp((tt-T.tool+0.1)/0.6,0,1)),a:ag_in(tt,T.tool-0.3,0.4)});
+      md_way(cx,"api",ts.r,gb.l,tt,{u:ag_sine(clamp((tt-T.genie-0.2)/0.6,0,1)),a:ag_in(tt,T.genie-0.1,0.4)});
+      md_way(cx,"query",gb.r,[m.x,m.y+m.h/2],tt,{u:ag_sine(clamp((tt-T.answers+0.2)/0.6,0,1)),a:ag_in(tt,T.answers-0.2,0.4)});}},
+    // later: its instructions use a word the measure was given; like a car reading the signs, it reads a measure's words
+    {later:true,at:c.words-0.6,place:"map",keys:[[0,960,540,1.0]],push:0.02,draw:(cx,tt)=>{
+      const ia=ag_in(tt,T.instr-0.3,0.5);if(ia>0){md_card(cx,100,230,780,250,{a:ia,glow:0.5});md_T(cx,"ITS INSTRUCTIONS",128,282,{w:800,size:28,ls:4,col:MD.soft,a:ia});
+        mr_say(cx,128,340,720,[["Every pay day, draft the deans' note with each faculty's",null],["sessional teaching cost",MD.agreed],["so far.",null]],{a:ia,markA:ag_in(tt,T.sess-0.1,0.4)});
+        if(ia>0.5){cx.save();cx.globalAlpha*=ag_in(tt,T.instr-0.3,0.5);ag_model(cx,820,230,34,{t:tt,core:0.8,think:0.2});cx.restore();}}
+      const wb=mr_words(cx,980,190,840,{a:ag_in(tt,T.knows-0.5,0.5),k:mr_k(tt,T.knows-0.5),synLit:ag_in(tt,T.knows,0.5),
+        litA:[ag_io(tt,T.nameW-0.1,T.nameW+1.2,0.3),ag_io(tt,T.desc-0.1,T.desc+1.4,0.3),ag_io(tt,T.synW-0.1,T.synW+1.6,0.3)]});
+      // like a car reading the signs it passes
+      const ca=ag_in(tt,T.carW-0.3,0.5);if(ca>0){cx.save();cx.globalAlpha*=ca;md_card(cx,100,560,780,250,{glow:0.3});rr(cx,124,690,732,96,10);cx.fillStyle="#111724";cx.fill();
+        cx.setLineDash([30,24]);cx.strokeStyle="rgba(238,228,192,0.5)";cx.lineWidth=3;cx.beginPath();cx.moveTo(140,738);cx.lineTo(840,738);cx.stroke();cx.setLineDash([]);
+        mr_sign(cx,"limit",720,628,84,{post:52});const u=clamp((tt-T.carW)/5.5,0,1),qx=lerp(170,560,ag_sine(u));mr_car(cx,qx,758,0,{});
+        const rd=ag_io(tt,T.carW+0.6,T.reads+0.8,0.4);if(rd>0){cx.save();cx.globalAlpha*=rd;cx.globalCompositeOperation="lighter";cx.fillStyle=rgba(MD.flow,0.3);cx.beginPath();cx.moveTo(qx+30,748);cx.lineTo(684,604);cx.lineTo(756,652);cx.closePath();cx.fill();cx.restore();}
+        md_T(cx,"reads the sign it passes",140,612,{w:600,size:28,col:MD.soft});cx.restore();}}},
+    // later: it works alone, so it has a name of its own, and only what its job reads; it drafts, and Rohan checks and sends
+    {later:true,at:c.alone-0.6,place:"map",keys:[[0,960,540,1.0]],push:0.02,draw:(cx,tt)=>{
+      const aa=ag_in(tt,c.alone-0.1,0.5);if(aa>0){cx.save();cx.globalAlpha*=aa;ag_model(cx,230,320,70,{t:tt,core:0.8,think:0.2});cx.restore();}
+      mr_badge(cx,230,390,"finance-payday-agent",{t:tt,drop:40,a:ag_in(tt,T.own-0.3,0.5)});
+      md_tag(cx,420,280,"Every pay day, on its own",{col:MD.soft,icon:"clock",a:ag_in(tt,T.sched-0.3,0.5)});
+      md_tag(cx,420,350,"The same rules as people",{col:MD.soft,icon:"person",a:ag_in(tt,T.rules-0.3,0.5)});
+      mr_list(cx,100,520,780,"What it may read",[[["Ask Genie One","EXECUTE"],MD.pass,"tick",ag_in(tt,T.may-0.2,0.4),MD.soft],[["Read the measure","SELECT"],MD.pass,"tick",ag_in(tt,T.measure-0.2,0.4),MD.soft],
+        [["Read the claims","no"],MD.personal,"lock",ag_in(tt,T.cant-0.2,0.4),MD.soft]],{a:ag_in(tt,T.may-0.5,0.5),edge:MD.flow,kickCol:MD.flow});
+      const na=ag_in(tt,c.alone+0.2,0.5),sent=ag_in(tt,T.sendsW,0.4);mr_note(cx,1060,250,760,{a:na,edge:sent>0.5?MD.pass:null});
+      md_pill(cx,1710,250,sent>0.5?"Sent":"Draft",{col:sent>0.5?MD.pass:MD.wait,size:28,a:na,k:sent>0?mr_k(tt,T.sendsW):null});
+      const ra=ag_in(tt,T.checks-0.3,0.5);if(ra>0){mr_who(cx,1100,640,MD.wait,ra);md_T(cx,"Rohan checks it",1146,650,{w:700,size:28,col:MD.wait,a:ra});}}},
+    // later: the rule
+    {later:true,at:c.rule-0.6,place:"map",keys:[[0,960,540,1.0]],push:0.02,draw:(cx,tt)=>{
+      const aa=ag_in(tt,c.rule-0.1,0.6);if(aa>0){cx.save();cx.globalAlpha*=aa;ag_model(cx,1560,460,96,{t:tt,core:0.8,think:0.15});cx.restore();mr_badge(cx,1560,556,"finance-payday-agent",{t:tt,drop:40,a:aa});}
+      mr_rule(cx,150,360,1000,["A reader that works alone gets its own name,","and only what its job reads."],{a:ag_in(tt,T.r1-0.5,0.5),k:mr_k(tt,T.r1-0.5),lineA:[ag_in(tt,T.r1-0.2,0.4),ag_in(tt,T.r2-0.2,0.4)]});}}],0.5);
+  MR_KICK(ctx,1);
+});
+
+/* ---------------------------------------------------------------- 5 · Outside, only the totals
+   A group of universities outside reads the measure through OpenSharing, where it lives; Ingrid asks for totals by faculty, never
+   by unit, because a unit with one tutor would give away that tutor's pay; so the share holds one small table made from the measure,
+   for semesters that have ended. */
+const MR_S1=[["Engineering and IT","A$2.48M"],["Health","A$2.21M"],["Arts and Education","A$1.96M"],["Business","A$1.38M"]];
+const MR_TUTORS=[["HI101","12"],["HI112","7"],["HI205","5"],["HI305","1"]];
+// the university and its platform, the measure in it, and the partner outside, as chapter 5 lays them out; returns their boxes
+function mr_shareScene(ctx,tt,o){const U={x:440,y:230,w:760,h:560},ua=o.uni==null?1:o.uni;
+  if(ua>0){md_card(ctx,U.x,U.y,U.w,U.h,{dash:[12,10],edge:MD.dim,a:ua*0.9});md_label(ctx,U.x+U.w/2,280,"The university",{align:"center",a:ua});}
+  md_platform(ctx,470,310,700,450,{uc:true,ucText:"Unity Catalog",a:o.plat});
+  const m=mr_measure(ctx,500,400,540,{sub:false,a:o.plat,lit:o.mLit});
+  const p=md_reader(ctx,1360,250,500,{title:"A group of universities",sub:"compares teaching costs",icon:"share",a:o.partner,col:o.pCol||null,lit:o.pLit});
+  return{U,m,p};}
+scene("share",(ctx,S,t,sc)=>{const c=sc.cues,T=mr_once(sc,"T",()=>({
+    outside:wAt(sc,"group","outside the university"),groupW:wAt(sc,"group","a group of universities"),fbf:wAt(sc,"group","faculty by faculty"),
+    sam:wAt(sc,"share","Sam"),os:wAt(sc,"share","OpenSharing"),lives:wAt(sc,"share","where it lives"),copy:wAt(sc,"share","no copy"),
+    ingridW:wAt(sc,"ingrid","Ingrid"),rule1:wAt(sc,"ingrid","totals by faculty"),never:wAt(sc,"ingrid","never by unit"),
+    one:wAt(sc,"why","one tutor"),away:wAt(sc,"why","give away"),
+    small:wAt(sc,"table","one small table"),made:wAt(sc,"table","made from the measure"),byF:wAt(sc,"table","by faculty"),ended:wAt(sc,"table","have ended"),
+    readsW:wAt(sc,"reads","reads the same"),nothing:wAt(sc,"reads","nothing more"),r1:wAt(sc,"rule","Outside the platform"),r2:wAt(sc,"rule","and make it")}));
+  ag_shots(ctx,S,t,sc.dur,[
+    // a group of universities outside; Sam shares the measure with them through OpenSharing, read where it lives
+    {later:true,at:0,place:"map",keys:[[0,960,540,1.0]],push:0.02,draw:(cx,tt)=>{
+      const B=mr_shareScene(cx,tt,{uni:ag_in(tt,0.6,0.6),plat:ag_in(tt,0.6,0.6),partner:ag_in(tt,T.groupW-0.3,0.5)});
+      md_T(cx,"faculty by faculty, each semester",1610,410,{w:600,size:28,align:"center",col:MD.soft,a:ag_in(tt,T.fbf-0.2,0.5)});
+      const sa=ag_in(tt,T.sam-0.4,0.6);if(sa>0){cx.save();cx.globalAlpha*=sa;md_person(cx,"sam",250,740,0.8,{t:tt,gaze:[3,0]});cx.restore();md_nameTag(cx,110,392,"sam",{col:MD.flow,a:sa});}
+      md_way(cx,"share",B.m.r,[1360,565],tt,{u:ag_sine(clamp((tt-T.os+0.3)/0.9,0,1)),icon:true,label:"OpenSharing",a:ag_in(tt,T.os-0.4,0.4)});
+      mr_box(cx,1360,510,500,{icon:"view",iconCol:MD.flow,title:"Casual teaching cost",sub:"read where it lives",dash:[10,9],edge:MD.flow,a:ag_in(tt,T.lives-0.2,0.5)});
+      md_tag(cx,1360,690,"no copy to keep up to date",{col:MD.pass,icon:"tick",a:ag_in(tt,T.copy-0.2,0.5)});}},
+    // later: Ingrid's rule, totals by faculty, never by unit: a unit with one tutor would give away that tutor's pay
+    {later:true,at:c.ingrid-0.6,place:"map",keys:[[0,960,540,1.0]],push:0.02,draw:(cx,tt)=>{
+      const ia=ag_in(tt,c.ingrid-0.1,0.7);if(ia>0){cx.save();cx.globalAlpha*=ia;md_person(cx,"ingrid",300,740,0.8,{t:tt,gaze:[3,0]});cx.restore();md_nameTag(cx,160,392,"ingrid",{col:MD.sys.hr,a:ia});}
+      mr_list(cx,620,250,700,"One more rule",[["Totals by faculty",MD.pass,"tick",ag_in(tt,T.rule1-0.2,0.4)],["Never by unit",MD.fail,"cross",ag_in(tt,T.never-0.2,0.4)]],{a:ag_in(tt,T.rule1-0.5,0.5),edge:MD.agreed,kickCol:MD.agreed});
+      const ra=ag_in(tt,c.why-0.4,0.5),hl=ag_in(tt,T.one-0.2,0.4);
+      md_rows(cx,640,500,[{h:"Unit",w:220,f:"mono"},{h:"Tutors",w:180}],MR_TUTORS,{a:ra,lit:hl>0.5?3:null,litCol:MD.personal});
+      md_tag(cx,1090,743,"one tutor's pay",{col:MD.personal,icon:"lock",a:ag_in(tt,T.away-0.2,0.5)});}},
+    // later: the share holds one small table made from the measure, by faculty, for semesters that have ended
+    {later:true,at:c.table-0.6,place:"map",keys:[[0,960,540,1.0]],push:0.02,draw:(cx,tt)=>{
+      const ok=ag_in(tt,T.readsW-0.2,0.5),B=mr_shareScene(cx,tt,{uni:ag_in(tt,c.table-0.1,0.5),plat:ag_in(tt,c.table-0.1,0.5),partner:ag_in(tt,c.table-0.1,0.5),pCol:ok>0.5?MD.pass:null,pLit:ag_io(tt,T.readsW,T.nothing+1,0.4)});
+      const ta=ag_in(tt,T.small-0.3,0.5),tb=md_table(cx,500,540,620,{name:"mart_finance__faculty_totals",kind:"made from the measure",a:ta,k:mr_k(tt,T.small-0.3),lit:ag_io(tt,T.made-0.1,T.made+1.4,0.4)});
+      md_lane(cx,md_path([[770,B.m.y+118],[770,tb.y]]),MD.agreed,ag_in(tt,T.made-0.3,0.4),{u:ag_sine(clamp((tt-T.made+0.3)/0.6,0,1)),t:tt});
+      md_way(cx,"share",tb.r,[1360,562],tt,{icon:true,label:"OpenSharing",a:ag_in(tt,T.small,0.5)});
+      mr_sharedTable(cx,1360,510,500,"faculty_totals","Semester 1, 2026: ended",MR_S1,{a:ag_in(tt,T.small+0.3,0.5),edge:ok>0.5?MD.pass:null,rowA:MR_S1.map((r,i)=>ag_in(tt,T.byF-0.2+i*0.25,0.4)),semLit:ag_io(tt,T.ended-0.2,T.ended+1.6,0.4)});}},
+    // later: the rule
+    {later:true,at:c.rule-0.6,place:"map",keys:[[0,960,540,1.0]],push:0.02,draw:(cx,tt)=>{
+      const ia=ag_in(tt,c.rule-0.1,0.7);if(ia>0){cx.save();cx.globalAlpha*=ia;md_person(cx,"ingrid",1620,740,0.8,{t:tt,flip:true,gaze:[3,0]});cx.restore();md_nameTag(cx,1500,392,"ingrid",{col:MD.sys.hr,a:ia});}
+      mr_rule(cx,150,360,1040,["Outside the platform, share the least a partner needs,","and make it from the definition."],{a:ag_in(tt,T.r1-0.5,0.5),k:mr_k(tt,T.r1-0.5),lineA:[ag_in(tt,T.r1-0.2,0.4),ag_in(tt,T.r2-0.2,0.4)]});}}],0.5);
+  MR_KICK(ctx,1);
+});
+
+/* ---------------------------------------------------------------- 6 · One definition, every reader
+   Pay day ends with one number in every reader, each seeing only what it may; like the signs agreed in Vienna, made once and read by
+   people and machines, but every reader shows who it is; every reader is written down in the data project; the rules; the standards
+   already there, the module's wheel; the convention still improving; and what comes next. */
+const MR_EXPOS=[["casual_teaching_genie",{logo:"databricks"}],["budget_pack",{logo:"powerbi"}],["tutor_planning",{logo:"databricks"}],["finance_payday_agent",{agent:true}],["faculty_totals_share",{icon:"share"}]];
+scene("close",(ctx,S,t,sc)=>{const c=sc.cues,T=mr_once(sc,"T",()=>({
+    one:wAt(sc,"back","one number"),genie:wAt(sc,"same","in Genie One"),pbi:wAt(sc,"same","in Power BI"),app:wAt(sc,"same","in the app"),draft:wAt(sc,"same","the agent's draft"),
+    mayW:wAt(sc,"may","only what it may"),vienna:wAt(sc,"vienna","Vienna"),once:wAt(sc,"vienna","made once"),people:wAt(sc,"vienna","for people"),machines:wAt(sc,"vienna","machines"),
+    anyone:wAt(sc,"unlike","anyone who passes"),shows:wAt(sc,"unlike","every reader shows"),written:wAt(sc,"known","written down"),change:wAt(sc,"known","a change to the measure"),names:wAt(sc,"known","names who it touches"),
+    where:wAt(sc,"where","Read each measure"),who:wAt(sc,"who","Let each reader"),least:wAt(sc,"least","share the least"),
+    wheel:wAt(sc,"wheel","standards"),reinvent:wAt(sc,"wheel","reinvent the wheel"),inv:wAt(sc,"iterate","Investigate"),iter:wAt(sc,"iterate","iterate"),docs:wAt(sc,"iterate","official docs"),
+    conv:wAt(sc,"still","convention"),force:wAt(sc,"still","comes into force"),nextW:wAt(sc,"next","Next")}));
+  ag_shots(ctx,S,t,sc.dur,[
+    // pay day ends with one number, in every reader, and each sees only what it may
+    {later:true,at:0,place:"map",keys:[[0,960,540,1.0]],push:0.02,draw:(cx,tt)=>{
+      const ua=ag_in(tt,0.6,0.6);if(ua>0){md_card(cx,90,190,1740,520,{dash:[12,10],edge:MD.dim,a:ua*0.9});md_label(cx,960,240,"The university",{align:"center",a:ua});}
+      mr_measure(cx,MR_M.x,MR_M.y,MR_M.w,{a:ua,lit:ag_io(tt,T.one-0.2,T.one+1.6,0.4)});
+      md_pill(cx,960,318,"Health, so far: A$1.84M",{col:MD.agreed,size:28,a:ag_in(tt,T.one-0.2,0.4),k:mr_k(tt,T.one-0.2)});
+      const at_={people:T.genie,bi:T.pbi,app:T.app,agent:T.draft,partner:T.mayW},key=ag_in(tt,T.mayW-0.3,0.5);
+      MR_READERS.forEach(R=>{const t0=at_[R.k],a=ag_in(tt,t0-0.3,0.4),lane=ag_sine(clamp((tt-t0+0.2)/0.8,0,1));mr_reader(cx,R,{a,lane,t:tt,flow:key});
+        if(R.k!=="partner")mr_says(cx,R,"A$1.84M",{a:ag_in(tt,t0+0.4,0.4)});else mr_says(cx,R,"totals by faculty",{a:ag_in(tt,t0+0.3,0.4)});
+        mr_key(cx,R.x+R.w-30,R.y-4,MD.pass,key*a);});}},
+    // later: like the signs agreed in Vienna, made once, for people, and machines read them too; but every reader of data shows who it is
+    {later:true,at:c.vienna-0.6,place:"map",keys:[[0,960,540,1.0]],push:0.02,draw:(cx,tt)=>{
+      const la=ag_in(tt,T.vienna-0.3,0.5),ra=ag_in(tt,T.once-0.4,0.5),pp=ag_in(tt,T.people-0.2,0.4),mc=ag_in(tt,T.machines-0.2,0.4),sh=ag_in(tt,T.shows-0.2,0.5);
+      md_label(cx,520,250,"Vienna, 1968",{align:"center",a:la});
+      mr_sign(cx,"warn",360,430,130,{a:la});mr_sign(cx,"limit",520,430,120,{a:la});mr_sign(cx,"must",680,430,120,{a:la});
+      md_tag(cx,520,580,"defined once",{align:"center",col:MD.agreed,icon:"contract",a:la});
+      mr_who(cx,420,700,MD.ink,pp);mr_car(cx,640,710,-Math.PI/2,{a:mc,lights:0.25});
+      md_T(cx,"read by anyone who passes",520,820,{w:600,size:28,align:"center",col:MD.soft,a:ag_in(tt,T.anyone-0.2,0.5)});
+      md_label(cx,1400,250,"The university, 2026",{align:"center",a:ra});
+      mr_measure(cx,1140,370,520,{sub:false,a:ra});
+      md_tag(cx,1400,580,"defined once",{align:"center",col:MD.agreed,icon:"contract",a:ra});
+      mr_who(cx,1300,700,MD.ink,pp*ra);if(mc*ra>0){cx.save();cx.globalAlpha*=mc*ra;ag_model(cx,1500,700,34,{t:tt,core:0.8,think:0.1});cx.restore();}
+      mr_key(cx,1326,728,MD.pass,sh,{r:16,s:20});mr_key(cx,1530,728,MD.pass,sh,{r:16,s:20});
+      md_T(cx,"every reader shows who it is",1400,820,{w:700,size:28,align:"center",col:MD.pass,a:sh});}},
+    // later: every reader written down in the data project, so a change to the measure names who it touches
+    {later:true,at:c.known-0.6,place:"map",keys:[[0,960,540,1.0]],push:0.02,draw:(cx,tt)=>{
+      const wa=ag_in(tt,T.written-0.4,0.5);md_window(cx,180,200,1560,640,{logo:"dbt",product:"dbt",title:"Exposures: who reads the measure",a:wa,k:mr_k(tt,T.written-0.4),draw:(b,bd)=>{
+        const ch=ag_io(tt,T.change-0.1,T.change+2.6,0.4),m=mr_measure(b,bd.x+40,bd.y+190,480,{sub:false,lit:ch});
+        if(ch>0)md_pill(b,bd.x+280,bd.y+150,"a change",{col:MD.wait,size:28,a:ch});
+        MR_EXPOS.forEach(([n,o],i)=>{const y=bd.y+24+i*96,ea=ag_in(tt,T.written-0.1+i*0.2,0.4),lit=ag_io(tt,T.names-0.2+i*0.18,T.names+2.4,0.3);
+          const pts=md_curve([m.x+m.w,m.y+59],[bd.x+880,y+36],{bend:0.5});md_lane(b,pts,lit>0.5?MD.wait:MD.agreed,ea*0.9,{t:tt});if(lit>0)md_flow(b,pts,tt,{col:MD.wait,a:lit,every:1.2});
+          mr_expo(b,bd.x+880,y,560,n,Object.assign({a:ea,lit,t:tt},o));});}});}},
+    // later: the rules, together
+    {later:true,at:c.where-0.6,place:"map",keys:[[0,960,540,1.0]],push:0.02,draw:(cx,tt)=>{
+      mr_rule(cx,300,380,1320,["Read each measure where it's defined, through a door that carries it.","Read as the person it acts for, or as itself, with only what it needs.","Outside, share the least."],
+        {kick:"Every reader",a:ag_in(tt,T.where-0.5,0.5),k:mr_k(tt,T.where-0.5),lineA:[ag_in(tt,T.where-0.2,0.4),ag_in(tt,T.who-0.2,0.4),ag_in(tt,T.least-0.2,0.4)]});}},
+    // later: the standards already there, the wheel; the convention still improving; and what comes next
+    {later:true,at:c.wheel-0.6,place:"map",keys:[[0,960,540,1.0]],push:0.02,draw:(cx,tt)=>{
+      const wa=ag_in(tt,T.wheel-0.3,0.5);md_mark(cx,760,380,100,(tt-T.wheel+0.2)/2.2,wa);
+      md_T(cx,"Investigate · adapt · implement · iterate",760,560,{w:700,size:36,align:"center",a:ag_in(tt,T.inv-0.2,0.6)});
+      md_tag(cx,760,640,"Start from the official docs",{align:"center",col:MD.flow,icon:"doc",a:ag_in(tt,T.docs-0.3,0.5)});
+      const sa=ag_in(tt,T.conv-0.3,0.5);mr_sign(cx,"warn",1500,390,150,{a:sa,k:mr_k(tt,T.conv-0.3)});
+      md_tag(cx,1500,560,"New text in force 12 November 2026",{align:"center",col:MD.agreed,icon:"clock",a:ag_in(tt,T.force-0.3,0.5)});
+      md_textCard(cx,560,700,800,{kick:"Next",title:"Files as data and as context"},{icon:"doc",a:ag_in(tt,T.nextW-0.2,0.5),k:mr_k(tt,T.nextW-0.2)});}}],0.5);
+  MR_KICK(ctx,1-ag_in(t,c.breath,0.6));
+  md_end(ctx,S,t,c.breath,"More readers than people","One definition, every reader","Film 3 of 3","From tables to decisions");
+});
+
+// on the map, one room: each chapter after the first glides on from where the last one leaves the camera
+ag_cutInto(["door","app","agent","share","close"]);

@@ -143,8 +143,9 @@ function mr_reader(ctx,R,o){o=o||{};const a=o.a==null?1:o.a;if(a<=0.004)return n
   const left=R.x<m.x,down=R.y>m.y+mh,from=down?[m.x+m.w/2,m.y+mh]:left?[m.x,m.y+mh/2]:[m.x+m.w,m.y+mh/2],to=down?[R.x+R.w/2,R.y]:left?[R.x+R.w,R.y+55]:[R.x,R.y+55];
   if(o.lane>0){const pts=down?md_path([from,to]):md_curve(from,to,{bend:0.55});md_lane(ctx,pts,col,a*0.9,{u:o.lane,dash:o.dash,t:o.t});if(o.flow&&o.lane>=1)md_flow(ctx,pts,o.t||0,{col,a:a*o.flow,every:1.4,off:R.x*0.001});}
   return Object.assign({},b,{h:110});}
-// the number a reader gives, as a pill under or beside its card
-function mr_says(ctx,R,text,o){o=o||{};const b={x:R.x,y:R.y,w:R.w,h:110},x=o.x!=null?o.x:b.x+b.w-(o.inset||118),y=o.y!=null?o.y:b.y+b.h+2;md_pill(ctx,x,y,text,{col:o.col||MD.pass,icon:o.icon,size:28,a:o.a,k:o.k});}
+// the number a reader gives, as a pill under its card (beside it for the partner, whose card is low in the frame)
+function mr_says(ctx,R,text,o){o=o||{};const b={x:R.x,y:R.y,w:R.w,h:110},side=R.k==="partner"&&o.x==null,pw=md_tw(ctx,text,{w:800,size:28})+(o.icon?100:60),
+  x=o.x!=null?o.x:side?b.x+b.w+24+pw/2:b.x+b.w-(o.inset||118),y=o.y!=null?o.y:side?b.y+b.h/2:b.y+b.h+38;md_pill(ctx,x,y,text,{col:o.col||MD.pass,icon:o.icon,size:28,a:o.a,k:o.k});}
 
 /* ---------------------------------------------------------------- small cards */
 // a rule, in gold: o.kick ("The rule"), lines of 36 px (o.lineA, each line's opacity, to bring them in as they're said); returns its box
@@ -227,3 +228,42 @@ function mr_box(ctx,x,y,w,o){o=o||{};const h=o.h||110,a=o.a==null?1:o.a,box={x,y
 // a page of code, in mono: lines [text, colour or null], each 28 px; o.lineA (each line's opacity)
 function mr_code(ctx,x,y,w,h,lines,o){o=o||{};return md_window(ctx,x,y,w,h,{logo:o.logo||"databricks",product:o.product||"Databricks Apps",title:o.title||"app.py",a:o.a,k:o.k,edge:o.edge,draw:(c,b)=>{
   lines.forEach((l,i)=>{const la=o.lineA?o.lineA[i]:1;if(la>0.004)md_T(c,l[0],b.x+8,b.y+38+i*44,{w:500,size:28,f:"mono",col:l[1]||MD.ink,a:la});});}});}
+// words that wrap, some of them marked: parts [[text, colour or null], ...]; a marked run is drawn in its colour and underlined
+// (o.markA, 0 to 1, how far the mark has come in); returns the height drawn
+function mr_say(ctx,x,y,w,parts,o){o=o||{};const sz=o.size||32,lh=o.lh||46,fw=o.w||600,a=o.a==null?1:o.a,ma=o.markA==null?1:o.markA,sp=md_tw(ctx," ",{w:fw,size:sz});
+  const words=[];parts.forEach(p=>String(p[0]).split(" ").forEach((wd,i,arr)=>{if(wd)words.push({s:wd,col:p[1]});}));
+  let xx=x,yy=y,lines=1;const runs=[];for(const wd of words){const ww=md_tw(ctx,wd.s,{w:fw,size:sz});if(xx>x&&xx+ww>x+w){xx=x;yy+=lh;lines++;}runs.push({s:wd.s,x:xx,y:yy,w:ww,col:wd.col});xx+=ww+sp;}
+  if(a>0.004){ctx.save();ctx.globalAlpha*=a;for(const r of runs){const marked=r.col&&ma>0;md_T(ctx,r.s,r.x,r.y,{w:fw,size:sz,col:marked?mix(MD.ink,r.col,ma):MD.ink});
+      if(marked){ctx.save();ctx.globalAlpha*=ma;ctx.fillStyle=rgba(r.col,0.9);ctx.fillRect(r.x,r.y+8,r.w+(runs[runs.indexOf(r)+1]&&runs[runs.indexOf(r)+1].col&&runs[runs.indexOf(r)+1].y===r.y?sp:0),3);ctx.restore();}}ctx.restore();}
+  return lines*lh;}
+// a measure's words, as its metric view gives them: its name, its description and its synonyms; o.litA [name, description, synonyms]
+// (each 0 to 1), o.synLit (the synonym that's used, lit in gold); returns its box
+function mr_words(ctx,x,y,w,o){o=o||{};const a=o.a==null?1:o.a,h=430,box={x,y,w,h,l:[x,y+h/2],r:[x+w,y+h/2]};if(a<=0.004)return box;const L=o.litA||[0,0,0];ctx.save();ctx.globalAlpha*=a;
+  if(o.k!=null)ag_about(ctx,x+w/2,y+h/2,lerp(0.6,1,ag_spr(o.k,0,0.5)));md_card(ctx,x,y,w,h,{edge:MD.agreed,glow:0.8});md_icon(ctx,"contract",x+w-48,y+48,40,MD.agreed);
+  md_T(ctx,"METRIC VIEW",x+28,y+52,{w:800,size:28,ls:4,col:MD.agreed});
+  const row=(i,label,yy,draw)=>{if(L[i]>0){ctx.save();ctx.globalAlpha*=L[i];ctx.fillStyle=rgba(MD.agreed,0.1);rr(ctx,x+12,yy-38,w-24,draw.h,10);ctx.fill();ctx.restore();}md_T(ctx,label,x+28,yy,{w:600,size:28,col:MD.soft});draw(yy);};
+  row(0,"Name",y+112,Object.assign(yy=>md_T(ctx,MR_NAME,x+250,yy,{w:500,size:28,f:"mono"}),{h:56}));
+  row(1,"Description",y+180,Object.assign(yy=>{md_T(ctx,"What a teaching period's casual",x+250,yy,{w:600,size:28});md_T(ctx,"teaching costs: approved claims,",x+250,yy+38,{w:600,size:28});md_T(ctx,"plus on-costs",x+250,yy+76,{w:600,size:28});},{h:132}));
+  row(2,"Synonyms",y+330,Object.assign(yy=>{const sl=o.synLit||0;if(sl>0){ctx.save();ctx.globalAlpha*=sl;glow(ctx,x+400,yy-10,190,MD.agreed,0.3);ctx.restore();}
+    md_T(ctx,"sessional teaching cost",x+250,yy,{w:700,size:28,col:sl>0.5?MD.agreed:MD.ink});md_T(ctx,"casual teaching spend",x+250,yy+40,{w:600,size:28});},{h:94}));
+  ctx.restore();return box;}
+// a name of its own: a badge on a lanyard under the agent's sphere, as the agent films hang one, drawn for the dark (its name in mono)
+function mr_badge(ctx,x,y,text,o){o=o||{};const a=o.a==null?1:o.a;if(a<=0.004)return;const drop=o.drop||40,sw=Math.sin((o.t||0)*1.3)*0.025,w=md_tw(ctx,text,{w:500,size:28,f:"mono"})+48,h=58;
+  ctx.save();ctx.globalAlpha*=a;ctx.translate(x,y);ctx.rotate(sw);ctx.strokeStyle=rgba(MD.flow,0.8);ctx.lineWidth=4;ctx.lineCap="round";ctx.beginPath();ctx.moveTo(-24,0);ctx.lineTo(-8,drop-8);ctx.moveTo(24,0);ctx.lineTo(8,drop-8);ctx.stroke();
+  ctx.fillStyle="#8a94a6";ctx.fillRect(-9,drop-12,18,12);md_card(ctx,-w/2,drop,w,h,{edge:MD.flow,glow:0.6,r:10,fill:"rgba(9,16,32,0.96)"});ctx.fillStyle=rgba(MD.flow,0.85);ctx.fillRect(-w/2+10,drop+5,w-20,4);
+  md_T(ctx,text,0,drop+40,{w:500,size:28,f:"mono",align:"center"});ctx.restore();}
+// the shared table as the partner reads it, where it lives: a dashed card with its name (mono), then the semester and a row for each
+// faculty; o.rowA (each row's opacity), o.semLit (the semester's line lit), o.edge; returns its box and its left port
+function mr_sharedTable(ctx,x,y,w,name,sem,rows,o){o=o||{};const rh=44,h=104+46+rows.length*rh+24,a=o.a==null?1:o.a,box={x,y,w,h,l:[x,y+52]};if(a<=0.004)return box;ctx.save();ctx.globalAlpha*=a;
+  if(o.k!=null)ag_about(ctx,x+w/2,y+h/2,lerp(0.6,1,ag_spr(o.k,0,0.5)));if(o.lit)glow(ctx,x+w/2,y+h/2,w*0.6,o.edge||MD.flow,0.3*o.lit);
+  md_card(ctx,x,y,w,h,{edge:o.edge||MD.flow,dash:[10,9],glow:0.6,r:14});md_icon(ctx,"table",x+38,y+52,36,MD.flow);md_T(ctx,name,x+72,y+46,{w:500,size:28,f:"mono"});md_T(ctx,"shared, read in place",x+72,y+84,{w:600,size:28,col:MD.flow});
+  ctx.strokeStyle="rgba(170,200,245,0.22)";ctx.lineWidth=1.2;ctx.beginPath();ctx.moveTo(x+20,y+104);ctx.lineTo(x+w-20,y+104);ctx.stroke();
+  const sl=o.semLit||0;if(sl>0){ctx.save();ctx.globalAlpha*=sl;ctx.fillStyle=rgba(MD.ink,0.08);rr(ctx,x+12,y+112,w-24,40,8);ctx.fill();ctx.restore();}md_T(ctx,sem,x+28,y+142,{w:600,size:28,col:MD.soft});
+  rows.forEach((r,i)=>{const ra=o.rowA?o.rowA[i]:1;if(ra<=0.004)return;const yy=y+150+i*rh;md_T(ctx,r[0],x+28,yy+30,{w:600,size:28,a:ra});md_T(ctx,r[1],x+w-28,yy+30,{w:700,size:28,align:"right",a:ra});});
+  ctx.restore();return box;}
+// a reader as the data project writes it down (a dbt exposure): a small card with its logo, the agent's sphere or an icon, and its
+// name in mono; o.lit (0 to 1, lit in o.col); returns its box and its left port
+function mr_expo(ctx,x,y,w,name,o){o=o||{};const h=72,a=o.a==null?1:o.a,box={x,y,w,h,l:[x,y+h/2]};if(a<=0.004)return box;const lit=o.lit||0,col=o.col||MD.wait;ctx.save();ctx.globalAlpha*=a;
+  if(lit>0)glow(ctx,x+w/2,y+h/2,w*0.55,col,0.3*lit);md_card(ctx,x,y,w,h,{edge:lit>0.5?col:null,glow:0.5+0.6*lit,r:14});
+  if(o.agent)ag_model(ctx,x+38,y+h/2,20,{t:o.t||0,core:0.8,think:0.1});else if(o.logo)logo(ctx,o.logo,x+20,y+h/2-18,36);else md_icon(ctx,o.icon||"view",x+38,y+h/2,32,MD.flow);
+  md_T(ctx,name,x+76,y+h/2+10,{w:500,size:28,f:"mono"});ctx.restore();return box;}
