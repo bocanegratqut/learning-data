@@ -282,7 +282,7 @@ scene("map",(ctx,S,t,sc)=>{const c=sc.cues,P=ob_once(sc,"P",()=>({name:wAt(sc,"w
       ob_person(x,"sam",tt,{});ag_roomLight(x,1);ob_personCard(x,"sam",ag_in(tt,c.night+0.3,0.5));
       const bad=ag_io(tt,P.failed,P.back+0.6,0.5),gone=ag_in(tt,P.back,0.6);
       ob_list(x,520,190,640,{kick:"Each night",title:"each tool's rights against the map",a:ag_in(tt,c.night+0.4,0.5),k:ag_spr(tt,c.night+0.4),
-        rows:["Unity Catalog","Unity Gateway","GitHub","dbt"].map((n,i)=>{const ok=ag_in(tt,P.compares+i*0.3,0.4);
+        rows:["Unity Catalog","Unity Gateway","the team's memory","GitHub"].map((n,i)=>{const ok=ag_in(tt,P.compares+i*0.3,0.4);
           return{text:n,marks:i===0?[["tick",ok*(1-bad)],["cross",bad]]:[["tick",ok]],col:i===0&&bad>0.5?AG.amber:null,hl:i===0?bad:0,hlCol:AG.amber};})});
       // Tuesday, by hand: the right to change Planning's production tables, which the map doesn't hold; caught, then taken back
       const ta=ag_in(tt,P.given,0.5)*(1-ag_in(tt,c.oneway-0.6,0.5));

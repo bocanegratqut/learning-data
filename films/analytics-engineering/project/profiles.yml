@@ -21,8 +21,8 @@ credentials:
 
     # An agent's run, under its own name: its service principal signs in with a pass GitHub gives the run, which
     # the run writes to a file (agents/<agent>/workflow.yml) and Databricks takes because the service principal's
-    # federation policy names the repository and the run's environment. No secret is kept anywhere: a pass lasts
-    # minutes. It builds only in schemas of its own in the development catalog, as its role's grants allow.
+    # federation policy names the repository and the run's environment. There's no secret for the agent to see or
+    # leak: a pass lasts minutes. It builds only in schemas of its own in the development catalog, as its grants allow.
     agent:
       type: databricks
       auth_type: file-oidc
