@@ -39,9 +39,9 @@ scene("signs",(ctx,S,t,sc)=>{const c=sc.cues,T=mr_once(sc,"T",()=>({
       md_label(cx,960,250,"A sharp bend ahead, before 1968",{align:"center",a:ag_in(tt,T.differ-0.2,0.5)});
       MR_PLATES.forEach((p,i)=>{const x=i%2?1300:620,y=i<2?420:600;mr_sign(cx,"plate",x,y,0,{text:p,size:34,a:ag_in(tt,T.words-0.3+i*0.3,0.4),k:mr_k(tt,T.words-0.3+i*0.3)});});
       md_tag(cx,960,760,"in each country's own language",{align:"center",col:MD.soft,a:ag_in(tt,T.lang-0.3,0.5)});}},
-    // a driver from abroad passes a warning in words, and misses the bend
-    {at:c.miss-0.5,place:"mrRoad",keys:[[0,960,540,1.0],[T.crashW-1.6,900,560,1.1]],d:2.4,push:0,draw:(cx,tt)=>{
-      mr_sign(cx,"plate",MR_SIGNX,MR_SIGNY-10,0,{text:MR_PLATES[1],size:32,post:70,a:ag_in(tt,c.miss-0.5,0.5)});
+    // a driver from abroad passes a warning in words, and misses the bend (a cut: the plate's words were just on the wall of plates)
+    {at:c.miss-0.5,cut:true,place:"mrRoad",keys:[[0,960,540,1.0],[T.crashW-1.6,900,560,1.1]],d:2.4,push:0,draw:(cx,tt)=>{
+      mr_sign(cx,"plate",MR_SIGNX,MR_SIGNY-10,0,{text:MR_PLATES[1],size:32,post:70});
       const t0=c.miss-0.3,u=clamp((tt-t0)/(T.crashW-t0),0,1),hit=ag_in(tt,T.crashW-0.05,0.15),q=mr_carOn(cx,MR_MISS,u,{lights:1-0.6*ag_in(tt,T.crashW+0.6,1.2)});
       const pa=ag_in(tt,T.never-0.2,0.4)*(1-hit);if(pa>0)md_pill(cx,q.x,q.y-86,"?",{col:MD.wait,a:pa,size:32});
       if(hit>0){const f=Math.exp(-Math.max(0,tt-T.crashW)*0.9);glow(cx,q.x-40,q.y,150,MD.fail,0.55*hit*(0.35+0.65*f));md_icon(cx,"warn",q.x-40,q.y-100,54,MD.fail,{a:hit});}}},
@@ -81,7 +81,9 @@ scene("signs",(ctx,S,t,sc)=>{const c=sc.cues,T=mr_once(sc,"T",()=>({
         if(isBad&&bad>0)mr_says(cx,R,"A$1.56M",{col:MD.fail,icon:"cross",a:bad});
         if(isAs&&as>0){mr_key(cx,R.x+R.w-30,R.y-4,MD.fail,as);md_tag(cx,R.x+60,R.y+150,"other faculties' claims",{col:MD.personal,icon:"lock",a:as});}
         if(good>0){mr_key(cx,R.x+R.w-30,R.y-4,MD.pass,good);
-          if(R.k!=="partner")mr_says(cx,R,"A$1.84M",{a:ag_in(tt,T.sameN-0.2+i*0.12,0.4)});else mr_says(cx,R,"totals by faculty",{a:ag_in(tt,T.sameN+0.4,0.4)});}});}}],0.5);
+          if(R.k!=="partner")mr_says(cx,R,"A$1.84M",{a:ag_in(tt,T.sameN-0.2+i*0.12,0.4)});else mr_says(cx,R,"totals by faculty",{a:ag_in(tt,T.sameN+0.4,0.4)});}});}},
+    // later: the map left bare, so the title card's words come in over nothing (legible.py --overlaps)
+    {later:true,at:c.breath+0.1,place:"map",keys:[[0,960,540,1.0]],push:0,draw:()=>{}}],0.5);
   md_title(ctx,S,t,c.breath,"More readers than people","One definition, every reader","FILM 3 OF 3 · FROM TABLES TO DECISIONS");
 });
 
@@ -383,7 +385,9 @@ scene("close",(ctx,S,t,sc)=>{const c=sc.cues,T=mr_once(sc,"T",()=>({
       md_tag(cx,760,640,"Start from the official docs",{align:"center",col:MD.flow,icon:"doc",a:ag_in(tt,T.docs-0.3,0.5)});
       const sa=ag_in(tt,T.conv-0.3,0.5);mr_sign(cx,"warn",1500,390,150,{a:sa,k:mr_k(tt,T.conv-0.3)});
       md_tag(cx,1500,560,"New text in force 12 November 2026",{align:"center",col:MD.agreed,icon:"clock",a:ag_in(tt,T.force-0.3,0.5)});
-      md_textCard(cx,560,700,800,{kick:"Next",title:"Files as data and as context"},{icon:"doc",a:ag_in(tt,T.nextW-0.2,0.5),k:mr_k(tt,T.nextW-0.2)});}}],0.5);
+      md_textCard(cx,560,700,800,{kick:"Next",title:"Files as data and as context"},{icon:"doc",a:ag_in(tt,T.nextW-0.2,0.5),k:mr_k(tt,T.nextW-0.2)});}},
+    // later: the map left bare, so the end card's words come in over nothing
+    {later:true,at:c.breath+0.1,place:"map",keys:[[0,960,540,1.0]],push:0,draw:()=>{}}],0.5);
   MR_KICK(ctx,1-ag_in(t,c.breath,0.6));
   md_end(ctx,S,t,c.breath,"More readers than people","One definition, every reader","Film 3 of 3","From tables to decisions");
 });
