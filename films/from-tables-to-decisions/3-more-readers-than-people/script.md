@@ -100,7 +100,7 @@ The module's look, assumed on 5 November 2026 for the author to review: the intr
 - **Carried across cuts:** the gold measure card, from the opening's ring of readers to every chapter and back to the ring at the close; the plate in German, from the wall of plates to the bend (a cut); the car reading a sign, from the opening to the agent's chapter and the close.
 - **Phone legibility:** words at least 28 px in the 1920 px frame after zoom, laid out from the drawn size; nothing below y ≈ 890. `legible.py --overlaps` finds no words over others.
 - **Motion:** spring and settle for cards and pills; a slow camera, at least 1.4 s with a sine ease; in one place the camera glides from one framing to the next and only what changes fades; each new moment on the map is a later moment (`later:true`), so what was there leaves first; a cut between the night and the road where the plate's words carry over; people fade whole; arms down.
-- **Poster:** the ring of readers, every one with its green key and the same number, from *A door that didn't carry it*'s close (`["door", "same", 1.5]`).
+- **Poster:** the ring of readers round the measure, every one with its green key and the same number, and "totals by faculty" beside the partner, from the opening's last line (`["signs", "right", 5.7]`).
 
 ## Script
 
@@ -184,11 +184,11 @@ In all 8:00.7, 1,053 words, 131 words a minute, the voice 73% of the time; no se
 
 The film can stop at the end of three chapters, with one question each (`site/assets/more-readers-than-people/think.en.js` and `think.es.js`).
 
-| After | Question | Answer |
-|---|---|---|
-| A door that didn't carry it | The budget pack's report said A$1.56 million under the measure's own name. What went wrong? | It was built through the mirror, where metric views don't appear, so it counted its own way, the pay paid, and gave it the measure's name. Read from Databricks through Power BI's connector, as each analyst, it asks for the measure by name and gets A$1.84 million. |
-| An app that reads as you | Each faculty may see only its own claims in the planning app. Where does the film keep that rule, and why? | In Unity Catalog, as a filter by faculty on the claims, with the app reading as the person using it: the filter sees who's asking, so every tool that reads the claims keeps it, and nothing in the app's code decides who sees what. |
-| Outside, only the totals | Why does the share hold a small table of totals by faculty, and not the measure itself? | Ingrid's rule: totals by faculty, never by unit, since a unit with one tutor would give away that tutor's pay. And a metric view over claims with a filter can't be shared, so the share holds one table made from the measure, for semesters that have ended. |
+| After | Question | Right answer (option) | Near miss, and why it's wrong |
+|---|---|---|---|
+| A door that didn't carry it | Genie One said A$1.84 million for Health so far, and the budget pack's report said A$1.56 million under the same name. What went wrong? | Metric views don't appear in the mirror, so the report, built there, summed the pay paid and gave it the measure's name (3) | The mirror copied the claims overnight, and the report missed today's: the film says the mirror reads the data where it lives, without a copy |
+| An app that reads as you | In the planning app, each faculty may see only its own numbers. Where does the film keep that rule, and how does it hold? | In Unity Catalog, as a filter by faculty on the claims, with the app reading as the person using it (1) | The same filter, with the app reading as itself: then everyone using it shares the app's rights, and the filter sees the app, never the person |
+| Outside, only the totals | A group of universities outside reads casual teaching cost through a share. Why does the share hold a small table of totals by faculty? | A unit with one tutor would give away that tutor's pay, so the share holds only what the partner needs (2) | The share leaves out the units with one tutor: Ingrid's rule is totals by faculty, never by unit, and every other unit's numbers would still go out |
 
 ## Labs (candidates)
 

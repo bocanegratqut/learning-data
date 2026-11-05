@@ -11,6 +11,7 @@ Serving data to people, agents and systems. Rohan Desai, in Finance, asks what c
 <!-- films: made by site-tools/build_series.py's readme() -->
 | Film | Topic | Length | Chapters | Pause and think | Script |
 |---|---|---|---|---|---|
+| [More readers than people](https://data.learn-all.org/from-tables-to-decisions/more-readers-than-people/) | Serving every reader | 8 min | 6 | 3 questions | [script](3-more-readers-than-people/script.md) · [source](3-more-readers-than-people/source/README.md) |
 <!-- /films -->
 
 ## The look and the sound

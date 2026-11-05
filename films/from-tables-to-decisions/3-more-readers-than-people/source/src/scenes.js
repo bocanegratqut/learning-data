@@ -247,7 +247,7 @@ scene("agent",(ctx,S,t,sc)=>{const c=sc.cues,T=mr_once(sc,"T",()=>({
       const gb=mr_box(cx,800,425,370,{logo:"databricks",title:"Genie One",sub:"answers questions",a:ag_in(tt,T.genie-0.3,0.5),k:mr_k(tt,T.genie-0.3),edge:ag_in(tt,T.answers,0.4)>0.5?MD.pass:null});
       const m=mr_measure(cx,1260,396,560,{a:ag_in(tt,T.answers-0.4,0.5),k:mr_k(tt,T.answers-0.4),lit:ag_io(tt,T.same-0.2,T.same+1.8,0.4)});
       md_way(cx,"api",[270,480],ts.l,tt,{u:ag_sine(clamp((tt-T.tool+0.1)/0.6,0,1)),a:ag_in(tt,T.tool-0.3,0.4)});
-      md_way(cx,"api",ts.r,gb.l,tt,{u:ag_sine(clamp((tt-T.genie-0.2)/0.6,0,1)),a:ag_in(tt,T.genie-0.1,0.4)});
+      md_way(cx,"api",ts.r,gb.l,tt,{u:ag_sine(clamp((tt-T.tool-0.4)/0.6,0,1)),a:ag_in(tt,T.tool+0.2,0.4)});
       md_way(cx,"query",gb.r,[m.x,m.y+m.h/2],tt,{u:ag_sine(clamp((tt-T.answers+0.2)/0.6,0,1)),a:ag_in(tt,T.answers-0.2,0.4)});}},
     // later: its instructions use a word the measure was given; like a car reading the signs, it reads a measure's words
     {later:true,at:c.words-0.6,place:"map",keys:[[0,960,540,1.0]],push:0.02,draw:(cx,tt)=>{
