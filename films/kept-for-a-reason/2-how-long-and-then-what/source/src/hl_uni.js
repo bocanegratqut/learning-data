@@ -44,14 +44,16 @@ function hl_pane(c,x,y,w,h,name,o){o=o||{};const a=o.a==null?1:o.a;if(a<=0)retur
 function hl_strike(c,x,y,w,p){if(p<=0)return;c.save();c.strokeStyle=rgba(DP.F.coral,1);c.lineWidth=5;c.lineCap="round";c.shadowColor=rgba(DP.F.coral,0.8);c.shadowBlur=10;
   c.beginPath();c.moveTo(x,y);c.lineTo(x+w*clamp(p,0,1),y-4*clamp(p,0,1));c.stroke();c.restore();}
 // a band of solid colour across something, its word in dark capitals (the kit's band), settling in by u
-function hl_bandAcross(c,x,y,w,h,col,text,u){if(u<=0)return;c.save();c.globalAlpha*=clamp(u*2,0,1);const k=ag_spr(u,0,1),yy=y-(1-k)*30;
+function hl_bandAcross(c,x,y,w,h,col,text,u){if(u<=0)return;const tw=dp_tw(c,String(text).toUpperCase(),{w:800,size:30,ls:5})+64;if(w<tw){x-=(tw-w)/2;w=tw;}
+  c.save();c.globalAlpha*=clamp(u*2,0,1);const k=ag_spr(u,0,1),yy=y-(1-k)*30;
   c.save();c.shadowColor=rgba(dp_f(col),0.7);c.shadowBlur=20;rr(c,x,yy,w,h,10);c.fillStyle=rgba(dp_f(col),1);c.fill();c.restore();
   const g=c.createLinearGradient(0,yy,0,yy+h);g.addColorStop(0,"rgba(255,255,255,0.28)");g.addColorStop(0.5,"rgba(255,255,255,0)");rr(c,x,yy,w,h,10);c.fillStyle=g;c.fill();
   dp_T(c,String(text).toUpperCase(),x+w/2,yy+h/2+10,{w:800,size:30,ls:5,align:"center",col:DP.on});c.restore();}
 
 /* ---------------------------------------------------------------- the retention schedule */
 // The university's schedule: a frosted table, its five columns, its rows coming in (rows[i] 0 to 1), each row's reason a green pill
-// (pills 0 to 1 lights them), the owners' names (cyan, an identity), the line saying who keeps it, and the owners' signature
+// (pills 0 to 1 lights them), the owners' names (cyan, an identity; they may come first), the line saying who keeps it, and the
+// owners' signature
 const HL_SCHED={x:100,y:118,w:1720,cols:[[34,"Kind of record"],[504,"Owner"],[760,"Why"],[1010,"How long"],[1450,"Then"]],
   rows:[[["Pay records","contracts, hours, pay"],"Ingrid Holm","law",["7 years after","each contract ends"],"Deleted"],
         [["Academic records","degrees, results"],"Mei Tanaka","public task",["For good"],"Kept for good"],
@@ -63,9 +65,12 @@ function hl_schedule(c,o){o=o||{};const S=HL_SCHED,a=o.a==null?1:o.a;if(a<=0)ret
   // the column heads, each lighting as it's named
   for(let i=0;i<5;i++){const [cx,name]=S.cols[i],l=clamp(head[i],0,1);dp_T(c,name,S.x+cx,S.y+124,{w:700,size:28,col:l>0.5?"cyan":"mut",ls:1});}
   c.fillStyle=rgba(DP.ice,0.4);c.fillRect(S.x+24,S.y+140,S.w-48,1.6);
-  for(let r=0;r<4;r++){const u=clamp(rows[r],0,1);if(u<=0)continue;const R=S.rows[r],y=y0+r*rh,dy=(1-ag_eo(u))*20;c.save();c.globalAlpha*=clamp(u*1.5,0,1);c.translate(0,dy);
+  for(let r=0;r<4;r++){const u=clamp(rows[r],0,1),R=S.rows[r],y=y0+r*rh;
+    // the owner's name, which may come before the rest of the row (o.owners: one value for every row, or one for each)
+    if(Array.isArray(o.owners)&&o.owners[r]>0)dp_pill(c,S.x+S.cols[1][0],y+44,R[1],"identity",{a:clamp(o.owners[r],0,1)});
+    if(u<=0)continue;const dy=(1-ag_eo(u))*20;c.save();c.globalAlpha*=clamp(u*1.5,0,1);c.translate(0,dy);
     R[0].forEach((l,i)=>dp_T(c,l,S.x+S.cols[0][0],y+38+i*38,{w:i?500:700,size:28,col:i?"mut":"ink"}));
-    const owner=clamp(o.owners==null?1:o.owners,0,1);if(owner>0)dp_pill(c,S.x+S.cols[1][0],y+44,R[1],"identity",{a:owner});
+    const owner=Array.isArray(o.owners)?0:clamp(o.owners==null?1:o.owners,0,1);if(owner>0)dp_pill(c,S.x+S.cols[1][0],y+44,R[1],"identity",{a:owner});
     dp_pill(c,S.x+S.cols[2][0],y+44,R[2],"allowed",{a:clamp(o.pills==null?1:o.pills,0,1),glow:12+18*(o.pillGlow||0)});
     R[3].forEach((l,i)=>dp_T(c,l,S.x+S.cols[3][0],y+38+i*38,{w:600,size:28,col:i?"mut":"ink"}));
     dp_T(c,R[4],S.x+S.cols[4][0],y+38,{w:700,size:28});
@@ -80,16 +85,18 @@ const HL_CONTRACTS=[["T-23014","Semester 1, 2023","23 Jun 2030"],["T-23187","Sem
   ["T-24166","Semester 2, 2024","15 Nov 2031"],["T-25033","Semester 1, 2025","27 Jun 2032"],["T-25172","Semester 2, 2025","21 Nov 2032"],
   ["T-26041","Semester 1, 2026","27 Jun 2033"],["T-26188","Semester 2, 2026","20 Nov 2033"]];
 const HL_CX=540,HL_CY=160,HL_CH=80;
-// one contract's card (u 0 to 1 coming in), its end date's slip (p 0 to 1), dimmed by dim
+// one contract's card (u 0 to 1 coming in), its end date's slip (p 0 to 1), dimmed by dim, the slip lit by o.lit (0 to 1)
 function hl_contract(c,i,u,p,o){o=o||{};if(u<=0)return;const [id,sem,until]=HL_CONTRACTS[i],y=HL_CY+i*HL_CH,dim=o.dim||0;c.save();c.globalAlpha*=clamp(u*1.5,0,1)*(1-0.6*dim);
   c.translate((1-ag_eo(u))*-30,0);dp_panel(c,HL_CX,y,470,64,{r:12,glowR:20,behind:o.behind});
   dp_T(c,id,HL_CX+24,y+43,{w:700,size:28,f:"mono"});dp_T(c,sem,HL_CX+190,y+43,{w:500,size:28,col:"mut"});c.restore();
-  if(p>0){c.save();c.globalAlpha*=clamp(p*1.5,0,1)*(1-0.6*dim);const k=ag_spr(p,0,0.9);c.translate(0,(1-k)*-14);dp_slip(c,HL_CX+500,y-3,"Until "+until,"grey",{ink:true,size:28,behind:o.behind});c.restore();}}
+  if(p>0){c.save();c.globalAlpha*=clamp(p*1.5,0,1)*(1-0.6*dim);const k=ag_spr(p,0,0.9);c.translate(0,(1-k)*-14);const b=dp_slip(c,HL_CX+500,y-3,"Until "+until,"grey",{ink:true,size:28,behind:o.behind});
+    if(o.lit>0&&b){c.globalCompositeOperation="lighter";c.shadowColor=rgba(DP.F.cyan,0.9*o.lit);c.shadowBlur=22;rr(c,b.x,b.y,b.w,b.h,b.h/2);c.strokeStyle=rgba(DP.F.cyan,0.55*o.lit);c.lineWidth=2.4;c.stroke();}
+    c.restore();}}
 
 /* ---------------------------------------------------------------- a record's line through time */
 // a line of light from a record's event to past its end date: the end date marked, and the two coral zones, too soon before it and
 // too long after it, each lighting 0 to 1
-function hl_lifeline(c,o){o=o||{};const a=o.a==null?1:o.a;if(a<=0)return;const x0=200,x1=1720,xe=1060,y=330;c.save();c.globalAlpha*=a;
+function hl_lifeline(c,o){o=o||{};const a=o.a==null?1:o.a;if(a<=0)return;const x0=200,x1=1720,xe=1060,y=470;c.save();c.globalAlpha*=a;
   for(const [za,zb,l,word] of [[x0+120,xe,o.soon||0,"Too soon"],[xe,x1,o.long||0,"Too long"]]){c.save();c.globalAlpha*=0.35+0.65*l;
     rr(c,za+6,y-64,zb-za-12,128,16);c.fillStyle=rgba(DP.F.coral,0.10+0.16*l);c.fill();c.strokeStyle=rgba(DP.F.coral,0.5+0.5*l);c.lineWidth=2;c.stroke();
     dp_T(c,word,(za+zb)/2,y-88,{w:700,size:30,align:"center",col:"coral"});c.restore();}

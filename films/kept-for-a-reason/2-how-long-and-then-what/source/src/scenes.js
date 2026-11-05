@@ -5,16 +5,23 @@
 
 DP_PEOPLE.push([HL_CLERK,"lamp"],"ingrid","yusuf","linh");
 
-// the clerk at her cabinets, her far hand on the top drawer's handle of the cabinet beside her (the drawer she has just closed)
-const HL_CLERK_AT=[426,591,1.0],HL_CLERK_POSE={near:[4,34,"rest"],far:[10,100,"hold"]};
-function hl_clerk(c,t,a){if(a<=0)return;const [x,y,s]=HL_CLERK_AT;const draw=cc=>dp_person(cc,HL_CLERK,x,y,s,{light:"lamp",t,pose:HL_CLERK_POSE,gaze:[3,1]});
+// the clerk at her cabinets, a manila folder of papers held to her chest
+const HL_CLERK_AT=[225,591,1.0];
+function hl_folder(c,x,y,w,h,rot){c.save();c.translate(x,y);c.rotate(rot||0);
+  c.fillStyle="rgb(232,226,208)";c.fillRect(-w/2+12,-h/2-9,w-26,h);c.fillStyle="rgba(70,58,44,0.25)";c.fillRect(-w/2+12,-h/2-9,w-26,1.5);
+  const g=c.createLinearGradient(0,-h/2-22,0,h/2);g.addColorStop(0,"rgb(224,198,142)");g.addColorStop(1,"rgb(186,156,102)");
+  c.save();c.shadowColor="rgba(0,0,0,0.4)";c.shadowBlur=10;c.shadowOffsetY=4;c.fillStyle=g;c.beginPath();c.moveTo(-w/2,-h/2);c.lineTo(w/2-130,-h/2);
+  c.lineTo(w/2-120,-h/2-22);c.lineTo(w/2-30,-h/2-22);c.lineTo(w/2-20,-h/2);c.lineTo(w/2,-h/2);c.lineTo(w/2,h/2);c.lineTo(-w/2,h/2);c.closePath();c.fill();c.restore();
+  c.fillStyle="rgba(255,240,210,0.45)";c.fillRect(-w/2,-h/2,w-130,2);c.restore();}
+function hl_clerk(c,t,a){if(a<=0)return;const [x,y,s]=HL_CLERK_AT;
+  const draw=cc=>dp_person(cc,HL_CLERK,x,y,s,{light:"lamp",t,pose:"hold",gaze:[3,1],hold:(xx,h)=>hl_folder(xx,h.near[0]+60,h.near[1]-60,240,170,-0.1)});
   if(a>=1)draw(c);else{const [bc,bx]=ag_buf("clerk",c.canvas.width,c.canvas.height);bx.setTransform(c.getTransform());bx.clearRect(-4000,-4000,9000,9000);draw(bx);
     c.save();c.setTransform(1,0,0,1,0,0);c.globalAlpha=a;c.drawImage(bc,0,0);c.restore();}}
 
 /* ---------------------------------------------------------------- 1 · A flood of paper */
 scene("flood",(ctx,S,t,sc)=>{
   const tGlide=wAt(sc,"war","country")-0.4,tWall=wAt(sc,"war","office")-0.3,tFour=wAt(sc,"cabinets","four"),tRooms=wAt(sc,"cabinets","rooms"),tFloors=wAt(sc,"cabinets","floors");
-  const tFlood=wAt(sc,"flood","flood"),tYear=wAt(sc,"flood","every year"),tWorth=wAt(sc,"flood","building");
+  const tCab=sc.cues.cabinets,tFlood=wAt(sc,"flood","flood"),tYear=wAt(sc,"flood","every year"),tWorth=wAt(sc,"flood","building");
   const tMost=wAt(sc,"eighty","most"),tEighty=wAt(sc,"eighty","eighty");
   const tList=wAt(sc,"list","destroyed"),tLift=wAt(sc,"list","list"),tCong=wAt(sc,"list","Congress"),tPile=wAt(sc,"again","every new pile"),tNew=wAt(sc,"again","new list");
   const tKept=wAt(sc,"kept","simply")-1.6,tJob=wAt(sc,"kept","nobody"),tRent=wAt(sc,"cost","rent"),tStaff=wAt(sc,"cost","staff"),tSteel=wAt(sc,"cost","steel");
@@ -23,13 +30,13 @@ scene("flood",(ctx,S,t,sc)=>{
   ag_shots(ctx,S,t,sc.dur,[
     // Washington's avenue at night; the camera glides in to a lit window
     {at:0,place:"hlStreet",push:0.02,d:tWall-tGlide,keys:[[0,960,540,1],[tGlide,HL_STREET_WINDOW.x,HL_STREET_WINDOW.y,2.4]]},
-    // the clerk at her cabinets; four folder tabs rise from an open drawer; the camera draws back along the row; boxes pile up
-    {at:tWall,place:"hlWall",dis:0.9,push:0.015,keys:[[tWall,900,600,1.12],[tFour,960,540,1]],draw:(x,tt)=>{
-      hl_boxes(x,hl_wallX(1)+20,HL_WALL.top-16,HL_WALL.w-40,ag_in(tt,tRooms,1.2),3);hl_boxes(x,hl_wallX(3)+20,HL_WALL.top-16,HL_WALL.w-40,ag_in(tt,tRooms+0.3,1.2),7);
-      hl_wallDrawer(x,0,{});hl_wallDrawer(x,1,{out:0.06*(1-ag_eo(clamp((tt-tWall-0.4)/0.5,0,1)))});
-      hl_wallDrawer(x,3,{});hl_wallDrawer(x,4,{});
-      const d=hl_wallDrawer(x,2,{out:1,full:0.9}),cx=d.x+d.w/2;
-      tabs.forEach(([w,at],i)=>hl_tab(x,cx+(i%2?70:-70),668-i*80,w,ag_eo(clamp((tt-at+0.25)/0.7,0,1)),{rise:120+i*80}));
+    // the clerk at her cabinets: each top drawer's label is typed as its kind of paper is named; as the cabinets fill, the payrolls'
+    // drawer slides open, full, and shuts; boxes pile on the cabinets' tops; the camera draws back along the row
+    {at:tWall,place:"hlWall",dis:0.9,push:0.015,keys:[[tWall,960,600,1.1],[tFour,960,540,1]],draw:(x,tt)=>{
+      hl_boxes(x,hl_wallX(2)+20,HL_WALL.top-16,HL_WALL.w-40,ag_in(tt,tRooms,1.2),3);hl_boxes(x,hl_wallX(3)+20,HL_WALL.top-16,HL_WALL.w-40,ag_in(tt,tRooms+0.3,1.2),7);
+      const typed=k=>{const [w,at]=tabs[k];return w.slice(0,Math.floor(w.length*clamp((tt-at+0.1)/0.45,0,1)));};
+      const op=ag_eo(clamp((tt-tCab+0.3)/0.8,0,1))*(1-ag_eo(clamp((tt-tRooms+0.3)/0.7,0,1)));
+      hl_wallDrawer(x,0,{});[1,2,4].forEach(i=>hl_wallDrawer(x,i,{big:true,label:typed(i-1),typeOf:tabs[i-1][0]}));hl_wallDrawer(x,3,{big:true,label:typed(2),typeOf:tabs[2][0],out:op,full:1});
       hl_clerk(x,tt,1);}},
     // the building in section, its floors filling; the Archives beside it filling too; ten drawers, eight dimmed; the lists
     {at:tFloors,place:"hlNight",dis:0.8,push:0.015,draw:(x,tt)=>{
@@ -61,7 +68,7 @@ scene("flood",(ctx,S,t,sc)=>{
       [["To prove a claim",tClaim,560],["To prove their service",tServ,880]].forEach(([w,at,px],i)=>{const up=ag_eo(clamp((tt-at)/1.0,0,1))*(1-sink);if(up<=0)return;
         const y=lerp(640,380+i*120,up);x.save();x.globalAlpha*=clamp(up*2,0,1);x.save();x.shadowColor="rgba(255,226,180,0.55)";x.shadowBlur=24;x.fillStyle="rgb(246,236,212)";x.fillRect(px-20,y-46,dp_tw(x,w,{w:700,size:30})+40,70);x.restore();
         dp_T(x,w,px,y+3,{w:700,size:30,col:HL_INK});x.restore();});
-      if(tt>tLost){const u=ag_in(tt,tLost+0.6,0.7);dp_slip(x,520,420,"Lost with the rest","coral",{a:u});}}}
+      if(tt>tLost){const u=ag_in(tt,tLost+0.6,0.7);dp_pill(x,640,470,"Lost with the rest","closed",{a:u,align:"center"});}}}
   ],0.8);
   dp_kicker(ctx,"Opening story","Washington, 1943",{a:hl_v(t,0.5,tGlide+0.4,0.8)});
 });
@@ -74,7 +81,7 @@ scene("before",(ctx,S,t,sc)=>{
   const tOther=wAt(sc,"other","destroyed"),tOpen=sc.cues.saved,tSaves=wAt(sc,"saved","saves"),tBudget=wAt(sc,"budget","budget");
   const tSteps=sc.cues.today-0.4,tGood=wAt(sc,"today","kept for good"),tCase=sc.cues.family-0.3,tHall=sc.cues.uni-0.3,tNoEnd=wAt(sc,"uni","no end date"),tEnd=wAt(sc,"end","end date");
   // the drawers that empty, one at a time, each with its own note; the one under the band stays full
-  const empties=[[1,tOpen+2.0],[2,tOpen+3.6],[4,tOpen+5.2]];
+  const empties=[[1,tOpen+2.0,"Orders · 1943"],[4,tOpen+3.8,"Letters · 1943"]];
   const label="Payrolls · 1944",typed=Math.floor(label.length*clamp((t-tLabel)/1.1,0,1));
   ag_shots(ctx,S,t,sc.dur,[
     // the desk: the Act; who drafted it; the page turns to a schedule; its columns light; two stamps
@@ -82,25 +89,24 @@ scene("before",(ctx,S,t,sc)=>{
       hl_actPage(x,P,{turn:ag_sine(clamp((tt-tTurn)/1.3,0,1)),litLong:hl_v(tt,tLong,tThen,0.4),litThen:ag_in(tt,tThen,0.4)});
       hl_stamp(x,P.x+P.w/2+40,P.y+P.h-210,"Approved · the Archivist",ag_in(tt,tArch,0.5),-0.05);
       hl_stamp(x,P.x+P.w/2-20,P.y+P.h-110,"Approved · Congress",ag_in(tt,tCong,0.5),0.04);
-      dp_card(x,1420,150,400,{title:"7 July 1943"},{a:hl_v(tt,tSign,tTurn,0.6),k:ag_spr(tt,tSign,0.9)});
       const aC=hl_v(tt,tDraft,tTurn,0.6);dp_card(x,60,330,440,{title:"The National Archives"},{a:aC,k:ag_spr(tt,tDraft,0.9)});
       dp_card(x,1420,330,440,{title:"A committee of Congress"},{a:hl_v(tt,tComm,tTurn,0.6),k:ag_spr(tt,tComm,0.9)});
       dp_link(x,[500,420],[P.x,420],"grey",aC,{dot:false,alpha:0.7});dp_link(x,[P.x+P.w,420],[1420,420],"grey",hl_v(tt,tComm,tTurn,0.6),{dot:false,alpha:0.7});}},
-    // the cabinets: a label written before its papers; the drawer fills only after; a band for a claim; nothing any other way; the
-    // savings; the drawers empty one at a time, the one under the band left full
-    {at:tWall,place:"hlWall",dis:0.9,push:0.0,keys:[[tWall,1180,560,1.2],[tClaim,1300,560,1.12],[tOpen,960,540,1]],d:1.8,draw:(x,tt)=>{
-      const open=ag_eo(clamp((tt-tOpen)/0.8,0,1));
-      hl_wallDrawer(x,0,{});
-      for(const [i,te] of [[1,empties[0][1]],[4,empties[2][1]]]){const gone=ag_in(tt,te,0.6),shut=ag_eo(clamp((tt-te-0.7)/0.6,0,1));hl_wallDrawer(x,i,{out:open*(1-shut),full:1-gone});}
-      {const te=empties[1][1],gone=ag_in(tt,te,0.6),shut=ag_eo(clamp((tt-te-0.7)/0.6,0,1)),fl=ag_in(tt,tFill,0.9);
-        const d=hl_wallDrawer(x,2,{out:Math.max(ag_eo(clamp((tt-tLabel-1.2)/0.6,0,1))*(1-ag_in(tt,tFill+1.2,0.6)),open*(1-shut)),full:fl*(1-gone),big:true,label:label.slice(0,typed)});
-        // the folder that isn't written yet: an outline, sliding into the drawer
-        const fu=ag_eo(clamp((tt-tLabel-1.6)/0.9,0,1))*(1-ag_in(tt,tFill,0.5));if(fu>0){x.save();x.globalAlpha*=fu;x.setLineDash([10,8]);x.strokeStyle=rgba(DP.ice,0.9);x.lineWidth=3;
-          const fx=d.x+d.w/2,fy=lerp(560,d.y-20,fu);x.strokeRect(fx-120,fy-70,240,90);x.restore();}}
-      const d3=hl_wallDrawer(x,3,{out:open,full:1});
-      hl_bandAcross(x,d3.x-40,d3.y+80,d3.w+80,58,"closed","Kept until the claim is settled",ag_in(tt,tBand,0.8));
-      hl_clerk(x,tt,1);
-      dp_card(x,1180,130,620,{title:"No paper destroyed any other way"},{a:hl_v(tt,tOther,tSaves-0.3,0.6),k:ag_spr(tt,tOther,0.9)});
+    // the cabinets after the law, the clerk gone home: next year's payrolls get their drawer and its label before the papers exist; it
+    // fills only after; 1943's payrolls, about money claimed, under a band; nothing any other way; the savings: the drawers of 1943's
+    // orders and letters are emptied, one after the other, as their schedules say; the payrolls under the band stay
+    {at:tWall,place:"hlWall",dis:0.9,push:0.0,keys:[[tWall,1120,560,1.2],[tOpen,960,540,1]],d:1.8,draw:(x,tt)=>{
+      const open=ag_eo(clamp((tt-tOpen)/0.8,0,1)),emptied=([i,te,l])=>({i,big:true,label:l,out:open*(1-ag_eo(clamp((tt-te-0.7)/0.6,0,1))),full:1-ag_in(tt,te,0.6)});
+      // the drawers, the most open drawn last (an open drawer stands in front of its shut neighbours)
+      const dr=[{i:0},emptied(empties[0]),{i:2,big:true,label:"Payrolls · 1943",full:1},
+        {i:3,big:true,label:label.slice(0,typed),typeOf:label,out:ag_eo(clamp((tt-tLabel-1.2)/0.6,0,1))*(1-ag_in(tt,tFill+1.2,0.6)),full:ag_in(tt,tFill,0.9)},emptied(empties[1])];
+      const box={};dr.slice().sort((a,b)=>(a.out||0)-(b.out||0)).forEach(o=>box[o.i]=hl_wallDrawer(x,o.i,o));const d2=box[2],d=box[3];
+      // the papers not yet written: a folder drawn in dashes, sliding down into the new drawer and out of sight behind its front
+      const fu=clamp((tt-tLabel-1.4)/1.6,0,1);if(fu>0&&fu<1){const fx=d.x+d.w/2,fy=lerp(d.y-250,d.y+150,ag_sine(fu));x.save();x.globalAlpha*=Math.min(1,fu*5);
+        x.beginPath();x.rect(d.x-40,0,d.w+80,d.y);x.clip();x.setLineDash([12,9]);x.strokeStyle=rgba(DP.ice,0.95);x.lineWidth=3;
+        x.beginPath();x.moveTo(fx-120,fy+80);x.lineTo(fx-120,fy-60);x.lineTo(fx+10,fy-60);x.lineTo(fx+22,fy-84);x.lineTo(fx+100,fy-84);x.lineTo(fx+112,fy-60);x.lineTo(fx+120,fy-60);x.lineTo(fx+120,fy+80);x.stroke();x.restore();}
+      hl_bandAcross(x,d2.x-40,d2.y+100,d2.w+80,58,"closed","Kept until the claim is settled",ag_in(tt,tBand,0.8));
+      dp_card(x,1100,130,720,{title:"No paper destroyed any other way"},{a:hl_v(tt,tOther,tSaves-0.3,0.6),k:ag_spr(tt,tOther,0.9)});
       const cs=dp_card(x,1160,110,640,{title:"$927,000 saved",sub:"Army Air Forces alone · 1944"},{a:ag_in(tt,tSaves,0.6),k:ag_spr(tt,tSaves,0.9)});
       dp_slip(x,1160,cs.y+cs.h+14,"About the Archives' whole budget","grey",{a:ag_in(tt,tBudget,0.6),ink:true});}},
     // the Archives today: the few folders go up the steps into the light
@@ -123,24 +129,28 @@ scene("before",(ctx,S,t,sc)=>{
 });
 
 /* ---------------------------------------------------------------- 3 · Three lives of a record */
+// Ingrid and Yusuf at the hall's edges, looking in at the platform; between them, the block, then the three lives
+const HL_INGRID=[200,712,0.76],HL_YUSUF=[1720,712,0.76];
+function hl_pair(c,t,o){o=o||{};dp_person(c,"ingrid",HL_INGRID[0],HL_INGRID[1],HL_INGRID[2],{t,gaze:[3,0]});dp_person(c,"yusuf",HL_YUSUF[0],HL_YUSUF[1],HL_YUSUF[2],{t,flip:true,gaze:[3,0]});
+  if(o.names>0){dp_pill(c,322,566,"Ingrid Holm","identity",{a:o.names*(o.ingrid==null?1:o.ingrid)});dp_pill(c,1598,566,"Yusuf Demir","identity",{a:o.names*(o.yusuf==null?1:o.yusuf),align:"right"});}}
 scene("lives",(ctx,S,t,sc)=>{
   const tPay=wAt(sc,"pay","Pay records"),tApps=wAt(sc,"pay","applications"),tNever=wAt(sc,"never","Nothing"),tThree=wAt(sc,"three","three lives");
   const tUse=wAt(sc,"use","in use"),tLinh=wAt(sc,"use","Linh"),tArch=wAt(sc,"archived","archived"),tCold=wAt(sc,"archived","read rarely");
   const tDel=wAt(sc,"deleted","deleted"),tGood=wAt(sc,"good","kept for good"),tYear=sc.cues.year-0.3,tLeak=wAt(sc,"year","leak"),tPlan=wAt(sc,"plan","deleting"),tLaw=wAt(sc,"plan","the law");
   const panesA=hl_v(t,tThree,tYear,0.8);
-  ag_shots(ctx,S,t,sc.dur,[{at:0,place:"hlHall",push:0.0,keys:[[0,960,540,1],[tPay-0.4,1000,480,1.18],[tThree-0.6,960,540,1],[tYear,980,470,1.14],[tPlan+1.5,960,540,1]],d:1.8,draw:(x,tt)=>{
+  ag_shots(ctx,S,t,sc.dur,[{at:0,place:"hlHall",push:0.012,draw:(x,tt)=>{
     // the platform: full, nothing ever deleted; dimmed while the three lives are shown
     const bA=1-0.82*panesA,yrs=Math.round(lerp(2016,2026,clamp((tt-tLeak+1.5)/2.6,0,1))),coral=ag_in(tt,tLeak,1.2);
     const sh=[0,1,2,3,4,5,6].map(i=>({n:8,warm:i===6,coral:i===0?coral:0}));hl_block(x,sh,{a:bA,behind:"hlHall"});
-    dp_tag(x,1200,hl_shelfAt(1,7)[1]-31,"Pay records · since 2016","grey",{a:hl_v(tt,tPay,tThree-0.6,0.6)*bA,to:hl_shelfAt(1,7),p:ag_in(tt,tPay+0.2,0.6),size:28});
-    dp_tag(x,1200,hl_shelfAt(3,7)[1]-31,"Applications, not hired · since 2017","grey",{a:hl_v(tt,tApps,tThree-0.6,0.6)*bA,to:hl_shelfAt(3,7),p:ag_in(tt,tApps+0.2,0.6),size:28});
-    hl_bandAcross(x,HL_BLOCK.x-80,470,HL_BLOCK.w+160,64,"none","Nothing ever deleted",hl_v(tt,tNever,tThree-0.6,0.7));
+    dp_tag(x,1190,hl_shelfAt(1,7)[1]-31,"Pay records · since 2016","grey",{behind:"hlHall",a:hl_v(tt,tPay,tThree-0.6,0.6)*bA,to:hl_shelfAt(1,7),p:ag_in(tt,tPay+0.2,0.6),size:28});
+    dp_tag(x,1190,hl_shelfAt(3,7)[1]-31,"Applications · since 2017","grey",{behind:"hlHall",a:hl_v(tt,tApps,tThree-0.6,0.6)*bA,to:hl_shelfAt(3,7),p:ag_in(tt,tApps+0.2,0.6),size:28});
+    hl_bandAcross(x,HL_BLOCK.x-80,62,HL_BLOCK.w+160,64,"none","Nothing ever deleted",hl_v(tt,tNever,tThree-0.6,0.7));
     // the oldest card: its years counting up, its rim turning coral
-    if(tt>tYear){const a=hl_v(tt,tYear+0.6,tPlan-0.3,0.6);dp_slip(x,HL_BLOCK.x-250,HL_BLOCK.y-6,String(yrs),"grey",{a,ink:true});
-      dp_slip(x,1200,HL_BLOCK.y+60,"Could leak · could be misused","coral",{a:hl_v(tt,tLeak+0.3,tPlan-0.3,0.6)});}
+    if(tt>tYear){const a=hl_v(tt,tYear+0.6,tPlan-0.3,0.6);dp_slip(x,HL_BLOCK.x-190,HL_BLOCK.y+4,String(yrs),"grey",{a,ink:true});
+      dp_slip(x,1190,HL_BLOCK.y+60,"Could leak · could be misused","coral",{a:hl_v(tt,tLeak+0.3,tPlan-0.3,0.6)});}
     // deleting without a plan: a record the law needs goes too soon
-    if(tt>tPlan){const u=ag_in(tt,tLaw,1.6);hl_rec(x,1200,420,470,["Pay record the law needs"],{a:ag_in(tt,tPlan,0.6)*(1-0.75*u),coral:u,behind:"hlHall"});
-      dp_slip(x,1200,520,"Gone too soon","coral",{a:ag_in(tt,tLaw+1.0,0.6)});}
+    if(tt>tPlan){const u=ag_in(tt,tLaw,1.6);hl_rec(x,1180,420,410,["Pay record the law needs"],{a:ag_in(tt,tPlan,0.6)*(1-0.75*u),coral:u,behind:"hlHall"});
+      dp_pill(x,1180,566,"Gone too soon","closed",{a:ag_in(tt,tLaw+1.0,0.6)});}
     // three lives: in use, archived, deleted; kept for good above archived
     if(panesA>0){x.save();x.globalAlpha*=panesA;
       hl_pane(x,440,470,330,330,"In use",{behind:"hlHall",glow:0.8+ag_in(tt,tUse,0.6)*hl_v(tt,tUse,tArch,0.5)});
@@ -148,56 +158,68 @@ scene("lives",(ctx,S,t,sc)=>{
       hl_pane(x,800,200,330,240,"Kept for good",{behind:"hlHall",a:ag_in(tt,tGood-0.4,0.6)});
       hl_rec(x,465,575,280,["Pay records","this year"],{a:ag_in(tt,tUse+0.3,0.6),warm:true,behind:"hlHall"});
       dp_pill(x,605,725,"Linh Nguyen","identity",{a:ag_in(tt,tLinh,0.6),align:"center"});
-      ["2023","2024","2025"].forEach((y,i)=>hl_rec(x,835+i*90,575,80,[y],{a:ag_in(tt,tArch+0.3+i*0.25,0.6),dim:0.35,behind:"hlHall"}));
+      ["2023","2024","2025"].forEach((y,i)=>hl_rec(x,822+i*98,575,88,[y],{a:ag_in(tt,tArch+0.3+i*0.25,0.6),dim:0.35,behind:"hlHall"}));
       dp_slip(x,965,668,"Read rarely","grey",{a:ag_in(tt,tCold,0.6),ink:true,align:"center"});
       const fade=ag_in(tt,tDel+0.3,1.4);hl_rec(x,1255,575,140,["2016"],{a:ag_in(tt,tDel-0.3,0.4)*(1-fade),dim:0.4,behind:"hlHall"});
       const up=ag_eo(clamp((tt-tGood)/1.4,0,1));hl_rec(x,835,lerp(575,300,up),260,["Degrees","and results"],{a:ag_in(tt,tGood-0.2,0.5),behind:"hlHall"});
       x.restore();}
     // Ingrid, who owns HR's records, and Yusuf, from data governance
-    dp_person(x,"ingrid",250,612,0.95,{t:tt,gaze:[3,0]});dp_person(x,"yusuf",1670,612,0.95,{t:tt,flip:true,gaze:[3,0]});
-    dp_pill(x,250,742,"Ingrid Holm","identity",{a:hl_v(tt,sc.cues.look,tPay+0.6,0.6),align:"center"});
-    dp_pill(x,1670,742,"Yusuf Demir","identity",{a:hl_v(tt,wAt(sc,"look","Yusuf"),tPay+0.6,0.6),align:"center"});}}]);
+    hl_pair(x,tt,{names:hl_v(tt,sc.cues.look,tPay-0.2,0.6),yusuf:ag_in(tt,wAt(sc,"look","Yusuf"),0.6)});}}]);
   dp_kicker(ctx,"The university","October 2026",{a:hl_v(t,0.5,sc.cues.look+3.5,0.8)});
 });
 
 /* ---------------------------------------------------------------- 4 · One schedule, by kind of record */
 scene("schedule",(ctx,S,t,sc)=>{
   const tLists=wAt(sc,"lists","Washington"),tOne=wAt(sc,"one","one schedule"),tRow=wAt(sc,"row","kind"),tOwner=wAt(sc,"row","owner"),tReason=wAt(sc,"row","reason");
-  const tLong=wAt(sc,"row","how long"),tThen=wAt(sc,"row","then what"),tOwners=wAt(sc,"owners","Ingrid"),tKeeps=wAt(sc,"owners","Yusuf keeps");
+  const tLong=wAt(sc,"row","how long"),tThen=wAt(sc,"row","then what"),tOwners=wAt(sc,"owners","Ingrid"),tMei=wAt(sc,"owners","Mei Tanaka"),tKeeps=wAt(sc,"owners","Yusuf keeps");
   const tPay=sc.cues.payrow,tAcad=sc.cues.academic,tMail=wAt(sc,"others","mailing"),tApps=wAt(sc,"others","applications"),tPills=wAt(sc,"reason","A reason");
   const tSign=wAt(sc,"signed","sign"),tClean=wAt(sc,"first","clean-up"),tGone=sc.cues.went;
   const aT=hl_v(t,tOne,tClean-0.6,0.8);
   ag_shots(ctx,S,t,sc.dur,[{at:0,place:"hlHall",push:0.0,keys:[[0,960,540,1],[tClean,960,500,1.1]],d:1.8,draw:(x,tt)=>{
-    // Washington's lists, for a moment
-    hl_sheet(x,780,300,360,220,{title:["List No. 2"],lines:3,a:hl_v(tt,tLists-0.4,tOne-0.8,0.6),rot:-0.03});
+    // record by record, like Washington's lists: one list after another, never ending
+    for(let i=0;i<4;i++)hl_sheet(x,520+i*170,210+i*56,380,230,{title:["List No. "+(i+1)],lines:3,a:hl_v(tt,0.3+i*0.7,tOne-0.8,0.6),rot:-0.05+i*0.032});
     hl_schedule(x,{a:aT,behind:"hlHall",head:[ag_in(tt,tRow,0.4),ag_in(tt,tOwner,0.4),ag_in(tt,tReason,0.4),ag_in(tt,tLong,0.4),ag_in(tt,tThen,0.4)],
-      rows:[ag_in(tt,tPay,0.8),ag_in(tt,tAcad,0.8),ag_in(tt,tMail,0.8),ag_in(tt,tApps,0.8)],owners:ag_in(tt,tOwners,0.6),pills:1,pillGlow:hl_v(tt,tPills,tSign,0.5),
+      rows:[ag_in(tt,tPay,0.8),ag_in(tt,tAcad,0.8),ag_in(tt,tMail,0.8),ag_in(tt,tApps,0.8)],owners:[ag_in(tt,tOwners,0.5),ag_in(tt,tMei,0.5),ag_in(tt,tOwners+0.25,0.5),ag_in(tt,tOwners+0.5,0.5)],pills:1,pillGlow:hl_v(tt,tPills,tSign,0.5),
       kept:ag_in(tt,tKeeps,0.6),signed:ag_in(tt,tSign,0.8)});
     // the first clean-up: the shelves of 2016, 2017 and 2018 empty one after another, and old applications leave together
     const bA=ag_in(tt,tClean-0.4,0.8);if(bA>0){const years=["2016","2017","2018","2019","2020"],sh=years.map((y,i)=>({n:8*(i<3?1-ag_in(tt,tGone+i*0.9,0.7):1),drawer:0}));
       sh.push({n:8*(1-ag_in(tt,tGone+3.0,1.2))});sh.push({n:8,warm:true});hl_block(x,sh,{a:bA,behind:"hlHall"});
       years.forEach((y,i)=>dp_slip(x,HL_BLOCK.x-160,HL_BLOCK.y+i*HL_BLOCK.h/7+14,y,"grey",{a:bA*(i<3?1-0.6*ag_in(tt,tGone+i*0.9+0.6,0.6):1),ink:true,size:28}));
-      dp_tag(x,1200,hl_shelfAt(5,7)[1]-31,"Applications, not hired","grey",{a:bA,to:hl_shelfAt(5,7),p:1,size:28});}}}]);
+      dp_tag(x,1200,hl_shelfAt(5,7)[1]-31,"Applications, not hired","grey",{behind:"hlHall",a:bA,to:hl_shelfAt(5,7),p:1,size:28});}}}]);
 });
 
 /* ---------------------------------------------------------------- 5 · The clock starts at an event */
+// a window back to 1943, over the hall: part of the clerk's cabinets, one drawer drawn live in it (sx, sy, sw, sh: the part of the place)
+function hl_inset1943(c,X,Y,Wd,Hd,src,drawer,a){if(a<=0)return;const [sx,sy,sw,sh]=src,k=Wd/sw;c.save();c.globalAlpha*=a;dp_panel(c,X-16,Y-16,Wd+32,Hd+32,{r:18,behind:"hlHall"});
+  c.save();rr(c,X,Y,Wd,Hd,12);c.clip();c.drawImage(ag_place("hlWall"),sx,sy,sw,sh,X,Y,Wd,Hd);c.translate(X-sx*k,Y-sy*k);c.scale(k,Hd/sh);drawer(c);c.restore();c.restore();}
 scene("clock",(ctx,S,t,sc)=>{
   const tEvent=wAt(sc,"event","event"),tNot=wAt(sc,"event","not from"),tEach=wAt(sc,"contract","each contract"),tEight=wAt(sc,"eight","eight end dates");
   const tFirst=wAt(sc,"firstc","kept until"),tLast=wAt(sc,"lastc","kept until"),tApp=wAt(sc,"others","application"),tMail=wAt(sc,"others","mailing");
-  const tFri=wAt(sc,"friday","Friday"),tEnds=wAt(sc,"friday","ends"),tNobody=sc.cues.nobody;
+  const tFollow=wAt(sc,"follows","end date"),tFri=wAt(sc,"friday","Friday"),tEnds=wAt(sc,"friday","ends"),tNobody=sc.cues.nobody,t43=sc.cues.as43;
   ag_shots(ctx,S,t,sc.dur,[{at:0,place:"hlHall",push:0.015,draw:(x,tt)=>{
-    // a record, its event, and how long counting from the event
-    const aE=hl_v(tt,0.6,tEach-0.3,0.7);if(aE>0){x.save();x.globalAlpha*=aE;hl_rec(x,560,250,300,["Pay record"],{behind:"hlHall"});
-      const ev=ag_in(tt,tEvent,0.6);x.globalAlpha*=1;dp_slip(x,1000,180,"Event","grey",{a:ev,ink:true});x.save();x.globalAlpha*=ev;x.strokeStyle=rgba(DP.ice,0.9);x.lineWidth=3;x.beginPath();x.moveTo(1060,250);x.lineTo(1060,360);x.stroke();x.restore();
-      const p=ag_eo(clamp((tt-tNot)/1.4,0,1));if(p>0){dp_link(x,[1060,320],[lerp(1060,1640,p),320],"grey",1,{dot:false,lw:4});dp_T(x,"How long",1260,300,{w:700,size:30,a:p});}x.restore();}
-    // Linh's eight contracts, and each one's end date
-    for(let i=0;i<8;i++){const dim=ag_in(tt,tApp-0.2,0.6)*(1-ag_in(tt,tFri-0.3,0.6))*(i===7?0:1)+ag_in(tt,tFri,0.6)*(i===7?0:0.6);
-      hl_contract(x,i,ag_in(tt,tEach+i*0.18,0.6),ag_in(tt,i===0?tFirst:i===7?tLast:tEight+0.2+(i-1)*0.32,0.5),{dim,behind:"hlHall"});}
-    dp_slip(x,1380,HL_CY+7*HL_CH-3,"Ended","grey",{a:ag_in(tt,tEnds,0.6),ink:true});
+    // a record's time: the day it was made at the line's start; the event, later; how long counts from the event to the end date
+    const aE=hl_v(tt,0.4,tEach-0.3,0.7);if(aE>0){const y=470,x0=560,xe=1000,x1=1600;x.save();x.globalAlpha*=aE;
+      x.save();x.strokeStyle=rgba(DP.ice,0.9);x.lineWidth=3;x.shadowColor=rgba(DP.F.cyan,0.6);x.shadowBlur=10;x.beginPath();x.moveTo(x0,y);x.lineTo(1780,y);x.stroke();x.restore();
+      x.fillStyle=rgba(DP.ice,1);x.beginPath();x.arc(x0,y,8,0,TAU);x.fill();hl_rec(x,x0-40,y-170,300,["Pay record"],{behind:"hlHall"});dp_T(x,"Made",x0,y+58,{w:700,size:28,align:"center",col:"mut"});
+      const ev=ag_in(tt,tEvent,0.6);if(ev>0){x.save();x.globalAlpha*=ev;x.strokeStyle=rgba(DP.ice,1);x.lineWidth=3;x.beginPath();x.moveTo(xe,y-60);x.lineTo(xe,y+60);x.stroke();x.restore();
+        dp_slip(x,xe,y+76,"Event","grey",{a:ev,ink:true,align:"center"});}
+      const p=ag_eo(clamp((tt-tNot)/1.4,0,1));if(p>0){const xa=lerp(xe,x1,p);dp_link(x,[xe,y-34],[xa,y-34],"grey",1,{dot:false,lw:4});
+        dp_T(x,"How long",(xe+x1)/2,y-58,{w:700,size:30,align:"center",a:clamp(p*2,0,1)});
+        if(p>=1){const u=ag_in(tt,tNot+1.4,0.5);x.save();x.globalAlpha*=u;x.strokeStyle=rgba(DP.ice,1);x.lineWidth=3;x.beginPath();x.moveTo(x1,y-60);x.lineTo(x1,y+60);x.stroke();x.restore();
+          dp_T(x,"End date",x1,y+108,{w:700,size:30,align:"center",a:u});}}
+      x.restore();}
+    // Linh's eight contracts, and each one's end date: the first, then the last, picked out in turn
+    const d43=0.65*ag_in(tt,t43-0.2,0.7);
+    for(let i=0;i<8;i++){const pick=i===0?hl_v(tt,tFirst,tLast-0.2,0.5):i===7?ag_in(tt,tLast,0.5)*(1-ag_in(tt,tApp-0.2,0.5)):0;
+      const dim=Math.max(0.55*ag_in(tt,tFirst,0.5)*(1-pick)*(1-ag_in(tt,tApp-0.2,0.6)),d43);
+      hl_contract(x,i,ag_in(tt,tEach+i*0.18,0.6),ag_in(tt,tEight+0.3+i*0.15,0.5),{dim,behind:"hlHall",lit:Math.max(pick,hl_v(tt,tNobody+i*0.12,t43-0.2,0.5))});}
+    dp_slip(x,1350,HL_CY+7*HL_CH-3,"Ended","grey",{a:hl_v(tt,tEnds,t43-0.3,0.6),ink:true});
     // other kinds, other events
-    dp_card(x,1220,190,640,{title:"Application",sub:"from the decision"},{a:hl_v(tt,tApp,tFri-0.4,0.6),k:ag_spr(tt,tApp,0.9)});
-    dp_card(x,1220,400,640,{title:"Mailing list",sub:"from the last contact, or a no"},{a:hl_v(tt,tMail,tFri-0.4,0.6),k:ag_spr(tt,tMail,0.9)});
-    dp_card(x,1220,190,640,{title:"Friday 20 November 2026"},{a:ag_in(tt,tFri,0.6),k:ag_spr(tt,tFri,0.9)});
+    dp_card(x,1350,190,540,{title:"Application",sub:"from the decision"},{a:hl_v(tt,tApp,tFollow-0.2,0.6),k:ag_spr(tt,tApp,0.9)});
+    dp_card(x,1350,400,540,{title:"Mailing list",sub:"from the last contact, or a no"},{a:hl_v(tt,tMail,tFollow-0.2,0.6),k:ag_spr(tt,tMail,0.9)});
+    dp_card(x,1350,190,540,{title:"Friday 20 November 2026"},{a:hl_v(tt,tFri,t43-0.3,0.6),k:ag_spr(tt,tFri,0.9)});
+    // as in 1943: the drawer labelled before its papers
+    hl_inset1943(x,1130,330,700,282,[1100,590,490,197],cc=>hl_wallDrawer(cc,3,{big:true,label:"Payrolls · 1944",full:1}),hl_v(tt,t43,sc.dur,0.7));
     // Linh, the casual tutor whose contracts they are
     dp_person(x,"linh",270,612,0.95,{t:tt,gaze:[3,0]});
     dp_pill(x,270,742,"Linh Nguyen","identity",{a:hl_v(tt,wAt(sc,"eight","Linh"),tFirst,0.6),align:"center"});}}]);
@@ -230,9 +252,8 @@ scene("hold",(ctx,S,t,sc)=>{
     const jc=hl_v(tt,tCase-0.4,tSettled-0.2,0.6);if(jc>0){const bb=dp_slip(x,1060,560,"Just in case","grey",{a:jc,ink:true});hl_strike(x,bb.x+16,bb.y+bb.h/2+2,bb.w-32,ag_in(tt,tCase+0.2,0.6)*jc);}
     dp_card(x,1060,560,420,{title:"Next clean-up"},{a:hl_v(tt,tNext-0.4,t43-0.2,0.6),k:ag_spr(tt,tNext-0.4,0.9),behind:"hlHall"});
     // as in 1943: the drawer kept until the claim is settled, for a moment
-    const m=hl_v(tt,t43,sc.ends.as43+0.6,0.7);if(m>0){x.save();x.globalAlpha*=m;dp_panel(x,1040,560,780,300,{r:18,behind:"hlHall"});
-      x.save();rr(x,1056,576,748,268,12);x.clip();x.drawImage(ag_place("hlWall"),1380,640,700,250,1056,576,748,268);x.translate(1056-1380*748/700,576-640*268/250);x.scale(748/700,268/250);
-      const d3=hl_wallDrawer(x,3,{});x.restore();hl_bandAcross(x,1070,690,720,58,"closed","Kept until the claim is settled",1);x.restore();}}}]);
+    const m=hl_v(tt,t43,sc.dur,0.7);hl_inset1943(x,1100,300,700,282,[715,590,490,197],cc=>hl_wallDrawer(cc,2,{big:true,label:"Payrolls · 1943",full:1}),m);
+    hl_bandAcross(x,1090,486,720,58,"closed","Kept until the claim is settled",ag_in(tt,t43+0.5,0.8)*m);}}]);
 });
 
 /* ---------------------------------------------------------------- 7 · An end date for every record */
@@ -250,17 +271,17 @@ scene("end",(ctx,S,t,sc)=>{
         hl_pane(x,px,300,330,300,p,{a,behind:"hlHall"});dp_slip(x,px+165,430,"Until 20 Nov 2033","grey",{a,ink:true,align:"center",size:28});});}},
     // 1943: the cabinets labelled; most drawers empty, a few folders on their way to the Archives
     {at:t43,place:"hlWall",dis:0.9,push:0.02,keys:[[t43,960,540,1]],draw:(x,tt)=>{
-      [["Orders · 1941",0.1],["Contracts · 1942",0.15],["Payrolls · 1943",1],["Letters · 1943",0.1]].forEach(([l,f],k)=>hl_wallDrawer(x,k+1,{big:true,label:l,out:0.6,full:f}));
+      [["Orders · 1941",0.1,0],["Contracts · 1942",0.15,0.6],["Payrolls · 1943",1,0.6],["Letters · 1943",0.1,0.35]].forEach(([l,f,o],k)=>hl_wallDrawer(x,k+1,{big:true,label:l,out:o,full:f}));
       hl_wallDrawer(x,0,{});hl_clerk(x,tt,1);
       for(let i=0;i<3;i++){const u=clamp((tt-tFew-i*0.6)/2.4,0,1);if(u<=0||u>=1)continue;const px=lerp(1210,1900,ag_sine(u)),py=lerp(700,420,ag_sine(u))-Math.sin(u*Math.PI)*60;
         x.save();x.globalAlpha*=Math.min(1,u*4,(1-u)*3);x.shadowColor="rgba(255,226,180,0.7)";x.shadowBlur=18;x.fillStyle="rgb(222,196,140)";x.fillRect(px-36,py-26,72,52);x.restore();}}},
-    // the university: every shelf a drawer with its label and its date
+    // the university: the platform's shelves now drawers, one for each kind of record, each with how long it's kept
     {at:tUni,place:"hlHall",dis:0.9,push:0.02,draw:(x,tt)=>{
-      const rows=[["Pay records · 2026","Until 20 Nov 2033"],["Pay records · 2025","Until 21 Nov 2032"],["Academic records","Kept for good"],["Mailing list","Until a no"],["Applications","12 months"],["Pay records · 2024","Until 15 Nov 2031"],["Pay records · 2023","Until 17 Nov 2030"]];
+      const rows=[["Pay records","7 years after each contract"],["Academic records","Kept for good"],["Mailing list","Until a no, or 2 years"],["Applications","12 months after the decision"]];
       const sh=rows.map((r,i)=>({n:8,drawer:1,label:r[0],warm:i===0}));hl_block(x,sh,{behind:"hlHall"});
-      rows.forEach((r,i)=>dp_slip(x,HL_BLOCK.x+HL_BLOCK.w+24,HL_BLOCK.y+i*HL_BLOCK.h/7+14,r[1],"grey",{ink:true,size:28,a:ag_in(tt,tUni+0.6+i*0.15,0.6)}));}}
+      rows.forEach((r,i)=>dp_slip(x,HL_BLOCK.x+HL_BLOCK.w+24,HL_BLOCK.y+(i+0.5)*HL_BLOCK.h/4-34,r[1],"grey",{ink:true,size:28,a:ag_in(tt,tUni+0.8+i*0.25,0.6)}));}}
   ],0.8);
   dp_end(ctx,S,t,sc.cues.breath,"How long, and then what","Every record has an end date, decided before it's needed.","Film 2 of 5","Kept for a reason");
 });
 
-ag_cutInto(["schedule","clock","hold","end"]);
+ag_cutInto(["lives","schedule","clock","hold","end"]);

@@ -1,5 +1,5 @@
 /* ===== How long, and then what: the opening's live pieces =====
-   What the opening draws over its places (hl_past.js): the clerk's folder tabs, transfer boxes piling up, typed sheets and lists, a
+   What the opening draws over its places (hl_past.js): transfer boxes piling up, typed sheets and lists, a
    building in section and the Archives in glass filling with drawers, the Act and its schedule on the desk with their stamps, and the
    papers on the platform. Words are typed (IBM Plex Mono) in dark ink on paper, or on the module's cards; every word at least 28 px. */
 
@@ -7,15 +7,7 @@
 const hl_v=(t,a,b,d)=>ag_in(t,a,d||0.6)*(b==null?1:1-ag_in(t,b,d||0.6));
 const HL_INK=[34,28,22],HL_PAPER=[228,218,194];
 
-/* ---------------------------------------------------------------- folders and boxes */
-// a folder's tab, manila, its word typed on it; (x, y) the tab's middle; it rises from below by u (0 hidden in the drawer, 1 up)
-function hl_tab(c,x,y,word,u,o){o=o||{};if(u<=0)return;const w=o.w||250,h=64;c.save();c.globalAlpha*=clamp(u*1.6,0,1);
-  if(o.clip)c.beginPath(),c.rect(o.clip[0],o.clip[1],o.clip[2],o.clip[3]),c.clip();
-  const yy=y+(1-u)*o.rise;c.save();c.shadowColor="rgba(0,0,0,0.45)";c.shadowBlur=12;c.shadowOffsetY=4;
-  c.beginPath();c.moveTo(x-w/2,yy+h/2);c.lineTo(x-w/2+14,yy-h/2);c.lineTo(x+w/2-14,yy-h/2);c.lineTo(x+w/2,yy+h/2);c.closePath();
-  const g=c.createLinearGradient(0,yy-h/2,0,yy+h/2);g.addColorStop(0,"rgb(222,196,140)");g.addColorStop(1,"rgb(196,168,114)");c.fillStyle=g;c.fill();c.restore();
-  c.fillStyle="rgba(255,240,210,0.6)";c.fillRect(x-w/2+14,yy-h/2,w-28,2);
-  dp_T(c,word,x,yy+11,{w:700,size:30,f:"mono",align:"center",col:HL_INK});c.restore();}
+/* ---------------------------------------------------------------- boxes */
 // transfer boxes piled on a cabinet's top, sliding in by u: brown card boxes, a lighter lid edge, a pale label (no words)
 function hl_boxes(c,x,y,w,u,seed){if(u<=0)return;const R=hl_rnd(seed||5);let yy=y;c.save();c.globalAlpha*=clamp(u*2,0,1);
   for(let i=0;i<3;i++){const bw=w*(0.78+R()*0.18),bh=74+R()*30,bx=x+(w-bw)/2+(R()-0.5)*20,k=ag_spr(u*1.8,i*0.25,0.8),dy=(1-k)*-90;if(k<=0)break;
