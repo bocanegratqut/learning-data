@@ -1,10 +1,10 @@
 {
   "key": "every-change-through-review",
   "title": "Every change through review",
-  "sub": "The sixth film of From helper to colleague, the third series on AI agents in data work: the planning agent's first pull request, with its evidence, its checks and a diff of the data, an agent's review for reference, the owners' approval, and a release a second person approves. An agent proposes; a person releases.",
-  "howto": "The film is drawn in the module's look: a pale marble wall over an oak floor, light from a window on the right. The agents are ceramic spheres with a violet band, never people, each told apart by the badge with its name. Blue is structure (a rule, a file, the pull request), violet the model, orange the data and its evidence, green what a person approved or a check passed, amber what's missing or could go wrong.",
+  "sub": "The sixth film of From helper to colleague, the third series on AI agents in data work: the planning agent's first pull request, which changes Planning's class plan, the number the faculties hire their tutors from. Its evidence, checks on what changed, a diff of the data, the governance review agent's review for reference, approval from the roles on the map, and a release a second person approves. An agent proposes; a person releases.",
+  "howto": "The film is drawn in the module's look: a pale marble wall over an oak floor, light from a window on the right. The agents are ceramic spheres with a violet band, never people, each told apart by the badge with its name. Blue is structure (a rule, a file, the pull request, the map's roles), violet the model and what an agent does, orange the data and its evidence, green what a person approved or a check passed, amber what's missing or could go wrong.",
   "src": [
-    "world.js",
+    "logos.js",
     "pieces.js",
     "scenes.js"
   ],
@@ -29,6 +29,10 @@
     [
       "\\bYusuf\\b",
       "Yoosoof"
+    ],
+    [
+      "\\bdbt\\b",
+      "dee bee tee"
     ],
     [
       "\\bJun\\b",
