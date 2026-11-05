@@ -3,7 +3,7 @@
 
     python site-tools/build_series.py
 
-The site is organised in big topics (TOPICS below), each holding films and series. Twenty-two series are built this way:
+The site is organised in big topics (TOPICS below), each holding films and series. Twenty-six series are built this way:
 From words to data (films/from-words-to-data/, on the site at from-words-to-data/), In the weeds of data crafting
 (films/analytics-engineering/, at in-the-weeds/), The map before the data (films/enterprise-architecture/, at
 enterprise-architecture/), The same one, everywhere (films/master-and-reference-data/, at master-and-reference-data/), and
@@ -19,7 +19,11 @@ documents-as-data/, a series of one film); and the three series of the module Da
 data (films/locks-before-the-data/, at locks-before-the-data/, which holds the module's plan), Only what you may see
 (films/only-what-you-may-see/, at only-what-you-may-see/) and Kept for a reason (films/kept-for-a-reason/, at
 kept-for-a-reason/); and the two series of the module Data quality: Fit for use (films/fit-for-use/, at fit-for-use/, which
-holds the module's plan) and Quality as a habit (films/quality-as-a-habit/, at quality-as-a-habit/); and the three series of the module Data
+holds the module's plan) and Quality as a habit (films/quality-as-a-habit/, at quality-as-a-habit/); and the four series of the module
+Leading data people: The new skills (films/the-new-skills/, at the-new-skills/, which holds the module's plan and the kit it shares
+with Data management), Working with people (films/working-with-people/, at working-with-people/), Leading a data team
+(films/leading-a-data-team/, at leading-a-data-team/) and Ownership and performance (films/ownership-and-performance/, at
+ownership-and-performance/); and the three series of the module Data
 management: A plan in ninety days (films/a-plan-in-ninety-days/, at a-plan-in-ninety-days/, which holds the module's plan), Making
 the case (films/making-the-case/, at making-the-case/) and Small steps, measured (films/small-steps-measured/, at
 small-steps-measured/). A series with no film on the site yet has no pages, and the topics leave it out until its first
@@ -84,8 +88,10 @@ def series_link(lg, RE, sid):
 # agent is opens the module AI agents in data work. Data that moves opens the module Modern data basics, whose four series are
 # each the next of the one before; the last, Documents as data, is a series of one film. Locks before the data opens the module
 # Data protection and privacy, whose three series are each the next of the one before. Fit for use opens the module Data quality,
-# and Quality as a habit follows it; the topic Data quality holds them after When things go wrong. A plan in ninety days opens the
-# module Data management, whose three series are each the next of the one before; its topic is the site's last.
+# and Quality as a habit follows it; the topic Data quality holds them after When things go wrong. The new skills opens the module
+# Leading data people, whose four series are each the next of the one before; its topic sits just before Data management's. A plan
+# in ninety days opens the module Data management, whose three series are each the next of the one before; its topic is the site's
+# last.
 SERIES = [
     dict(id="from-words-to-data", dir="from-words-to-data", slug="from-words-to-data",
          name={"en": "From words to data", "es": "De las palabras a los datos"},
@@ -168,6 +174,22 @@ SERIES = [
          built="in-the-weeds", next="quality-as-a-habit"),
     dict(id="quality-as-a-habit", dir="quality-as-a-habit", slug="quality-as-a-habit",
          name={"en": "Quality as a habit", "es": "La calidad como hábito"},
+         place={"en": "university", "es": "universidad"}, blocks=[], project="analytics-engineering",
+         built="in-the-weeds"),
+    dict(id="the-new-skills", dir="the-new-skills", slug="the-new-skills",
+         name={"en": "The new skills", "es": "Las nuevas habilidades"},
+         place={"en": "university", "es": "universidad"}, blocks=[], project="analytics-engineering",
+         built="in-the-weeds", next="working-with-people"),
+    dict(id="working-with-people", dir="working-with-people", slug="working-with-people",
+         name={"en": "Working with people", "es": "Trabajar con personas"},
+         place={"en": "university", "es": "universidad"}, blocks=[], project="analytics-engineering",
+         built="in-the-weeds", next="leading-a-data-team"),
+    dict(id="leading-a-data-team", dir="leading-a-data-team", slug="leading-a-data-team",
+         name={"en": "Leading a data team", "es": "Liderar un equipo de datos"},
+         place={"en": "university", "es": "universidad"}, blocks=[], project="analytics-engineering",
+         built="in-the-weeds", next="ownership-and-performance"),
+    dict(id="ownership-and-performance", dir="ownership-and-performance", slug="ownership-and-performance",
+         name={"en": "Ownership and performance", "es": "Responsabilidad y desempeño"},
          place={"en": "university", "es": "universidad"}, blocks=[], project="analytics-engineering",
          built="in-the-weeds"),
     dict(id="a-plan-in-ninety-days", dir="a-plan-in-ninety-days", slug="a-plan-in-ninety-days",
@@ -398,6 +420,11 @@ TOPICS = [
          who={"en": "For everyone who works with data, and will work beside an AI agent", "es": "Para quien trabaja con datos, y trabajará junto a un agente de IA"},
          line={"en": "Agentic data engineering from the ground up: what an AI agent is and how we got here, what agents are like to work with, and why that means governing them.",
                "es": "La ingeniería de datos con agentes desde la base: qué es un agente de IA y cómo llegamos aquí, cómo es trabajar con agentes, y por qué eso significa gobernarlos."}),
+    dict(id="leading-data-people", items=["the-new-skills", "working-with-people", "leading-a-data-team", "ownership-and-performance"],
+         name={"en": "Leading data people", "es": "Liderar equipos de datos"},
+         who={"en": "For anyone who works in data, and anyone who leads the people who do", "es": "Para quien trabaja con datos, y para quien lidera a las personas que lo hacen"},
+         line={"en": "The skills data work needs now, and leading the people who do it: seeing the whole, working beside agents, listening, explaining, saying no well, leading a team, owning an outcome, and growing people.",
+               "es": "Las habilidades que hoy pide el trabajo con datos, y cómo liderar a quienes lo hacen: ver el conjunto, trabajar junto a agentes, escuchar, explicar, decir que no bien, liderar un equipo, hacerse cargo de un resultado, y ayudar a crecer a las personas."}),
     dict(id="data-management", items=["a-plan-in-ninety-days", "making-the-case", "small-steps-measured"],
          name={"en": "Data management", "es": "Gestión de datos"},
          who={"en": "For data managers, and anyone who leads data work across an organisation", "es": "Para gestores de datos, y para quien lidera el trabajo con datos en toda una organización"},
