@@ -84,3 +84,130 @@ scene("signs",(ctx,S,t,sc)=>{const c=sc.cues,T=mr_once(sc,"T",()=>({
           if(R.k!=="partner")mr_says(cx,R,"A$1.84M",{a:ag_in(tt,T.sameN-0.2+i*0.12,0.4)});else mr_says(cx,R,"totals by faculty",{a:ag_in(tt,T.sameN+0.4,0.4),inset:170});}});}}],0.5);
   md_title(ctx,S,t,c.breath,"More readers than people","One definition, every reader","FILM 3 OF 3 · FROM TABLES TO DECISIONS");
 });
+
+/* ---------------------------------------------------------------- 2 · A door that didn't carry it
+   Pay day in Finance: Rohan, the measure he owns on the platform, Genie One's answer and the budget pack's; then, later, why: the
+   catalog seen through a mirror in Microsoft Fabric, which shows tables but not metric views and reads as one sign-in; then the door
+   that carries the measure, Power BI's own connector, each analyst as themselves; and, later, Noor's rule. */
+const MR_DB={x:70,y:230,w:700,h:560},MR_FB={x:1150,y:230,w:700,h:560};
+scene("door",(ctx,S,t,sc)=>{const c=sc.cues,T=mr_once(sc,"T",()=>({
+    payday:wAt(sc,"today","pay day"),owns:wAt(sc,"rohan","owns"),mv:wAt(sc,"defined","metric view"),uc:wAt(sc,"defined","Unity Catalog"),
+    asks:wAt(sc,"genie","when he asks"),n184:wAt(sc,"genie","one point eight four"),
+    packW:wAt(sc,"pack","budget pack"),n156:wAt(sc,"pack","one point five six"),sameName:wAt(sc,"pack","same name"),
+    pbi:wAt(sc,"bi","Power BI"),cat:wAt(sc,"bi","university's catalog"),mirrorW:wAt(sc,"bi","a mirror"),fabric:wAt(sc,"bi","Microsoft Fabric"),
+    tables:wAt(sc,"mirror","tables"),lives:wAt(sc,"mirror","where it lives"),noMV:wAt(sc,"mirror","metric views"),
+    cant:wAt(sc,"counted","can't be seen"),summed:wAt(sc,"counted","summed"),called:wAt(sc,"counted","called it"),
+    every:wAt(sc,"rights","every query"),one:wAt(sc,"rights","the one sign-in"),rightsW:wAt(sc,"rights","rights stay behind"),
+    dbx:wAt(sc,"direct","from Databricks"),conn:wAt(sc,"direct","connector"),each:wAt(sc,"direct","each analyst"),
+    byName:wAt(sc,"same","by name"),gets:wAt(sc,"same","one point eight four"),genieToo:wAt(sc,"same","as Genie One"),
+    r1:wAt(sc,"noor","mirror only"),r2:wAt(sc,"noor","and read a measure")}));
+  ag_shots(ctx,S,t,sc.dur,[
+    // pay day: Rohan, the measure he owns, defined once on the platform; Genie One's answer, and the budget pack's
+    {later:true,at:0,place:"map",keys:[[0,960,540,1.0]],push:0.02,draw:(cx,tt)=>{
+      md_textCard(cx,540,250,520,{kick:"Pay day",title:"Thursday, 5 November"},{icon:"clock",a:ag_in(tt,0.5,0.6)*(1-ag_in(tt,T.mv-0.6,0.5)),k:mr_k(tt,0.5)});
+      const ra=ag_in(tt,0.7,0.7);if(ra>0){cx.save();cx.globalAlpha*=ra;md_person(cx,"rohan",300,740,0.8,{t:tt,gaze:tt>T.asks-0.5?[3,0]:[1,1],nod:ag_io(tt,T.asks,T.asks+1.4,0.3)*0.4});cx.restore();
+        md_nameTag(cx,160,392,"rohan",{col:MD.dom.finance,a:ra});}
+      const pa=ag_in(tt,T.mv-0.3,0.6);md_platform(cx,1110,200,710,510,{uc:true,ucText:"Unity Catalog",a:pa,lit:ag_io(tt,T.uc-0.2,T.uc+1.4,0.4)});
+      mr_measure(cx,1160,320,610,{a:ag_in(tt,T.owns-0.2,0.5),k:mr_k(tt,T.owns-0.2),lit:ag_io(tt,T.mv-0.1,T.mv+1.4,0.4)+ag_io(tt,T.sameName-0.1,T.sameName+2.2,0.4)*0.8});
+      md_tag(cx,1160,536,"Owner: Rohan Desai",{col:MD.agreed,icon:"person",a:ag_in(tt,T.owns+0.7,0.5)});
+      // Genie One: his question, a query to the measure where it's defined, and its answer
+      const ga=ag_in(tt,T.asks-0.5,0.5);mr_genie(cx,540,200,520,330,{a:ga,k:mr_k(tt,T.asks-0.5),q:"Casual teaching cost for Health, so far?",qA:ag_in(tt,T.asks-0.1,0.4),
+        ans:"A$1.84 million",sub:"Faculty of Health, Semester 2",ansA:ag_in(tt,T.n184-0.2,0.4)});
+      md_way(cx,"query",[1060,368],[1160,404],tt,{u:ag_sine(clamp((tt-T.asks-0.2)/0.8,0,1)),a:ga});
+      // the budget pack, from a Power BI report: another number, under the same name
+      const ba=ag_in(tt,T.packW-0.3,0.5),bad=ag_in(tt,T.n156-0.1,0.4);
+      mr_report(cx,540,574,520,290,{a:ba,k:mr_k(tt,T.packW-0.3),num:"A$1.56 million",col:MD.fail,numA:ag_in(tt,T.n156-0.2,0.4),edge:bad>0.5?MD.fail:null,lit:bad*0.6,
+        nameLit:ag_io(tt,T.sameName-0.1,T.sameName+2.2,0.4)});}},
+    // later: why. Power BI reads the university's catalog through a mirror in Microsoft Fabric
+    {later:true,at:c.bi-0.6,place:"map",keys:[[0,960,540,1.0]],push:0.02,draw:(cx,tt)=>{
+      const fix=ag_in(tt,T.dbx-0.4,0.6),dim=1-0.7*fix;
+      // the platform, its claims and the measure, and the catalog's rights, which stay there
+      const da=ag_in(tt,T.cat-0.3,0.6);md_platform(cx,MR_DB.x,MR_DB.y,MR_DB.w,MR_DB.h,{uc:true,ucText:"Unity Catalog",a:da});
+      const tc=md_table(cx,106,350,628,{name:"mart_finance__casual_claims",kind:"table",a:da,lit:ag_io(tt,T.lives-0.2,T.lives+1.6,0.4)});
+      const tm=md_table(cx,106,510,628,{name:MR_NAME,kind:"metric view",col:MD.agreed,a:da,lit:ag_io(tt,T.noMV-0.1,T.noMV+1.8,0.4)+ag_io(tt,T.byName-0.1,T.gets+1.2,0.4)});
+      md_tag(cx,386,730,"the catalog's rights",{col:MD.flow,icon:"lock",a:ag_in(tt,T.rightsW-0.3,0.5)});
+      // Microsoft Fabric, its mirror of the catalog: the tables, read where they live, and no metric views
+      const fa=ag_in(tt,T.fabric-0.3,0.6);mr_fabric(cx,MR_FB.x,MR_FB.y,MR_FB.w,MR_FB.h,{a:fa});
+      const ma=ag_in(tt,T.fabric+0.2,0.5);if(ma>0){cx.save();cx.globalAlpha*=ma;const lw=logo(cx,"fabricMirror",1186,318,34);md_T(cx,"Mirrored catalog",1186+lw+12,346,{w:600,size:28,col:MD.soft});cx.restore();}
+      md_table(cx,1186,366,628,{name:"mart_finance__casual_claims",kind:"mirrored table",ghost:true,a:ag_in(tt,T.tables-0.2,0.5)*dim,lit:ag_io(tt,T.lives-0.2,T.lives+1.6,0.4)});
+      mr_slot(cx,1186,488,300,84,"No metric views",{a:ag_in(tt,T.noMV-0.2,0.5)*dim});
+      md_way(cx,"mirror",tc.r,[1186,418],tt,{u:ag_sine(clamp((tt-T.mirrorW+0.1)/0.9,0,1)),icon:true,label:"mirror",iconA:1-ag_in(tt,T.one-0.3,0.4),a:da*dim});
+      // the one sign-in every query through the mirror runs as
+      const ka=ag_in(tt,T.one-0.3,0.4)*(1-fix);if(ka>0){mr_key(cx,960,410,MD.ink,ka,{r:34,s:38});md_T(cx,"one sign-in",960,488,{w:700,size:28,align:"center",a:ka});}
+      // the report, which counted its own way: the pay paid, summed, and called casual teaching cost
+      const cnt=ag_in(tt,T.summed-0.2,0.5)*(1-fix);if(cnt>0){md_lane(cx,md_path([[1540,470],[1540,620]]),MD.fail,cnt,{u:ag_sine(clamp((tt-T.summed+0.2)/0.6,0,1)),t:tt});
+        md_tag(cx,1556,546,"SUM(pay_paid)",{col:MD.fail,a:cnt});}
+      const bad=1-ag_in(tt,T.gets-0.2,0.5);
+      const rb=mr_biCard(cx,1186,620,628,{a:ag_in(tt,c.bi+0.1,0.5),k:mr_k(tt,c.bi+0.1),edge:bad>0.5?MD.fail:MD.pass,subLit:ag_io(tt,T.called-0.1,T.called+1.6,0.4),
+        roll:["A$1.56M","A$1.84M",ag_in(tt,T.gets-0.2,0.6),MD.fail,MD.pass]});
+      // the door that carries it: Power BI's own connector to Databricks, each analyst signed in as themselves, the measure asked for by name
+      md_way(cx,"query",rb.l,tm.r,tt,{u:ag_sine(clamp((tt-T.conn+0.4)/0.9,0,1)),icon:true,label:"Power BI's connector",labelBelow:-90,a:fix,col:MD.flow});
+      [1600,1680,1760].forEach((x,i)=>{const wa=ag_in(tt,T.each-0.2+i*0.25,0.4);mr_who(cx,x,546,MD.ink,wa);mr_key(cx,x+24,572,MD.pass,wa,{r:16,s:20});});
+      md_tag(cx,106,654,"MEASURE("+MR_NAME+")",{col:MD.agreed,a:ag_in(tt,T.byName-0.2,0.5)});
+      md_reader(cx,830,220,260,{title:"Genie One",sub:"A$1.84M",logo:"databricks",a:ag_in(tt,T.genieToo-0.2,0.5),col:MD.pass,lit:ag_io(tt,T.genieToo,T.genieToo+1.6,0.4)});}},
+    // later: Noor writes the rule down
+    {later:true,at:c.noor-0.6,place:"map",keys:[[0,960,540,1.0]],push:0.02,draw:(cx,tt)=>{
+      const na=ag_in(tt,c.noor-0.1,0.7);if(na>0){cx.save();cx.globalAlpha*=na;md_person(cx,"noor",1620,740,0.8,{t:tt,flip:true,gaze:[3,0]});cx.restore();md_nameTag(cx,1500,392,"noor",{col:MD.flow,a:na});}
+      mr_rule(cx,150,360,900,["Mirror only what every reader there may see.","Read a measure where it's defined."],{a:ag_in(tt,T.r1-0.5,0.5),k:mr_k(tt,T.r1-0.5),
+        lineA:[ag_in(tt,T.r1-0.2,0.4),ag_in(tt,T.r2-0.2,0.4)]});}}],0.5);
+  MR_KICK(ctx,1);
+});
+
+/* ---------------------------------------------------------------- 3 · An app that reads as you
+   Anil plans next semester's tutors in the faculties' planning app; an app can read as itself or as the person using it; this one
+   reads as the person, and the claims carry a filter by faculty in Unity Catalog, so the app's code holds no rule about who sees what. */
+const MR_FACS=["Health","Arts and Education","Business","Engineering and IT"];
+const MR_UNITS=[["HI101","420"],["HI112","300"],["HI205","260"],["HI305","60"]];
+scene("app",(ctx,S,t,sc)=>{const c=sc.cues,T=mr_once(sc,"T",()=>({
+    anil:wAt(sc,"plan","Anil Kurian"),tutors:wAt(sc,"plan","tutors"),appW:wAt(sc,"app","an app"),dbxApps:wAt(sc,"app","Databricks Apps"),
+    cost:wAt(sc,"shows","casual teaching cost"),hours:wAt(sc,"shows","the hours"),every:wAt(sc,"each","Every faculty"),own:wAt(sc,"each","only its own"),
+    itself:wAt(sc,"two","as itself"),shares:wAt(sc,"two","shares the app's rights"),person:wAt(sc,"two","or as the person"),
+    thisOne:wAt(sc,"asks","This one"),queries:wAt(sc,"asks","run queries"),
+    claims:wAt(sc,"filter","the claims"),filterW:wAt(sc,"filter","a filter by faculty"),ucW:wAt(sc,"filter","Unity Catalog"),
+    sees:wAt(sc,"sees","Anil sees"),code:wAt(sc,"sees","nothing in the app's code"),r1:wAt(sc,"rule","Let an app"),r2:wAt(sc,"rule","and keep the rules")}));
+  ag_shots(ctx,S,t,sc.dur,[
+    // Anil, and the planning app: the faculty's cost so far, beside the hours each unit will need
+    {later:true,at:0,place:"map",keys:[[0,960,540,1.0]],push:0.02,draw:(cx,tt)=>{
+      const pa=ag_in(tt,0.7,0.7);if(pa>0){cx.save();cx.globalAlpha*=pa;md_person(cx,"anil",300,740,0.8,{t:tt,gaze:[3,0]});cx.restore();md_nameTag(cx,160,392,"anil",{col:MD.dom.teaching,a:pa});}
+      const wa=ag_in(tt,T.appW-0.3,0.5);md_window(cx,560,230,1260,560,{logo:"databricks",product:"Databricks Apps",title:"Tutor planning, Semester 1 2027",a:wa,k:mr_k(tt,T.appW-0.3),draw:(b,bd)=>{
+        const lit=MR_FACS.map((f,i)=>ag_io(tt,T.every-0.1+i*0.35,T.every+0.5+i*0.35,0.25)),lk=MR_FACS.map((f,i)=>i?ag_in(tt,T.own-0.1,0.5):0);
+        mr_tabs(b,bd.x+20,bd.y+40,MR_FACS,0,{litA:lit,lockA:lk});
+        const ca=ag_in(tt,T.cost-0.3,0.5),cl=ag_io(tt,T.cost-0.1,T.cost+1.6,0.4);if(ca>0){b.save();b.globalAlpha*=ca;if(cl>0)glow(b,bd.x+200,bd.y+250,260,MD.agreed,0.25*cl);
+          md_icon(b,"contract",bd.x+40,bd.y+138,36,MD.agreed);md_T(b,"CASUAL TEACHING COST",bd.x+72,bd.y+150,{w:800,size:28,ls:4,col:MD.agreed});
+          md_T(b,"A$1.84M",bd.x+20,bd.y+240,{w:800,size:60});md_T(b,"Faculty of Health, so far",bd.x+20,bd.y+290,{w:500,size:28,col:MD.soft});
+          md_T(b,"Semester 2, 2026",bd.x+20,bd.y+330,{w:500,size:28,col:MD.soft});b.restore();}
+        md_rows(b,bd.x+560,bd.y+100,[{h:"Unit",w:220,f:"mono"},{h:"Tutor hours needed",w:420}],MR_UNITS,{a:ag_in(tt,T.hours-0.4,0.4),rowA:(r,i)=>ag_in(tt,T.hours-0.2+i*0.3,0.4)});}});}},
+    // later: two ways an app can read, as itself or as the person using it
+    {later:true,at:c.two-0.6,place:"map",keys:[[0,960,540,1.0]],push:0.02,draw:(cx,tt)=>{
+      const pick=ag_in(tt,T.thisOne-0.2,0.6);
+      [[60,"As itself",T.itself,true],[980,"As the person using it",T.person,false]].forEach(([x,head,at_,own])=>{
+        const pa=ag_in(tt,at_-0.4,0.5)*(own?1-0.55*pick:1);if(pa<=0.004)return;cx.save();cx.globalAlpha*=pa;
+        md_card(cx,x,220,880,560,{edge:!own&&pick>0?MD.pass:null,glow:0.4+0.6*(!own?pick:0),r:22});md_label(cx,x+40,280,head,{col:!own&&pick>0.5?MD.pass:MD.soft});
+        const app=mr_box(cx,x+240,470,360,{logo:"databricks",title:"The app",sub:"Tutor planning",h:110});
+        const m=mr_measure(cx,x+200,640,440,{sub:false});
+        [x+220,x+420,x+620].forEach((ux,i)=>{md_lane(cx,md_path([[ux,402],[app.x+90+i*90,app.y]]),MD.soft,0.8,{t:tt});
+          mr_who(cx,ux,370,MD.ink,1);if(!own)mr_key(cx,ux+26,398,MD.pass,1,{r:15,s:18});});
+        md_lane(cx,md_path([[app.b[0],app.b[1]],[m.t[0],m.t[1]]]),own?MD.soft:MD.pass,0.9,{t:tt});
+        if(own){mr_key(cx,app.x+app.w-6,app.y+8,MD.ink,1,{r:20,s:24});md_T(cx,"one key for all",app.x+app.w+26,app.y+64,{w:600,size:28,col:MD.soft,a:ag_in(tt,T.shares-0.2,0.5)});}
+        else md_T(cx,"only runs queries",app.x+app.w+26,app.y+64,{w:600,size:28,col:MD.flow,a:ag_in(tt,T.queries-0.3,0.5)});
+        cx.restore();});}},
+    // later: the rules live where the data does. The claims carry a filter by faculty in Unity Catalog; the app's code holds none
+    {later:true,at:c.filter-0.6,place:"map",keys:[[0,960,540,1.0]],push:0.02,draw:(cx,tt)=>{
+      const pa=ag_in(tt,c.filter-0.1,0.5);md_platform(cx,850,220,980,580,{uc:true,ucText:"Unity Catalog",a:pa,lit:ag_io(tt,T.ucW-0.2,T.ucW+1.4,0.4)});
+      const mv=md_table(cx,880,330,560,{name:MR_NAME,kind:"metric view",col:MD.agreed,a:pa});
+      const cl=md_table(cx,880,520,560,{name:"mart_finance__casual_claims",kind:"table",col:MD.personal,icon:"lock",a:ag_in(tt,T.claims-0.2,0.5),lit:ag_io(tt,T.claims,T.claims+1.4,0.4)});
+      md_lane(cx,md_path([[1160,mv.y+mv.h],[1160,cl.y]]),MD.flow,ag_in(tt,T.claims-0.2,0.5),{t:tt});
+      md_tag(cx,880,662,"row filter: by faculty",{col:MD.flow,icon:"eye",a:ag_in(tt,T.filterW-0.2,0.5)});
+      const sa=ag_in(tt,T.sees-0.3,0.5);
+      mr_list(cx,1462,330,340,"Anil sees",MR_FACS.map((f,i)=>[f,i?MD.dim:MD.pass,i?"lock":"tick",1]),{a:sa,edge:MD.pass});
+      // the app, and its code: it reads as the person, and decides nothing about who sees what
+      const ca=ag_in(tt,c.filter+0.2,0.5);mr_code(cx,100,300,640,330,[["# Tutor planning",MD.soft],["query("],["  \"casual_teaching_cost\","],["  as_person=True)"]],{a:ca});
+      md_tag(cx,100,690,"no rule about who sees what",{col:MD.pass,icon:"tick",a:ag_in(tt,T.code-0.2,0.5)});
+      md_way(cx,"query",[740,465],[mv.x,mv.y+mv.h/2],tt,{u:ag_sine(clamp((tt-T.sees+0.2)/0.8,0,1)),a:sa});
+      mr_who(cx,180,230,MD.ink,ag_in(tt,T.sees-0.4,0.5));mr_key(cx,206,258,MD.pass,ag_in(tt,T.sees-0.4,0.5),{r:15,s:18});md_T(cx,"Anil",226,240,{w:700,size:28,a:ag_in(tt,T.sees-0.4,0.5)});}},
+    // later: the rule
+    {later:true,at:c.rule-0.6,place:"map",keys:[[0,960,540,1.0]],push:0.02,draw:(cx,tt)=>{
+      const pa=ag_in(tt,c.rule-0.1,0.7);if(pa>0){cx.save();cx.globalAlpha*=pa;md_person(cx,"anil",1620,740,0.8,{t:tt,flip:true,gaze:[3,0]});cx.restore();md_nameTag(cx,1500,392,"anil",{col:MD.dom.teaching,a:pa});}
+      mr_rule(cx,150,360,900,["Let an app read as the person using it.","Keep the rules where the data lives."],{a:ag_in(tt,T.r1-0.5,0.5),k:mr_k(tt,T.r1-0.5),lineA:[ag_in(tt,T.r1-0.2,0.4),ag_in(tt,T.r2-0.2,0.4)]});}}],0.5);
+  MR_KICK(ctx,1);
+});

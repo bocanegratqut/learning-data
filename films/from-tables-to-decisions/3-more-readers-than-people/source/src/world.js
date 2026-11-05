@@ -147,10 +147,10 @@ function mr_reader(ctx,R,o){o=o||{};const a=o.a==null?1:o.a;if(a<=0.004)return n
 function mr_says(ctx,R,text,o){o=o||{};const b={x:R.x,y:R.y,w:R.w,h:110},x=o.x!=null?o.x:b.x+b.w-(o.inset||118),y=o.y!=null?o.y:b.y+b.h+2;md_pill(ctx,x,y,text,{col:o.col||MD.pass,icon:o.icon,size:28,a:o.a,k:o.k});}
 
 /* ---------------------------------------------------------------- small cards */
-// a rule, in gold: o.kick ("The rule"), lines of 36 px; returns its box
+// a rule, in gold: o.kick ("The rule"), lines of 36 px (o.lineA, each line's opacity, to bring them in as they're said); returns its box
 function mr_rule(ctx,x,y,w,lines,o){o=o||{};const h=96+lines.length*50,a=o.a==null?1:o.a,box={x,y,w,h};if(a<=0.004)return box;ctx.save();ctx.globalAlpha*=a;
   if(o.k!=null)ag_about(ctx,x+w/2,y+h/2,lerp(0.6,1,ag_spr(o.k,0,0.5)));md_card(ctx,x,y,w,h,{edge:MD.agreed,glow:0.9});
-  md_T(ctx,(o.kick||"The rule").toUpperCase(),x+32,y+56,{w:800,size:28,ls:4,col:MD.agreed});lines.forEach((l,i)=>md_T(ctx,l,x+32,y+108+i*50,{w:700,size:36}));ctx.restore();return box;}
+  md_T(ctx,(o.kick||"The rule").toUpperCase(),x+32,y+56,{w:800,size:28,ls:4,col:MD.agreed});lines.forEach((l,i)=>md_T(ctx,l,x+32,y+108+i*50,{w:700,size:36,a:o.lineA?o.lineA[i]:1}));ctx.restore();return box;}
 // a card of rows, each [words, colour or null, icon or null, opacity]: an answer, a list of grants, a note
 function mr_list(ctx,x,y,w,head,rows,o){o=o||{};const rh=o.rh||52,h=(head?78:24)+rows.length*rh+20,a=o.a==null?1:o.a,box={x,y,w,h};if(a<=0.004)return box;ctx.save();ctx.globalAlpha*=a;
   if(o.k!=null)ag_about(ctx,x+w/2,y+h/2,lerp(0.6,1,ag_spr(o.k,0,0.5)));md_card(ctx,x,y,w,h,{edge:o.edge||null,glow:0.7,dash:o.dash});
@@ -180,3 +180,50 @@ function mr_signBuild(ctx,x,y,s,o){o=o||{};const a=o.a==null?1:o.a;if(a<=0.004)r
     // cover the symbol until it's added
     if(sy<1){ctx.save();ctx.globalAlpha*=co*(1-sy);tri(0.5);ctx.fillStyle=rgba(MR_WHITE,1);ctx.lineWidth=s*0.12;ctx.strokeStyle=rgba(MR_WHITE,1);ctx.fill();ctx.stroke();ctx.restore();}}
   ctx.restore();}
+
+/* ---------------------------------------------------------------- the tools' pages and cards (chapters 2 to 6) */
+// a number that rolls from a to b (u 0 to 1): the old one rises and fades as the new one comes up from below
+function mr_roll(ctx,x,y,a,b,u,o){o=o||{};const sz=o.size||32,al=o.align||"right",d=sz*0.9,f=o.w||800;u=ag_sine(clamp(u,0,1));
+  if(u<1)md_T(ctx,a,x,y-d*u,{w:f,size:sz,align:al,col:o.colA||MD.ink,a:1-u});if(u>0)md_T(ctx,b,x,y+d*(1-u),{w:f,size:sz,align:al,col:o.colB||MD.ink,a:u});}
+// Genie One's page: a question (o.q) in a bubble at the right, as asked, then the answer (o.ans, large, in o.col) and where it came
+// from (o.from, in mono); o.qA and o.ansA bring each in; returns the window's body
+function mr_genie(ctx,x,y,w,h,o){o=o||{};return md_window(ctx,x,y,w,h,{logo:"databricks",product:"Genie One",title:o.title,edge:o.edge,lit:o.lit,a:o.a,k:o.k,draw:(c,b)=>{
+  const qa=o.qA==null?1:o.qA,aa=o.ansA==null?1:o.ansA;let yy=b.y+8;
+  if(o.q){const ls=md_wrap(c,o.q,b.w-110,{w:600,size:28}),bh=ls.length*38+26,bw=Math.max(...ls.map(l=>md_tw(c,l,{w:600,size:28})))+40,bx=b.x+b.w-bw;
+    if(qa>0.004){c.save();c.globalAlpha*=qa;md_card(c,bx,yy,bw,bh,{r:16,fill:"rgba(38,58,94,0.92)",glow:0});ls.forEach((l,i)=>md_T(c,l,bx+20,yy+40+i*38,{w:600,size:28}));c.restore();}yy+=bh+24;}
+  if(aa>0.004&&o.ans){c.save();c.globalAlpha*=aa;md_T(c,o.ans,b.x+4,yy+42,{w:800,size:44,col:o.col||MD.pass});if(o.sub)md_T(c,o.sub,b.x+4,yy+84,{w:600,size:28,col:MD.soft});
+    if(o.from)md_T(c,o.from,b.x+4,yy+(o.sub?122:84),{w:500,size:28,f:"mono",col:MD.soft});c.restore();}}});}
+// a Power BI report's page: the measure's name as the report gives it (o.name), for whom (o.who), and its number (o.num, in o.col);
+// o.roll [from, to, u, colFrom, colTo] rolls the number; returns the body
+function mr_report(ctx,x,y,w,h,o){o=o||{};return md_window(ctx,x,y,w,h,{logo:"powerbi",product:"Power BI",title:o.title||"Budget pack",edge:o.edge,lit:o.lit,a:o.a,k:o.k,draw:(c,b)=>{
+  if(o.nameLit)glow(c,b.x+150,b.y+30,170,o.nameCol||MD.fail,0.3*o.nameLit);
+  md_T(c,o.name||"Casual teaching cost",b.x+4,b.y+38,{w:700,size:32});md_T(c,o.who||"Faculty of Health, so far",b.x+4,b.y+78,{w:500,size:28,col:MD.soft});
+  const na=o.numA==null?1:o.numA;if(na>0.004){c.save();c.globalAlpha*=na;if(o.roll)mr_roll(c,b.x+4,b.y+148,o.roll[0],o.roll[1],o.roll[2],{size:52,align:"left",colA:o.roll[3],colB:o.roll[4]});
+    else md_T(c,o.num||"",b.x+4,b.y+148,{w:800,size:52,col:o.col||MD.ink});c.restore();}}});}
+// a report on a card, as it stands among the platform's parts: Power BI's logo, the report, the measure's name on it, and its number at
+// the right; returns its box and ports
+function mr_biCard(ctx,x,y,w,o){o=o||{};const h=120,a=o.a==null?1:o.a,box={x,y,w,h,l:[x,y+h/2],r:[x+w,y+h/2],t:[x+w/2,y],b:[x+w/2,y+h]};if(a<=0.004)return box;
+  ctx.save();ctx.globalAlpha*=a;if(o.k!=null)ag_about(ctx,x+w/2,y+h/2,lerp(0.6,1,ag_spr(o.k,0,0.5)));if(o.lit)glow(ctx,x+w/2,y+h/2,w*0.6,o.edge||MD.ink,0.3*o.lit);
+  md_card(ctx,x,y,w,h,{edge:o.edge||null,glow:0.6});const lw=logo(ctx,"powerbi",x+24,y+h/2-24,48),tx=x+24+lw+18;
+  md_T(ctx,o.title||"Budget pack",tx,y+h/2-6,{w:800,size:32});if(o.subLit)glow(ctx,tx+140,y+h/2+22,160,MD.fail,0.35*o.subLit);md_T(ctx,o.sub||"Casual teaching cost",tx,y+h/2+32,{w:500,size:28,col:MD.soft});
+  if(o.roll)mr_roll(ctx,x+w-28,y+h/2+14,o.roll[0],o.roll[1],o.roll[2],{size:36,colA:o.roll[3],colB:o.roll[4]});else if(o.num)md_T(ctx,o.num,x+w-28,y+h/2+14,{w:800,size:36,align:"right",col:o.col||MD.ink});
+  ctx.restore();return box;}
+// a pane for Microsoft Fabric, as md_platform draws Databricks': the logo and name at its top left; returns its inside
+function mr_fabric(ctx,x,y,w,h,o){o=o||{};const a=o.a==null?1:o.a,lit=o.lit||0,inner={x:x+36,y:y+96,w:w-72,h:h-120};if(a<=0.004)return inner;ctx.save();ctx.globalAlpha*=a;
+  md_card(ctx,x,y,w,h,{edge:[120,150,196],glow:0.4+0.8*lit,edgeA:0.5+0.3*lit,r:24,fill:"rgba(9,15,31,0.9)"});const lw=logo(ctx,"fabric",x+28,y+26,44);
+  md_T(ctx,o.title||"Microsoft Fabric",x+28+lw+16,y+62,{w:800,size:36});ctx.restore();return inner;}
+// a dashed slot where something would be but isn't, with a cross and its words
+function mr_slot(ctx,x,y,w,h,text,o){o=o||{};const a=o.a==null?1:o.a;if(a<=0.004)return;ctx.save();ctx.globalAlpha*=a;md_card(ctx,x,y,w,h,{dash:[10,9],edge:o.col||MD.dim,glow:0.2,r:14,fill:"rgba(7,12,26,0.6)"});
+  md_icon(ctx,"cross",x+38,y+h/2,30,o.col||MD.soft);md_T(ctx,text,x+68,y+h/2+10,{w:600,size:28,col:MD.soft});ctx.restore();}
+// a row of tabs, one chosen (sel): o.a, o.litA (each tab's light, 0 to 1), o.lockA (each tab's lock, 0 to 1); returns their boxes
+function mr_tabs(ctx,x,y,names,sel,o){o=o||{};const a=o.a==null?1:o.a,out=[];let xx=x;for(let i=0;i<names.length;i++){const lk=o.lockA?o.lockA[i]||0:0,tw=md_tw(ctx,names[i],{w:700,size:28})+44+(lk>0?40*lk:0),h=52,on=i===sel,li=o.litA?o.litA[i]||0:0;
+    out.push({x:xx,y:y-h/2,w:tw,h});if(a>0.004){ctx.save();ctx.globalAlpha*=a*(lk>0?1-0.45*lk:1);md_card(ctx,xx,y-h/2,tw,h,{r:h/2,edge:on?MD.ink:li>0?MD.flow:null,glow:on?0.5:0.2+0.5*li,fill:on?"rgba(40,58,92,0.95)":"rgba(10,17,35,0.9)",edgeA:on?0.8:0.4+0.4*li});
+      md_T(ctx,names[i],xx+22,y+10,{w:700,size:28,col:on?MD.ink:MD.soft});if(lk>0)md_icon(ctx,"lock",xx+tw-34,y,26,MD.soft,{a:lk});ctx.restore();}xx+=tw+14;}return out;}
+// a small card for an app or a tool, with a logo or an icon, a title and a line under it; returns its box and ports
+function mr_box(ctx,x,y,w,o){o=o||{};const h=o.h||110,a=o.a==null?1:o.a,box={x,y,w,h,l:[x,y+h/2],r:[x+w,y+h/2],t:[x+w/2,y],b:[x+w/2,y+h]};if(a<=0.004)return box;ctx.save();ctx.globalAlpha*=a;
+  if(o.k!=null)ag_about(ctx,x+w/2,y+h/2,lerp(0.6,1,ag_spr(o.k,0,0.5)));if(o.lit)glow(ctx,x+w/2,y+h/2,w*0.6,o.edge||MD.ink,0.3*o.lit);md_card(ctx,x,y,w,h,{edge:o.edge||null,glow:0.5+0.6*(o.lit||0),dash:o.dash});
+  let tx=x+26;if(o.logo){tx+=logo(ctx,o.logo,x+24,y+h/2-22,44)+16;}else if(o.icon){md_icon(ctx,o.icon,x+46,y+h/2,38,o.iconCol||o.edge||MD.ink);tx=x+84;}
+  md_T(ctx,o.title||"",tx,y+(o.sub?h/2-6:h/2+11),{w:800,size:32});if(o.sub)md_T(ctx,o.sub,tx,y+h/2+32,{w:500,size:28,col:MD.soft,f:o.subMono?"mono":undefined});ctx.restore();return box;}
+// a page of code, in mono: lines [text, colour or null], each 28 px; o.lineA (each line's opacity)
+function mr_code(ctx,x,y,w,h,lines,o){o=o||{};return md_window(ctx,x,y,w,h,{logo:o.logo||"databricks",product:o.product||"Databricks Apps",title:o.title||"app.py",a:o.a,k:o.k,edge:o.edge,draw:(c,b)=>{
+  lines.forEach((l,i)=>{const la=o.lineA?o.lineA[i]:1;if(la>0.004)md_T(c,l[0],b.x+8,b.y+38+i*44,{w:500,size:28,f:"mono",col:l[1]||MD.ink,a:la});});}});}
