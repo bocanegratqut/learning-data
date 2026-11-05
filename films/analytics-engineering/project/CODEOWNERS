@@ -49,7 +49,9 @@
 # Data the business owns: each seed's owner
 /seeds/expected/finance/tuition_report.csv               finance@uni.example
 /seeds/expected/planning/census_report.csv               census@uni.example
+/seeds/reference/course/units.csv                        registrar@uni.example
 /seeds/reference/finance/tuition_rates.csv               finance@uni.example
+/seeds/reference/hr/pay_days.csv                         hr@uni.example
 /seeds/reference/student/status_map.csv                  mei.tanaka@uni.example
 /seeds/reference/student/learner_identity_decisions.csv  mei.tanaka@uni.example
 /seeds/reference/student/credit_recognition.csv          faculties@uni.example
