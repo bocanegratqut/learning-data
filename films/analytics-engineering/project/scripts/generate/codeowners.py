@@ -12,6 +12,7 @@ owner to review it, without anyone remembering to.
     a consumer's exposures                  the consumer
     governance's check and its tests        data governance and the data architect (DEC-PRJ-12)
     the team's memory, memory/              data governance; each entry, the owner it names
+    each agent's settings, agents/          the platform team; each agent's folder, its owner too
 
 Owners are named as people know them; governance/2-owners/owners.yml says where each one's
 review request goes. An owner that isn't there stops the script: every owner must be reachable.
@@ -134,6 +135,14 @@ def main():
     rules.append(("/memory/", [reviewers["governance"]], None))
     for entry in sorted((ROOT / "memory" / "entries").glob("*.md")):
         rules.append(("/" + entry.relative_to(ROOT).as_posix(), reach(front_matter(entry).get("owner")), None))
+
+    # Last again: each agent's settings in the tools, which scripts/generate/agents.py writes from the map. The
+    # platform team applies them, and the script that writes them reads the data architect's map.
+    rules.append((None, None, "Each agent's settings in the tools, written from the map: the platform team, and each agent's owner"))
+    rules.append(("/agents/", reach("Sam, platform team"), None))
+    for readme in sorted((ROOT / "agents").glob("*/README.md")):
+        rules.append((f"/agents/{readme.parent.name}/", reach("Sam, platform team", front_matter(readme).get("owner")), None))
+    rules.append(("/scripts/generate/agents.py", reach("Sam, platform team") + [reviewers["model"]], None))
 
     if unknown:
         raise SystemExit(f"{REGISTER.relative_to(ROOT)} doesn't say how to reach: {', '.join(sorted(unknown))}. "
