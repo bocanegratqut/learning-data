@@ -72,8 +72,8 @@ window.CAPTIONS=Object.assign(window.CAPTIONS||{},{
 "Una copia enmascarada es posible, pero sigue siendo de personas reales, y una columna que nadie ha clasificado pasa tal cual.",
 "So development and test get made-up learners, and none of them is anyone.":
 "Así que desarrollo y pruebas reciben estudiantes inventados, y ninguno de ellos es nadie.",
-"The example project's 55 for the logic; for size, a script that writes 2,614, with the real columns and their classes.":
-"Los 55 del proyecto de ejemplo, para la lógica; para el tamaño, un script que escribe 2,614, con las columnas reales y sus clases.",
+"For size, a script writes 2,614 of them, with production's columns and their classes.":
+"Para el tamaño, un script escribe 2,614, con las columnas de producción y sus clases.",
 "dbt's unit tests check the counting on rows written for each test: if nine learners leave Midwifery, the count shows as fewer than 10.":
 "Las pruebas unitarias de dbt revisan el conteo con filas escritas para cada prueba: si nueve estudiantes dejan Partería, dice menos de 10.",
 "dbt's clone and sample bring production's rows in, so they're never used on tables about people.":
@@ -85,10 +85,10 @@ window.CAPTIONS=Object.assign(window.CAPTIONS||{},{
 
 "Monday, 2 November.":
 "Lunes 2 de noviembre.",
-"The teaching hospital where the faculty's learners do their placements asks how many leave after first year, by course, to plan next year's places.":
-"El hospital universitario donde los estudiantes de la facultad hacen sus prácticas pregunta cuántos dejan tras primer año, por carrera, para planear sus plazas.",
+"The teaching hospital where the faculty's learners train asks how many leave after first year, by course, to plan its places.":
+"El hospital universitario donde se forman los estudiantes pregunta cuántos dejan tras primer año, por carrera, para planear sus plazas.",
 "A new purpose needs a new agreement, as An agreement first says: 2026-21, signed by Mei and the hospital's head of education.":
-"Un propósito nuevo necesita un acuerdo nuevo, como dice Primero, un acuerdo: el 2026-21, firmado por Mei y la dirección de docencia del hospital.",
+"Un fin nuevo pide un acuerdo nuevo, como dice Primero, un acuerdo: el 2026-21, firmado por Mei y la dirección de docencia del hospital.",
 "The hospital is on Databricks too, so OpenSharing can share a table with it, as in The marketplace.":
 "El hospital también usa Databricks, así que OpenSharing puede compartirle una tabla, como en El mercado de datos.",
 "But the university's policies don't travel with a share.":
@@ -105,7 +105,7 @@ window.CAPTIONS=Object.assign(window.CAPTIONS||{},{
 "Then the hospital asks a harder question: do learners who spend more weeks on its wards do better that year?":
 "Luego el hospital hace una pregunta más difícil: ¿a quienes pasan más semanas en sus salas les va mejor ese año?",
 "The answer needs both sides' rows, the hospital's weeks and the university's results, and neither may hand its rows to the other.":
-"La respuesta necesita las filas de ambos, las semanas del hospital y los resultados de la universidad, y ninguno puede entregarle sus filas al otro.",
+"La respuesta pide las filas de ambos, las semanas del hospital y los resultados de la universidad, y ninguno puede darle sus filas al otro.",
 "So they meet in a clean room, on Azure Databricks, where neither can see the other's rows, only their columns' names.":
 "Así que se reúnen en una sala limpia, en Azure Databricks, donde ninguno ve las filas del otro, solo los nombres de sus columnas.",
 "The university adds one view, from a shelf no one reads: each Health learner's student number, course and result.":
@@ -129,12 +129,14 @@ window.CAPTIONS=Object.assign(window.CAPTIONS||{},{
 "Elena Lindgren, la nueva asistente de investigación de Anil, quiere descargar la tabla del estudio para limpiarla en una hoja de cálculo.",
 "But a file on a laptop keeps no rules at all, and the agreement says nothing is downloaded.":
 "Pero un archivo en una laptop no mantiene ninguna regla, y el acuerdo dice que nada se descarga.",
-"So in the studies' workspace, from Grants by design, every way out is switched off: downloading results, exporting notebooks, copying tables, downloading files.":
-"Así que en el espacio de trabajo de los estudios, de Permisos por diseño, toda salida está apagada: descargar resultados, exportar notebooks, copiar tablas, descargar archivos.",
+"So in the studies' workspace, from Grants by design, every way out is switched off.":
+"Así que en el espacio de trabajo de los estudios, de Permisos por diseño, toda salida está apagada.",
+"Downloading results, exporting notebooks, copying a table, downloading a file: each one is off.":
+"Descargar resultados, exportar notebooks, copiar una tabla, descargar un archivo: todo está apagado.",
 "The switches are kept as code: turning one back on takes a reviewed change, and the audit log shows it.":
 "Los interruptores se guardan como código: volver a encender uno pide un cambio revisado, y el registro de auditoría lo muestra.",
 "And what runs there can reach only the catalog's storage and a short list, as Network, storage and keys set up for production.":
-"Y lo que corre ahí solo llega al almacenamiento del catálogo y a una lista corta, como Red, almacenamiento y claves lo preparó para producción.",
+"Y lo que corre ahí solo llega al almacenamiento del catálogo y a una lista corta, como hizo Red, almacenamiento y claves en producción.",
 "No switch stops a photo of a screen; her confidentiality agreement covers that.":
 "Ningún interruptor impide una foto de la pantalla; eso lo cubre su acuerdo de confidencialidad.",
 "So Elena cleans the data where it is, in a notebook in the study's space.":
