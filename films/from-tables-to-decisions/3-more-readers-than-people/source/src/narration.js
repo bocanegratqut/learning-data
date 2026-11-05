@@ -16,7 +16,7 @@ const NARR={
  {"id":"new","gap":0.8,"text":"And the signs have readers nobody planned for in 1968.","say":"And the signs have readers nobody planned for in nineteen sixty-eight."},
  {"id":"cars","gap":0.8,"text":"Since July 2024, every new car in the European Union must read the speed limit off the signs it passes.","say":"Since July twenty twenty-four, every new car in the European Union must read the speed limit off the signs it passes."},
  {"id":"data","gap":0.8,"text":"Data has readers nobody planned for, too."},
- {"id":"readers","gap":0.8,"text":"Casual teaching cost, defined once at the university, is read by people, by Finance's reports, by an app, by an agent, and by a partner outside."},
+ {"id":"readers","gap":0.8,"text":"Casual teaching cost, defined once at the university, is read by people, Finance's reports, an app, an agent, and a partner outside."},
  {"id":"wrong","gap":0.8,"text":"A reader that can't reach the definition counts its own way. One that reads as someone else sees what it shouldn't."},
  {"id":"right","gap":0.8,"text":"Read where it's defined, each as itself, every reader gives the same number, and sees only what it may."}]},
 "door":{"name":"A door that didn't carry it","lead":1.0,"tail":1.0,"vo":[
