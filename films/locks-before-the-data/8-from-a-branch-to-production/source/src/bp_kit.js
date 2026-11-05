@@ -13,23 +13,23 @@ const bp_io=(t,t0,t1,d)=>t1==null?ag_in(t,t0,d||0.5):ag_io(t,t0,t1,d||0.5);
 function bp_kick(ctx,S,t,top,title,t0,t1){const a=bp_io(t,t0,t1,0.6);if(a<=0)return;setScreen(ctx,S);dp_kicker(ctx,top,title,{a});}
 
 /* the opening's three lessons, carried into the hall: "Rules set before the change", "Checked by someone who didn't write it",
-   "In force only once both are done". bp_lessons(ctx, {a, lit: [a0, a1, a2], at}) draws them at "big" (three cards across the
-   frame), "small" (a column at the top right, each a slip) or between, by u (0 big, 1 small). */
+   "In force only once both are done". bp_lessons(ctx, {a, lit: [a0, a1, a2], each, by}) draws them "big" (u 0: three cards across
+   the frame, their tops at by, 640 by default) or "small" (u 1: a column of slips at the top right, a tick beside each one lit). */
 const BP_LESSONS=["Rules set before the change","Checked by someone who didn't write it","In force only once both are done"];
-function bp_lessons(ctx,o){o=o||{};const a=o.a==null?1:o.a;if(a<=0)return;const u=ag_sine(o.u||0),lit=o.lit||[1,1,1],each=o.each||[1,1,1];
+function bp_lessons(ctx,o){o=o||{};const a=o.a==null?1:o.a;if(a<=0)return;const u=o.u||0,lit=o.lit||[1,1,1],each=o.each||[1,1,1],by=o.by==null?640:o.by;
   BP_LESSONS.forEach((s,i)=>{const ea=a*each[i];if(ea<=0)return;const L=lit[i];
-    // big: three cards side by side under the middle; small: slips stacked at the top right
-    const bx=130+i*570,by=640,sx=1880,sy=72+i*76;
-    if(u<0.5){const k=1-u*2;ctx.save();ctx.globalAlpha*=ea*k;dp_card(ctx,bx,by,520,{kick:"0"+(i+1),title:s},{col:L>0.5?"cyan":"grey",behind:o.behind});ctx.restore();}
-    if(u>0.5){const k=(u-0.5)*2,size=28,w=dp_tw(ctx,s,{w:700,size})+48;ctx.save();ctx.globalAlpha*=ea*k*(0.55+0.45*L);
-      dp_slip(ctx,sx-w,sy,s,L>0.5?"cyan":"grey",{size,ink:true,behind:o.behind});
-      if(L>0.02)dp_tick(ctx,sx-w-30,sy+34,"green",L);ctx.restore();}});}
+    if(u<0.5){ctx.save();ctx.globalAlpha*=ea;dp_card(ctx,130+i*570,by,520,{kick:"0"+(i+1),title:s},{col:L>0.5?"cyan":"grey",behind:o.behind});ctx.restore();return;}
+    const size=28,w=dp_tw(ctx,s,{w:700,size})+48,sx=1880-w,sy=60+i*74;ctx.save();ctx.globalAlpha*=ea;
+    dp_slip(ctx,sx,sy,s,L>0.5?"cyan":"grey",{size,ink:L>0.5,behind:o.behind});if(L>0.02)dp_tick(ctx,sx-30,sy+34,"green",L);ctx.restore();});}
 
-// one line of code on a dark strip, in the code font: o.size (28), o.col, o.rim (a meaning: the strip's rim and a glow), o.strike (0 to 1)
-function bp_code(ctx,x,y,s,o){o=o||{};const size=o.size||28,a=o.a==null?1:o.a;if(a<=0)return 0;const w=dp_tw(ctx,s,{w:500,size,f:"mono"})+40,h=size+26;
+// one line of code on a dark strip, in the code font: o.size (28), o.col, o.rim (a meaning: the strip's rim and a glow), o.strike (0 to 1);
+// o.stripA (0 to 1) how much of the strip shows, so a line can come out of the page's plain lines and go back into them; o.h the
+// strip's height, centred on the words (a file's lines are closer than a strip's own height)
+function bp_code(ctx,x,y,s,o){o=o||{};const size=o.size||28,a=o.a==null?1:o.a;if(a<=0)return 0;const w=dp_tw(ctx,s,{w:500,size,f:"mono"})+40,h=o.h||size+26,
+    top=o.h?y-8-h/2:y-h+14;
   ctx.save();ctx.globalAlpha*=a;
-  if(o.rim){const c=dp_f(o.rim),ra=o.rimA==null?1:o.rimA;ctx.save();ctx.shadowColor=rgba(c,0.6*ra);ctx.shadowBlur=18;rr(ctx,x-6,y-h+14,w+12,h,10);ctx.strokeStyle=rgba(c,ra);ctx.lineWidth=2.4;ctx.stroke();ctx.restore();}
-  rr(ctx,x-6,y-h+14,w+12,h,10);ctx.fillStyle="rgba(2,12,16,0.62)";ctx.fill();
+  if(o.rim){const c=dp_f(o.rim),ra=o.rimA==null?1:o.rimA;if(ra>0){ctx.save();ctx.shadowColor=rgba(c,0.6*ra);ctx.shadowBlur=18;rr(ctx,x-6,top,w+12,h,10);ctx.strokeStyle=rgba(c,ra);ctx.lineWidth=2.4;ctx.stroke();ctx.restore();}}
+  const sa=o.stripA==null?1:o.stripA;if(sa>0){ctx.save();ctx.globalAlpha*=sa;rr(ctx,x-6,top,w+12,h,10);ctx.fillStyle="rgba(2,12,16,0.62)";ctx.fill();ctx.restore();}
   dp_T(ctx,s,x+14,y,{w:500,size,f:"mono",col:o.col||"ink"});
   if(o.strike>0){const c=dp_f("coral");ctx.save();ctx.strokeStyle=rgba(c,1);ctx.lineWidth=3.2;ctx.shadowColor=rgba(c,0.7);ctx.shadowBlur=8;
     ctx.beginPath();ctx.moveTo(x+8,y-size*0.32);ctx.lineTo(x+8+(w-16)*ag_sine(o.strike),y-size*0.32);ctx.stroke();ctx.restore();}
@@ -40,16 +40,18 @@ function bp_mini(ctx,x,y,k,col,a){if(a<=0)return;ctx.save();ctx.globalAlpha*=a;c
 
 /* the registrar's records: rows of violet glass (each a learner's record: personal data), n of them in a column from (x, y), each
    w x h, gap apart; o.lit (0 to 1) how bright; o.aside: [index, u] slides that row out to the tray at o.tray [x, y] (u 0 to 1);
-   o.flow (0 to 1): how many have come in, from the door below (o.from [x, y]). */
+   o.flow (0 to 1): how many have come in, from the door below (o.from [x, y]); o.bad [index, u] rims that row in coral, as a row
+   that can't be read. */
 function bp_rows(ctx,x,y,o){o=o||{};const n=o.n||8,w=o.w||150,h=o.h||16,gap=o.gap||10,a=o.a==null?1:o.a;if(a<=0)return;const col=DP.F.violet;
   ctx.save();ctx.globalAlpha*=a;
   for(let i=0;i<n;i++){let rx=x,ry=y+i*(h+gap),ra=1;
     if(o.flow!=null){const u=clamp(o.flow*n*1.25-(n-1-i)*1.0,0,1),e=ag_eo(u),[fx,fy]=o.from||[x+w/2,y+n*(h+gap)+60];
       if(u<=0)continue;rx=lerp(fx-w/2,x,e);ry=lerp(fy,ry,e);ra=Math.min(1,u*2.5);}
     if(o.aside&&o.aside[0]===i){const u=ag_sine(o.aside[1]),[tx,ty]=o.tray;rx=lerp(rx,tx,u);ry=lerp(ry,ty,u)-Math.sin(Math.PI*u)*24;}
-    ctx.save();ctx.globalAlpha*=ra;rr(ctx,rx,ry,w,h,h/2);const g=ctx.createLinearGradient(rx,0,rx+w,0);g.addColorStop(0,rgba(col,0.85*(0.5+0.5*(o.lit==null?1:o.lit))));g.addColorStop(1,rgba(mix(col,[255,255,255],0.3),0.55));
+    ctx.save();ctx.globalAlpha*=ra;if(o.bad&&o.bad[0]===i&&o.bad[1]>0){const c=DP.F.coral;ctx.save();ctx.globalAlpha*=o.bad[1];ctx.shadowColor=rgba(c,0.9);ctx.shadowBlur=12;
+      rr(ctx,rx-4,ry-4,w+8,h+8,(h+8)/2);ctx.strokeStyle=rgba(c,1);ctx.lineWidth=2.6;ctx.stroke();ctx.restore();}rr(ctx,rx,ry,w,h,h/2);const g=ctx.createLinearGradient(rx,0,rx+w,0);g.addColorStop(0,rgba(col,0.85*(0.5+0.5*(o.lit==null?1:o.lit))));g.addColorStop(1,rgba(mix(col,[255,255,255],0.3),0.55));
     ctx.shadowColor=rgba(col,0.6);ctx.shadowBlur=10;ctx.fillStyle=g;ctx.fill();ctx.restore();}
   ctx.restore();}
 // a tray of glass beside the platform, where a row that can't be read is set aside, with its label
-function bp_tray(ctx,x,y,w,label,a){if(a<=0)return;ctx.save();ctx.globalAlpha*=a;dp_panel(ctx,x,y,w,64,{col:"violet",r:14,glowR:24});
+function bp_tray(ctx,x,y,w,label,a){if(a<=0)return;ctx.save();ctx.globalAlpha*=a;dp_panel(ctx,x,y,w,48,{col:"violet",r:14,glowR:24});
   if(label)dp_T(ctx,label,x+w/2,y-18,{w:700,size:28,align:"center",col:"violet"});ctx.restore();}
