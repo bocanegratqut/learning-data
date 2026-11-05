@@ -265,10 +265,13 @@ function af_route(ctx,path,u,col,a){if(!(a>0.003)||u<=0)return;const c=dp_f(col)
 const AF_SHIPS=[[0,0],[-34,-16],[-34,16],[-68,0],[-68,-32],[-68,32],[-102,-16],[-102,16],[-136,0],[30,-24],[30,24]];
 function af_hull(ctx,x,y,a,len,col){ctx.save();ctx.translate(x,y);ctx.rotate(a);ctx.fillStyle=col;ctx.beginPath();ctx.moveTo(len/2,0);ctx.quadraticCurveTo(len*0.28,-len*0.16,-len/2,-len*0.13);
   ctx.lineTo(-len/2,len*0.13);ctx.quadraticCurveTo(len*0.28,len*0.16,len/2,0);ctx.closePath();ctx.fill();ctx.restore();}
-function af_convoy(ctx,path,u,a,t){if(!(a>0.003))return;const q=at(path,u),ca=Math.cos(q.a),sa=Math.sin(q.a);ctx.save();ctx.globalAlpha*=a;
+function af_convoy(ctx,path,u,a,t){af_convoyAt(ctx,at(path,u),a);}
+// the convoy at a point q {x, y, a}: between two routes, a blend of where each would have it (af_between)
+function af_convoyAt(ctx,q,a){if(!(a>0.003))return;const ca=Math.cos(q.a),sa=Math.sin(q.a);ctx.save();ctx.globalAlpha*=a;
   for(const [dx,dy] of AF_SHIPS){const x=q.x+dx*ca-dy*sa,y=q.y+dx*sa+dy*ca;ctx.save();ctx.globalAlpha*=0.5;af_hull(ctx,x-3*ca,y-3*sa,q.a,30,"rgba(170,230,235,0.25)");ctx.restore();
     af_hull(ctx,x,y,q.a,22,"rgb(226,242,240)");}
   ctx.restore();}
+function af_between(p1,p2,u,m){const a=at(p1,u),b=at(p2,u);let d=b.a-a.a;while(d>Math.PI)d-=TAU;while(d<-Math.PI)d+=TAU;return{x:lerp(a.x,b.x,m),y:lerp(a.y,b.y,m),a:a.a+d*m};}
 // the submarines: dark low shapes with a small tower, waiting; their wake a faint line
 function af_subs(ctx,a,t){if(!(a>0.003))return;ctx.save();ctx.globalAlpha*=a;AF_SUBS.forEach(([x,y],i)=>{const dx=Math.sin(t*0.3+i)*4,ang=0.3+i*0.5;
   ctx.save();ctx.translate(x+dx,y);ctx.rotate(ang);ctx.fillStyle="rgb(4,10,12)";ctx.strokeStyle="rgba(170,230,235,0.35)";ctx.lineWidth=1.4;
@@ -312,7 +315,7 @@ AG_PLACES.afDesk=c=>{const D=AF_OFFICE,[lx,ly]=D.lamp;
 function af_sheet(ctx,cx,cy,o){o=o||{};const w=228,h=300,a=o.a==null?1:o.a;if(!(a>0.003))return;ctx.save();ctx.globalAlpha*=a;ctx.translate(cx,cy);ctx.rotate(o.rot||-0.06);
   ctx.save();ctx.shadowColor="rgba(0,0,0,0.4)";ctx.shadowBlur=14;ctx.shadowOffsetY=6;ctx.fillStyle="rgb(232,224,204)";ctx.fillRect(-w/2,-h/2,w,h);ctx.restore();
   ctx.fillStyle="rgba(120,90,60,0.12)";ctx.fillRect(-w/2,-h/2,w,h);
-  dp_T(ctx,"MOST SECRET",0,-h/2+46,{w:800,size:30,align:"center",col:[150,34,30],ls:1});
+  dp_T(ctx,"MOST SECRET",0,-h/2+46,{w:800,size:30,align:"center",col:[150,34,30],ls:1,deco:o.deco?1:0});
   ctx.fillStyle="rgba(60,52,44,0.42)";for(let i=0;i<8;i++)ctx.fillRect(-w/2+26,-h/2+82+i*22,w-52-(i===7?70:i%3*18),3);
   if(o.burn>0)af_burn(ctx,0,h/2-20,w,o.burn);
   ctx.restore();}
@@ -324,3 +327,14 @@ function af_sheetDown(ctx,a){if(!(a>0.003))return;const [x,y]=AF_OFFICE.sheet;ct
   ctx.fillStyle="rgba(150,34,30,0.8)";ctx.fillRect(x-30,y-16,60,4);ctx.fillStyle="rgba(60,52,44,0.4)";for(let i=0;i<4;i++)ctx.fillRect(x-50+i*2,y-6+i*7,100-i*4,1.6);ctx.restore();}
 // the pose that reaches a point of the place with the near hand (its middle about 90 px past the wrist), for a person at x, y, s
 function af_reachTo(P,px,py,hand){const [x,y,s,flip]=P,A=AG_FIG.anchor,fx=A[0]+(flip?-1:1)*(px-x)/s-90,fy=A[1]+(py-y)/s-8,[a1,a2]=af_reach(fx,fy);return{near:[a1,a2,hand||"rest"]};}
+// the sheet as the officer holds it (holdBack: under his hand, in figure space), from held up before him (u 0) to lying flat on the
+// desk where AF_OFFICE.sheet is (u 1): the same picture, at the same place, as af_sheetFlat draws on the desk, so when he lets go of
+// it the sheet doesn't move. Laid flat, its words are too small to read and are drawn as decoration
+function af_heldSheet(c,h,u){const e=ag_sine(clamp(u,0,1)),O=AF_OFFICE,[ox,oy,os]=O.officer,A=AG_FIG.anchor,dx=A[0]+(O.sheet[0]-ox)/os,dy=A[1]+(O.sheet[1]-oy)/os;
+  const x=lerp(h.near[0]+50,dx,e),y=lerp(h.near[1]-60,dy,e);c.save();c.translate(x,y);c.scale(lerp(1,0.62,e),lerp(1,0.17,e));af_sheet(c,0,0,{rot:lerp(-0.06,0,e),deco:e>0.01});c.restore();}
+function af_sheetFlat(ctx,o){o=o||{};const [x,y]=AF_OFFICE.sheet;ctx.save();ctx.translate(x,y);ctx.scale(0.62,0.17);af_sheet(ctx,0,0,{rot:0,deco:true,a:o.a});ctx.restore();}
+// the sheet held up before the officer, destroyed (burn 0 to 1): a small coral glow at its foot, and it's gone
+function af_burnSheet(c,h,burn){const x=h.near[0]+50,y=h.near[1]-60;c.save();c.translate(x,y);af_sheet(c,0,0,{rot:-0.06,a:1-ag_in(burn,0.35,0.55)});af_burn(c,0,130,228,burn);c.restore();}
+// the gaps between neighbouring huts in a row (not across the path down the middle): [x, top, bottom] for a thin line in each
+function af_hutGaps(){const out=[];AF_HUTS.forEach(row=>{for(let k=0;k+1<row.length;k++){const [x0,y0,s0]=row[k],[x1,y1,s1]=row[k+1],e=x0+AF_HUT.w*s0;
+  if(x1-e>260)continue;out.push([(e+x1)/2,Math.min(y0,y1)-(AF_HUT.h+AF_HUT.roof+16)*Math.max(s0,s1),Math.max(y0,y1)+6]);}});return out;}

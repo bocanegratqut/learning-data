@@ -6,6 +6,7 @@
   "src": [
     "af_papers.js",
     "af_wartime.js",
+    "af_hall.js",
     "scenes.js"
   ],
   "poster": [

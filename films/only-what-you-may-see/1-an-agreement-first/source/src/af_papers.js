@@ -31,7 +31,7 @@ function af_panelFold(ctx,x,y,w,h,o){o=o||{};const col=o.col?dp_f(o.col):AF_ICE,
    (a meaning: "allowed", "hidden"); strike (0 to 1) draws a violet line through them; glow (0 to 1) lights the row. foot(ctx, x, y, w)
    draws what goes under the rows (signatures) and returns its height. Returns the paper's box, and each row's box (rows). */
 const AF_PAD=36,AF_LH=40,AF_ROWGAP=16;
-function af_paper(ctx,x,y,w,P,o){o=o||{};const lw=o.labelW||210,tw=w-2*AF_PAD-lw,F={w:600,size:28},rows=(P.rows||[]).map(r=>({r,lines:ag_wrap(ctx,r.text,tw,F)}));
+function af_paper(ctx,x,y,w,P,o){o=o||{};const lw=o.labelW||210,tw=w-2*AF_PAD-lw,F={w:600,size:28},rows=(P.rows||[]).map(r=>({r,lines:r.lines||ag_wrap(ctx,r.text,tw,F)}));
   // where everything goes, from the top
   let yy=y+AF_PAD;const L=[];
   if(P.kick){yy+=22;L.push(["kick",yy]);}
@@ -42,7 +42,8 @@ function af_paper(ctx,x,y,w,P,o){o=o||{};const lw=o.labelW||210,tw=w-2*AF_PAD-lw
   const footH=P.footH||0;const h=Math.round(yy-y+footH+AF_PAD-6),bb={x,y,w,h,rows:RB,footY:yy};if(o.measure)return bb;
   const a=o.a==null?1:o.a;if(!(a>0.003))return bb;ctx.save();ctx.globalAlpha*=a;if(o.k!=null)ag_about(ctx,x+w/2,y+h/2,lerp(0.6,1,o.k));
   af_panelFold(ctx,x,y,w,h,{behind:o.behind,col:o.col});
-  for(const [k,by] of L){if(k==="kick")dp_T(ctx,String(P.kick).toUpperCase(),x+AF_PAD,by,{w:800,size:28,ls:4,col:P.kickCol||"cyan"});
+  for(const [k,by] of L){if(k==="kick"){dp_T(ctx,String(P.kick).toUpperCase(),x+AF_PAD,by,{w:800,size:28,ls:4,col:P.kickCol||"cyan"});
+      if(o.date&&o.dateA>0)dp_T(ctx,o.date,x+w-AF_PAD-56,by,{w:600,size:28,align:"right",col:"mut",a:o.dateA});}
     else if(k==="title")dp_T(ctx,P.title,x+AF_PAD,by,{w:800,size:40});else dp_T(ctx,P.sub,x+AF_PAD,by,{w:600,size:28,col:"mut"});}
   if(rows.length){ctx.save();ctx.fillStyle="rgba(190,245,245,0.16)";ctx.fillRect(x+AF_PAD,top-14,w-2*AF_PAD,1.6);ctx.restore();}
   RB.forEach(b=>{const r=b.r,ra=r.a==null?1:r.a;if(!(ra>0.003))return;ctx.save();ctx.globalAlpha*=ra;const dy=(1-ag_eo(ra))*10;
@@ -54,10 +55,14 @@ function af_paper(ctx,x,y,w,P,o){o=o||{};const lw=o.labelW||210,tw=w-2*AF_PAD-lw
     ctx.restore();});
   if(P.foot)P.foot(ctx,x,yy,w);
   ctx.restore();return bb;}
-// a signature: a line to sign on, and a hand's loops written along it (u 0 to 1), in ice; the name under it
-function af_signature(ctx,x,y,w,u,seed){ctx.save();ctx.fillStyle="rgba(190,245,245,0.4)";ctx.fillRect(x,y+6,w,1.6);
-  if(u>0){ctx.beginPath();ctx.rect(x-4,y-40,w*clamp(u,0,1)+8,60);ctx.clip();ctx.strokeStyle=rgba(DP.T.ink,1);ctx.lineWidth=2.6;ctx.lineCap="round";ctx.lineJoin="round";ctx.shadowColor="rgba(190,245,245,0.6)";ctx.shadowBlur=6;
-    ctx.beginPath();const n=60,k1=2.6+(seed||0)*0.7,k2=1.1+(seed||0)*0.3;for(let i=0;i<=n;i++){const v=i/n,xx=x+6+v*(w-12),yy=y-10-12*Math.sin(v*TAU*k1+seed)*Math.exp(-v*1.2)-6*Math.sin(v*TAU*k2);i?ctx.lineTo(xx,yy):ctx.moveTo(xx,yy);}ctx.stroke();}
+// a signature: a line to sign on, and a hand's loops written along it (u 0 to 1), in ice: a run of loops (a trochoid, its loops
+// growing and shrinking), rising a little, and a stroke back under it at the end; seed makes each person's hand their own
+function af_signature(ctx,x,y,w,u,seed){seed=seed||0;ctx.save();ctx.fillStyle="rgba(190,245,245,0.4)";ctx.fillRect(x,y+6,w,1.6);
+  if(u>0){ctx.beginPath();ctx.rect(x-4,y-56,w*clamp(u,0,1)+8,76);ctx.clip();ctx.strokeStyle=rgba(DP.T.ink,1);ctx.lineWidth=2.6;ctx.lineCap="round";ctx.lineJoin="round";
+    ctx.shadowColor="rgba(190,245,245,0.6)";ctx.shadowBlur=6;const L=w*0.78,T=TAU*(4.6+(seed*1.7)%2),a=L/T,n=220;ctx.beginPath();
+    for(let i=0;i<=n;i++){const v=i/n,th=v*T,b=a*(1.5+0.7*Math.sin(v*TAU*1.3+seed*2.1))*(v<0.08?v/0.08:1),xx=x+10+a*th-b*Math.sin(th),yy=y-16-v*8-b*Math.cos(th)*0.9;
+      i?ctx.lineTo(xx,yy):ctx.moveTo(xx,yy);}
+    ctx.moveTo(x+10+L+8,y-14);ctx.quadraticCurveTo(x+w*0.55,y+2,x+16,y-6);ctx.stroke();}
   ctx.restore();}
 
 /* ---------------------------------------------------------------- the confidentiality agreement, each person's own
@@ -73,8 +78,9 @@ function af_promise(ctx,x,y,w,o){o=o||{};const show=o.show||(()=>1),glow=o.glow|
     {a:o.a,k:o.k,behind:o.behind,measure:o.measure,labelW:58});}
 
 /* ---------------------------------------------------------------- the data sharing agreement, 2026-14, word for word (numbers.md)
-   show(k) brings in each line by its key; hi(k) lights it; may (0 to 1) turns what it may have green; never (0 to 1) strikes what it
-   never gets, in violet; signs {mei, anil, date, chip} write the signatures (0 to 1) */
+   show(k) brings in each line by its key; hi(k) lights it; may (0 to 1) turns what it may have green; never (0 to 1) turns what it
+   never gets violet (hidden); signs {mei, anil, chip, a} write the signatures (0 to 1) and set the gold chip; date (dateA 0 to 1) the
+   day it was signed, on the kick's row */
 const AF_AGREE=[["purpose","Purpose","How learners in the Faculty of Health progress, and where they need support"],
   ["from","From","The registrar's learner records: 2,614 learners"],
   ["may","May have","Each learner's course and results; their year of birth; a code in place of who they are"],
@@ -86,17 +92,17 @@ const AF_AGREE=[["purpose","Purpose","How learners in the Faculty of Health prog
 function af_agreement(ctx,x,y,w,o){o=o||{};const show=o.show||(()=>1),hi=o.hi||(()=>0),S=o.signs||null;
   return af_paper(ctx,x,y,w,{kick:"Data sharing agreement",title:"2026-14 · For a study in the Faculty of Health",
     rows:AF_AGREE.map(([k,l,t])=>({label:l,text:t,a:show(k),glow:hi(k),col:k==="may"&&o.may>0?mix(DP.T.ink,DP.T.green,o.may):k==="never"&&o.never>0?mix(DP.T.ink,DP.T.violet,o.never):null,
-      strike:k==="never"?(o.never||0):0,labelCol:k==="may"&&o.may>0?"green":k==="never"&&o.never>0?"violet":"mut"})),footH:S?120:0,
+      labelCol:k==="may"&&o.may>0?"green":k==="never"&&o.never>0?"violet":"mut"})),footH:S?120:0,
     foot:S?(c,x0,y0,ww)=>{const fa=S.a==null?1:S.a;if(!(fa>0.003))return;c.save();c.globalAlpha*=fa;const cx=x0+AF_PAD,half=(ww-2*AF_PAD-120)/2;
       af_signature(c,cx,y0+40,half-40,S.mei||0,1.3);af_signature(c,cx+half,y0+40,half-40,S.anil||0,2.1);
       withA(c,ag_in(S.mei||0,0.3,0.5),()=>{dp_T(c,"Mei Tanaka · for the registrar's office",cx,y0+88,{w:600,size:28,col:"mut"});});
       withA(c,ag_in(S.anil||0,0.3,0.5),()=>{dp_T(c,"Anil Kurian · for the study",cx+half,y0+88,{w:600,size:28,col:"mut"});});
       if(S.chip>0){c.save();c.globalAlpha*=S.chip;dp_chip(c,x0+ww-AF_PAD-72,y0+26);c.restore();}c.restore();}:null},
-    {a:o.a,k:o.k,behind:o.behind,measure:o.measure,labelW:200});}
+    {a:o.a,k:o.k,behind:o.behind,measure:o.measure,labelW:200,date:o.date,dateA:o.dateA});}
 
 /* ---------------------------------------------------------------- the agreement's contract: its terms where the platform reads them */
 function af_contract(ctx,x,y,w,o){o=o||{};const show=o.show||(()=>1),hi=o.hi||(()=>0);
-  return af_paper(ctx,x,y,w,{kick:"Contract",kickCol:"cyan",title:"2026-14",rows:[{label:"Columns",text:"course · results · year of birth · learner code",a:show(0),glow:hi(0)},
+  return af_paper(ctx,x,y,w,{kick:"Contract",kickCol:"cyan",title:"2026-14",rows:[{label:"Columns",text:"course · results · year of birth · learner code",lines:["course · results ·","year of birth · learner code"],a:show(0),glow:hi(0)},
     {label:"Group",text:"Health progress study",a:show(1),glow:hi(1)},{label:"Until",text:"30 June 2027",a:show(2),glow:hi(2),col:o.ended?"coral":null}]},
     {a:o.a,k:o.k,behind:o.behind,measure:o.measure,labelW:160,col:"cyan"});}
 
@@ -110,17 +116,19 @@ function af_register(ctx,x,y,w,o){o=o||{};const h=o.h||420,a=o.a==null?1:o.a;if(
   dp_panel(ctx,x,y,w,h,{col:AF_ICE,r:18,behind:o.behind,glowR:40});
   ctx.save();ctx.strokeStyle="rgba(190,245,245,0.35)";ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(mid,y+14);ctx.lineTo(mid,y+h-14);ctx.stroke();
   const sg=ctx.createLinearGradient(mid-30,0,mid+30,0);sg.addColorStop(0,"rgba(0,0,0,0)");sg.addColorStop(0.5,"rgba(0,0,0,0.25)");sg.addColorStop(1,"rgba(0,0,0,0)");ctx.fillStyle=sg;ctx.fillRect(mid-30,y+4,60,h-8);ctx.restore();
-  dp_T(ctx,"REGISTER",x+34,y+70,{w:800,size:28,ls:4,col:"cyan"});
+  dp_T(ctx,String(o.kick||"Register").toUpperCase(),x+34,y+70,{w:800,size:28,ls:4,col:"cyan"});
   ag_wrap(ctx,o.title||"",mid-x-60,{w:800,size:36}).forEach((l,i)=>dp_T(ctx,l,x+34,y+124+i*46,{w:800,size:36}));
-  if(o.keeper)dp_T(ctx,o.keeper,x+34,y+h-40,{w:600,size:28,col:"mut"});
+  if(o.keeper){const kl=ag_wrap(ctx,o.keeper,mid-x-60,{w:600,size:28});kl.forEach((l,i)=>dp_T(ctx,l,x+34,y+h-40-(kl.length-1-i)*38,{w:600,size:28,col:"mut"}));}
   const rx=mid+34,rw=x+w-34-rx;let ry=y+64;
-  (o.rows||[]).forEach(([text,q])=>{q=q||{};const ra=(q.a==null?1:q.a)*op;if(ra<=0.003){ry+=q.h||58;return;}ctx.save();ctx.globalAlpha*=ra;
+  (o.rows||[]).forEach(([text,q])=>{q=q||{};const ra=(q.a==null?1:q.a)*op;if(q.ghost){ctx.save();ctx.globalAlpha*=ra;ctx.fillStyle="rgba(190,245,245,0.16)";rr(ctx,rx,ry-20,rw*0.8,10,5);ctx.fill();rr(ctx,rx,ry,rw*0.55,10,5);ctx.fill();ctx.restore();ry+=46;return;}
+    if(ra<=0.003){ry+=q.h||58;return;}ctx.save();ctx.globalAlpha*=ra;
     const lines=ag_wrap(ctx,text,rw-(q.tick!=null?60:0),{w:600,size:28}),rh=lines.length*38+20;
     if(q.frost){dp_frost(ctx,rx-10,ry-30,rw+10,rh-6,c=>{lines.forEach((l,i)=>ag_T(c,l,rx,ry+i*38,{w:600,size:28,col:[240,240,250],deco:1}));},{behind:o.behind});}
     else lines.forEach((l,i)=>dp_T(ctx,l,rx,ry+i*38,{w:600,size:28,col:q.col||"ink"}));
     if(q.tick!=null&&q.tick>0)dp_tick(ctx,x+w-56,ry-10+(lines.length-1)*19,q.tickCol||"green",q.tick);
+    if(q.note)dp_T(ctx,q.note,rx,ry+lines.length*38+4,{w:700,size:28,col:q.noteCol||"grey",a:q.noteA==null?1:q.noteA});
     if(q.glow>0){ctx.save();ctx.globalAlpha*=q.glow;ctx.fillStyle=rgba(dp_f(q.glowCol||"cyan"),0.14);rr(ctx,rx-16,ry-36,rw+22,rh,10);ctx.fill();ctx.restore();}
-    ctx.restore();ry+=rh+10;});
+    ctx.restore();ry+=rh+10+(q.note?42:0);});
   ctx.restore();}
 
 /* ---------------------------------------------------------------- a group's badge, and the people in it
@@ -137,6 +145,7 @@ function af_group(ctx,x,y,w,o){o=o||{};const a=o.a==null?1:o.a;if(!(a>0.003))ret
     ctx.translate(x+62,my+38);ctx.scale(0.55,0.55);dp_personPic(ctx,0,0,p>0.5?"grey":"cyan");ctx.restore();
     ctx.beginPath();ctx.arc(x+62,my+38,34,0,TAU);ctx.strokeStyle=rgba(dp_f(p>0.5?"grey":"cyan"),0.9);ctx.lineWidth=2;ctx.stroke();
     dp_T(ctx,m.name,x+116,my+48,{w:700,size:30,col:p>0.5?"grey":"ink"});ctx.restore();
+    if(p>0.003)dp_T(ctx,"Paused",x+116+dp_tw(ctx,m.name,{w:700,size:30})+18,my+48,{w:700,size:28,col:"grey",a:ag_in(p,0.3,0.7)});
     const st=m.state||"signed",txt=st==="renew"?"Renew by February":st==="lapsed"?"Lapsed":st==="paused"?"Paused":"Signed · current",col=st==="renew"?"amber":st==="lapsed"||st==="paused"?"coral":"green";
     dp_pill(ctx,x+w-30,my+50,txt,col,{align:"right",a:m.pillA==null?1:m.pillA});
     ctx.restore();});
@@ -151,25 +160,3 @@ function af_totals(ctx,x,y,w,o){o=o||{};const a=o.a==null?1:o.a;if(!(a>0.003))re
   AF_TOTALS.forEach(([c,n,k],i)=>{const yy=y+152+i*46;dp_T(ctx,c,x+30,yy,{w:600,size:28,col:i===AF_TOTALS.length-1?"ink":"mut"});
     dp_T(ctx,n,x+w-30,yy,{w:700,size:28,align:"right",col:k||"ink"});});
   ctx.restore();return{x,y,w,h};}
-
-/* ---------------------------------------------------------------- the platform, and the study's own space in it
-   The platform: a tall block of clear glass in the hall (af_platform). The study's own space: a small room of clear glass inside it,
-   named, holding only the four columns it may have (cols 0 to 1 each; frost 0 to 1 frosts them over, as the study's copy is deleted) */
-const AF_PLAT={x:1060,y:150,w:700,h:690,room:[1160,420,500,330]};
-function af_platform(ctx,o){o=o||{};const a=o.a==null?1:o.a;if(!(a>0.003))return;const P=AF_PLAT;ctx.save();ctx.globalAlpha*=a;
-  dp_wall(ctx,P.x,P.y,P.w,P.h,{col:"cyan"});
-  // its top, seen from a little below, and its far edges, fainter
-  ctx.save();ctx.strokeStyle="rgba(190,245,245,0.28)";ctx.lineWidth=1.6;ctx.beginPath();ctx.moveTo(P.x+40,P.y-30);ctx.lineTo(P.x+P.w+40,P.y-30);ctx.lineTo(P.x+P.w+40,P.y+P.h-40);ctx.stroke();
-  ctx.beginPath();ctx.moveTo(P.x,P.y);ctx.lineTo(P.x+40,P.y-30);ctx.moveTo(P.x+P.w,P.y);ctx.lineTo(P.x+P.w+40,P.y-30);ctx.moveTo(P.x+P.w,P.y+P.h);ctx.lineTo(P.x+P.w+40,P.y+P.h-40);ctx.stroke();ctx.restore();
-  dp_T(ctx,"The platform",P.x+30,P.y+62,{w:700,size:30,col:"cyan"});
-  ctx.restore();}
-const AF_COLS=["course","results","year of birth","learner code"];
-function af_room(ctx,o){o=o||{};const a=o.a==null?1:o.a;if(!(a>0.003))return;const [x,y,w,h]=AF_PLAT.room;ctx.save();ctx.globalAlpha*=a;
-  dp_wall(ctx,x,y,w,h,{col:o.col||"cyan"});
-  dp_T(ctx,"Health progress study",x+24,y+52,{w:700,size:30,col:o.col||"cyan"});dp_T(ctx,"its own space",x+24,y+92,{w:600,size:28,col:"mut"});
-  const cols=o.cols||(()=>1),fr=o.frost||0;
-  AF_COLS.forEach((c,i)=>{const ca=cols(i);if(!(ca>0.003))return;const cx=x+24+(i%2)*((w-60)/2+12),cy=y+132+Math.floor(i/2)*84,cw=(w-60)/2;ctx.save();ctx.globalAlpha*=ca*(1-ag_in(fr,0.6,0.4));
-    dp_panel(ctx,cx,cy,cw,64,{col:"cyan",r:12,glowR:18,behind:o.behind});dp_T(ctx,c,cx+18,cy+42,{w:600,size:28});
-    if(fr>0){dp_frost(ctx,cx,cy,cw,64,null,{a:ag_in(fr,0,0.5),behind:o.behind});}
-    ctx.restore();});
-  ctx.restore();}
