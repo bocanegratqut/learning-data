@@ -1,4 +1,4 @@
-/* ===== An agent with its own badge: the room's own pieces =====
+/* ===== The map, enforced: the room's own pieces =====
    The film's pieces in the module's lab, all prefixed ob_ / OB (the module's shared code is never changed for one film). Several are
    copied from Why Unity Catalog and Unity Gateway govern them's pieces.js as merged on 5 November 2026 (its ug_ helpers for a person
    at the left, the agent in its ring, the badge on its hook and the paper tags on strings, the grants and the groups), under this
@@ -6,11 +6,13 @@
      the room's usual shot (OB): a person standing at the left, the agent in its ring on the wall in the middle, with a hook under it
      (its badge, its name tag, its owner's tag), and the wall's right for what it shows; its pieces: a name card over a person, a
      ticket, the 214 changes as tiles, the switches, the badge's card with its three tools, the group and its grants, the logs (the
-     code's history, the query history, the audit log's table), the search, the job and its pass, the policy, the tokens with their
-     clocks, the vault and the key, the token service, the branches and main, the schemas, the sandbox and the glass.
-   Colours keep the module's meanings: blue tools and structure (the badge's tools, the group, the grants, the vault, the locks), violet
-   the model and what an agent does (its band, its own lines in a log), orange data coming back, green a check that passes, amber
-   something wrong. The agents look alike: each wears its badge, with its name on it, and none is ever in two places at once. */
+     code's history, the query history, the audit log's table), the search, the job and its pass, the tokens with their clocks, the
+     key, the branches and main, the schemas, the sandbox and the glass; and Noor's map (an element, a step with what it reads, writes
+     and calls) and each tool's card, with the tool's own logo where the film names it.
+   Colours keep the module's meanings: blue tools and structure (the badge's tools, the group, the grants, the locks, the map's
+   roles), violet the model and what an agent does (its band, its own lines in a log, its element on the map), orange data coming
+   back, green a check that passes, amber something wrong. The agents look alike: each wears its badge, with its name on it, and none
+   is ever in two places at once. */
 
 // a value worked out once per chapter (the cue times its scene uses)
 function ob_once(sc,k,fn){sc.__ob=sc.__ob||{};if(!(k in sc.__ob))sc.__ob[k]=fn();return sc.__ob[k];}
@@ -21,7 +23,7 @@ const OB_QUIET=[[700,430,290,260,0.55],[1580,430,340,320,0.5],[640,96,560,46,0.3
 AG_PLACES.obLab=c=>ag_paintLab(c,{quiet:OB_QUIET});
 // the bare room, in a later moment's pass through it, keeps the light every shot of it draws
 AG_BARE.obLab=c=>ag_roomLight(c,1);
-const OB_KICK=(x,a)=>ag_kicker(x,"3.5","An agent with its own badge",{a});
+const OB_KICK=(x,a)=>ag_kicker(x,"3.5","The map, enforced",{a});
 // the kicker, on the frame and drawn once by each chapter after its shots, so a glide never moves it and a pass through the bare room
 // never takes it away
 function ob_kick(ctx,S,a){if(!(a>0))return;ctx.save();setScreen(ctx,S);OB_KICK(ctx,a);ctx.restore();}
@@ -69,7 +71,8 @@ function ob_who(ctx,who,t,o){o=o||{};const W_=OB.who,a=o.a==null?1:o.a;if(a<=0.0
 function ob_name(ctx,cx,y,name,role,a){if(a<=0)return;const w=Math.max(ag_tw(ctx,name,{w:700,size:30}),ag_tw(ctx,role,{w:600,size:28}))+60,h=100;
   ag_box(ctx,cx-w/2,y,w,h,18,{a});withA(ctx,a,()=>{ag_T(ctx,name,cx,y+43,{w:700,size:30,align:"center"});ag_T(ctx,role,cx,y+80,{w:600,size:28,align:"center",col:AG.mut});});}
 // the people of this film at the left, each with their card
-const OB_PEOPLE={jun:["jun","Jun Park","Analytics engineer"],sam:["sam","Sam Okafor","Data platform"],clara:["clara","Clara Jensen","Planning"],lucia:[OB_LUCIA,"Lucía Ortega","Planning"]};
+const OB_PEOPLE={jun:["jun","Jun Park","Analytics engineer"],sam:["sam","Sam Okafor","Data platform"],clara:["clara","Clara Jensen","Planning"],lucia:[OB_LUCIA,"Lucía Ortega","Planning"],
+  noor:["noor","Noor Rahman","Data architect"]};
 function ob_person(ctx,k,t,o){o=o||{};const P=OB_PEOPLE[k],a=o.a==null?1:o.a;ob_who(ctx,P[0],t,{a,p:Object.assign({gaze:[4,-1]},o.p||{})});return P;}
 function ob_personCard(ctx,k,a){const P=OB_PEOPLE[k];ob_name(ctx,OB.who.x,196,P[1],P[2],a);}
 
@@ -146,7 +149,8 @@ function ob_switch(ctx,x,y,w,label,sub,on,o){o=o||{};const a=o.a==null?1:o.a,h=s
 
 /* ---------------------------------------------------------------- the badge's card: one name in every tool
    ob_idCard(ctx, x, y, w, rows, o): a badge seen up close, with its strap's slot, its name and its owner, and a row for each tool:
-   rows [[tool, what it is there, a (0 to 1), hl (0 to 1)]]; o.foot [[words, a, colour, icon]] pills under it; o.a, o.k */
+   rows [[tool, what it is there, a (0 to 1), hl (0 to 1), mono, colour, the tool's logo]]; o.a, o.k. A logo the film doesn't carry
+   draws nothing, and the name moves to its place. */
 function ob_idCard(ctx,x,y,w,rows,o){o=o||{};const a=o.a==null?1:o.a,rh=74,h=160+rows.length*rh+24;if(a<=0)return{x,y,w,h};ctx.save();ctx.globalAlpha*=a;
   if(o.k!=null)ag_about(ctx,x+w/2,y+h/2,lerp(0.6,1,o.k));
   ag_box(ctx,x,y,w,h,24,{edge:AG.blue,edgeA:0.55});ctx.fillStyle=rgba(AG.blue,0.85);rr(ctx,x+16,y+12,w-32,8,4);ctx.fill();
@@ -156,7 +160,8 @@ function ob_idCard(ctx,x,y,w,rows,o){o=o||{};const a=o.a==null?1:o.a,rh=74,h=160
   rows.forEach((r,i)=>{const ry=y+160+i*rh,ra=r[2]==null?1:r[2];if(ra<=0)return;const hl=r[3]||0;
     withA(ctx,ra,()=>{ctx.strokeStyle="rgba(87,82,76,0.16)";ctx.lineWidth=1.2;ctx.beginPath();ctx.moveTo(x+24,ry+4);ctx.lineTo(x+w-24,ry+4);ctx.stroke();
       if(hl>0){ctx.fillStyle=rgba(AG.blue,0.08*hl);rr(ctx,x+14,ry+10,w-28,rh-10,12);ctx.fill();}
-      ag_T(ctx,r[0],x+28,ry+52,{w:700,size:30});ag_T(ctx,r[1],x+w-28,ry+52,{w:500,size:28,f:r[4]?"mono":undefined,align:"right",col:r[5]||AG.ink});});});
+      const lw=r[6]?logo(ctx,r[6],x+28,ry+22,40):0;ag_T(ctx,r[0],x+28+(lw?lw+14:0),ry+52,{w:700,size:30});
+      ag_T(ctx,r[1],x+w-28,ry+52,{w:500,size:28,f:r[4]?"mono":undefined,align:"right",col:r[5]||AG.ink});});});
   ctx.restore();return{x,y,w,h};}
 
 /* ---------------------------------------------------------------- the group and its grants (as Why Unity Catalog and Unity Gateway
@@ -247,8 +252,9 @@ function ob_vault(ctx,x,y,w,o){o=o||{};const a=o.a==null?1:o.a,h=260;if(a<=0)ret
 
 /* ---------------------------------------------------------------- a place of its own: branches, and schemas
    ob_branches(ctx, x, y, w, o): main, a line with its commits and a lock at its end; the agent's branch below it, violet, named
-   agent/planning/study-mode; o.br 0 to 1 draws the branch; o.pr 0 to 1 a pull request's dashed arrow up to main; o.push 0 to 1 a push
-   straight to main, refused (an amber cross); o.a */
+   o.name (OB_BRANCH, its first pull request's, by default); o.br 0 to 1 draws the branch; o.pr 0 to 1 a pull request's dashed arrow
+   up to main; o.push 0 to 1 a push straight to main, refused (an amber cross); o.a */
+const OB_BRANCH="agent/planning/class-size";
 function ob_branches(ctx,x,y,w,o){o=o||{};const a=o.a==null?1:o.a;if(a<=0)return;ctx.save();ctx.globalAlpha*=a;
   const my=y,by=y+150,bx0=x+150,bx1=x+w*0.72;
   ctx.strokeStyle="rgba(87,82,76,0.75)";ctx.lineWidth=6;ctx.lineCap="round";ctx.beginPath();ctx.moveTo(x,my);ctx.lineTo(x+w-70,my);ctx.stroke();
@@ -257,7 +263,7 @@ function ob_branches(ctx,x,y,w,o){o=o||{};const a=o.a==null?1:o.a;if(a<=0)return
   const br=clamp(o.br==null?1:o.br,0,1);if(br>0){const u=ag_sine(br);ctx.strokeStyle=rgba(AG.violet,0.85);ctx.lineWidth=6;ctx.beginPath();ctx.moveTo(bx0,my);
     ctx.bezierCurveTo(bx0+40,my+20,bx0+40,by,bx0+110,by);ctx.lineTo(lerp(bx0+110,bx1,u),by);ctx.stroke();
     if(u>0.98){ctx.fillStyle="#F3F1ED";ctx.beginPath();ctx.arc(bx1,by,13,0,TAU);ctx.fill();ctx.strokeStyle=rgba(AG.violet,0.95);ctx.lineWidth=4;ctx.stroke();}
-    ag_T(ctx,"agent/planning/study-mode",bx0+110,by+56,{w:500,size:28,f:"mono",col:AG.violet,a:clamp(br*2-0.6,0,1)});}
+    ag_T(ctx,o.name||OB_BRANCH,bx0+110,by+56,{w:500,size:28,f:"mono",col:AG.violet,a:clamp(br*2-0.6,0,1)});}
   if(o.pr>0){const u=ag_sine(clamp(o.pr,0,1));ctx.save();ctx.setLineDash([12,10]);ctx.strokeStyle=rgba(AG.blue,0.85);ctx.lineWidth=4;ctx.beginPath();
     ctx.moveTo(bx1+20,by-10);ctx.quadraticCurveTo(bx1+90,lerp(by,my,0.5),lerp(bx1+20,bx1+110,u),lerp(by-10,my+24,u));ctx.stroke();ctx.restore();
     if(u>0.95)ag_arrowHead(ctx,bx1+110,my+24,-1.2,10,rgba(AG.blue,0.9));
@@ -270,3 +276,54 @@ function ob_schema(ctx,x,y,name,o){o=o||{};const a=o.a==null?1:o.a,f={w:500,size
   ctx.save();ctx.globalAlpha*=a;if(o.k!=null)ag_about(ctx,x+w/2,y+h/2,lerp(0.6,1,o.k));
   ag_box(ctx,x,y,w,h,14,{edge:o.edge,edgeA:0.7});ag_T(ctx,name,x+30,y+42,Object.assign({},f,{col:o.grey?AG.mut:(o.col||AG.ink)}));
   if(o.lock)ag_lock(ctx,x+w-36,y+36,26,rgba(AG.mut,1));ctx.restore();return{x,y,w,h};}
+
+/* ---------------------------------------------------------------- Noor's map: an element, a step, someone else's step
+   ob_el(ctx, x, y, w, kind, name, o): an element on the map: its kind in capitals over a thin bar of its colour (o.col: violet for an
+   agent, blue for a role), its name, and o.sub under it (o.subA); o.a, o.k. ob_step(ctx, x, y, w, name, rows, o): a step of
+   Planning's change process, with what it reads, writes and calls, a row each (rows [[verb, what, a]]); o.a, o.k. ob_ghost: a step
+   that's a person's, dashed and muted, from its left edge. Each returns its box. */
+function ob_el(ctx,x,y,w,kind,name,o){o=o||{};const a=o.a==null?1:o.a,h=o.sub?150:110;if(a<=0)return{x,y,w,h};ctx.save();ctx.globalAlpha*=a;
+  if(o.k!=null)ag_about(ctx,x+w/2,y+h/2,lerp(0.6,1,o.k));const col=o.col||AG.kick;
+  ag_box(ctx,x,y,w,h,18,{edge:col,edgeA:0.65});ctx.fillStyle=rgba(col,0.85);rr(ctx,x+16,y+10,w-32,6,3);ctx.fill();
+  ag_T(ctx,kind.toUpperCase(),x+28,y+54,{w:700,size:28,ls:4,col});ag_T(ctx,name,x+28,y+98,{w:700,size:32});
+  if(o.sub)ag_T(ctx,o.sub,x+28,y+136,{w:600,size:28,col:AG.mut,a:o.subA==null?1:o.subA});ctx.restore();return{x,y,w,h};}
+function ob_step(ctx,x,y,w,name,rows,o){o=o||{};const a=o.a==null?1:o.a,h=122+rows.length*48+10;if(a<=0)return{x,y,w,h};ctx.save();ctx.globalAlpha*=a;
+  if(o.k!=null)ag_about(ctx,x+w/2,y+h/2,lerp(0.6,1,o.k));
+  ag_box(ctx,x,y,w,h,18,{edge:AG.blue,edgeA:0.5});
+  ag_T(ctx,"STEP",x+28,y+52,{w:700,size:28,ls:4,col:AG.kick});ag_T(ctx,name,x+28,y+96,{w:700,size:30});
+  rows.forEach((r,i)=>{const ry=y+150+i*48,ra=r[2]==null?1:r[2];if(ra<=0)return;
+    withA(ctx,ra,()=>{ag_T(ctx,r[0],x+28,ry,{w:600,size:28,col:AG.mut});ag_T(ctx,r[1],x+128,ry,{w:600,size:28});});});
+  ctx.restore();return{x,y,w,h};}
+function ob_ghost(ctx,x,y,text,a){const w=ag_tw(ctx,text,{w:700,size:28})+56,h=56;if(!(a>0))return{x,y:y-h/2,w,h};ctx.save();ctx.globalAlpha*=a;
+  ctx.setLineDash([10,8]);ctx.strokeStyle=rgba(AG.mut,0.8);ctx.lineWidth=2.4;rr(ctx,x,y-h/2,w,h,h/2);ctx.stroke();ctx.setLineDash([]);
+  ag_T(ctx,text,x+w/2,y+10,{w:700,size:28,align:"center",col:AG.mut});ctx.restore();return{x,y:y-h/2,w,h};}
+
+/* ---------------------------------------------------------------- the tools' cards, and a row of boxes
+   ob_list(ctx, x, y, w, o): a card of rows: o.kick in capitals (o.kickCol), after o.logo, the tool's own logo, where the film names the
+   tool; o.title (o.titleF "mono" for a name the tool uses) after o.label, a muted word; o.rows [{text, a, hl (lit, o.hlCol), mono, col,
+   dash (a slot nobody fills yet: dashed and muted), marks [[kind, a]] (a tick, a cross, a lock or a warning before the words, each
+   at its own opacity, so a tick can turn to a cross)}]; o.edge, o.a, o.k. ob_tile(ctx, x, y, w, h, text, o): a box of words in a row
+   of them, its tools' logos (o.logos) before the words; o.col, o.mono, o.dash, o.a, o.k. Each returns its box. */
+function ob_mark(ctx,kind,x,y,a){if(!(a>0))return;
+  if(kind==="tick")ag_tick(ctx,x,y-10,24,rgba(AG.green,a),4);else if(kind==="lock")ag_lock(ctx,x,y-6,26,rgba(AG.blue,a));
+  else if(kind==="warn")ag_warn(ctx,x,y-10,28,rgba(AG.amber,a));else if(kind==="cross")ob_cross(ctx,x,y-10,11,a,AG.amber);}
+function ob_list(ctx,x,y,w,o){o=o||{};const a=o.a==null?1:o.a,rows=o.rows||[],rh=52,top=o.title?156:110,h=top+(rows.length-1)*rh+40;if(a<=0)return{x,y,w,h};
+  ctx.save();ctx.globalAlpha*=a;if(o.k!=null)ag_about(ctx,x+w/2,y+h/2,lerp(0.6,1,o.k));
+  ag_box(ctx,x,y,w,h,22,{edge:o.edge||AG.blue,edgeA:0.6});
+  let kx=x+28;if(o.logo){const lw=logo(ctx,o.logo,x+28,y+24,36);if(lw)kx+=lw+14;}
+  ag_T(ctx,String(o.kick||"").toUpperCase(),kx,y+52,{w:700,size:28,ls:4,col:o.kickCol||AG.blue});
+  if(o.title){let tx=x+28;if(o.label){ag_T(ctx,o.label,tx,y+102,{w:600,size:28,col:AG.mut});tx+=ag_tw(ctx,o.label,{w:600,size:28})+16;}
+    ag_T(ctx,o.title,tx,y+102,o.titleF==="mono"?{w:500,size:30,f:"mono"}:{w:700,size:30});}
+  rows.forEach((r,i)=>{const ry=y+top+i*rh,ra=r.a==null?1:r.a;if(ra<=0)return;withA(ctx,ra,()=>{
+    if(r.hl>0){ctx.fillStyle=rgba(r.hlCol||AG.blue,0.09*r.hl);rr(ctx,x+14,ry-34,w-28,46,10);ctx.fill();}
+    if(r.dash){ctx.save();ctx.setLineDash([10,8]);ctx.strokeStyle=rgba(AG.mut,0.8);ctx.lineWidth=2.2;rr(ctx,x+14,ry-34,w-28,46,10);ctx.stroke();ctx.restore();}
+    const mk=r.marks||[];mk.forEach(m=>ob_mark(ctx,m[0],x+44,ry,m[1]==null?1:m[1]));
+    ag_T(ctx,r.text,x+(mk.length?76:28),ry,Object.assign(r.mono?{w:500,size:28,f:"mono"}:{w:600,size:28},{col:r.col||(r.dash?AG.mut:AG.ink)}));});});
+  ctx.restore();return{x,y,w,h};}
+function ob_tile(ctx,x,y,w,h,text,o){o=o||{};const a=o.a==null?1:o.a;if(a<=0)return{x,y,w,h};ctx.save();ctx.globalAlpha*=a;
+  if(o.k!=null)ag_about(ctx,x+w/2,y+h/2,lerp(0.6,1,o.k));const col=o.col||AG.blue,f=o.mono?{w:500,size:30,f:"mono"}:{w:700,size:30};
+  if(o.dash){ctx.save();ctx.setLineDash([10,8]);ctx.strokeStyle=rgba(AG.mut,0.8);ctx.lineWidth=2.4;rr(ctx,x,y,w,h,18);ctx.stroke();ctx.restore();}
+  else ag_box(ctx,x,y,w,h,18,{edge:col,edgeA:0.6});
+  const ls=(o.logos||[]).map(k=>{const im=LOGO[k];return im?[k,34*im.width/im.height]:null;}).filter(Boolean),lw=ls.reduce((s_,l)=>s_+l[1]+12,0);
+  let lx=x+w/2-(ag_tw(ctx,text,f)+lw)/2;ls.forEach(([k,wi])=>{logo(ctx,k,lx,y+h/2-17,34);lx+=wi+12;});
+  ag_T(ctx,text,lx,y+h/2+11,Object.assign({},f,{col:o.dash?AG.mut:(o.textCol||AG.ink)}));ctx.restore();return{x,y,w,h};}
