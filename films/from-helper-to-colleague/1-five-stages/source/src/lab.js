@@ -1,10 +1,10 @@
 /* ===== Five stages, not a switch: the lab's pieces =====
    Where things stand in the module's lab (FL), and the film's pieces there, prefixed fs_ / FS_:
-     the five stages (src/stages.js) stand on the floor, filling the wall (FL.big) or smaller at the right (FL.small), the census
-     agent at the upper left with its badge, the one person the moment needs below it, facing the stages;
-     the census count; a task's tag, which leaves the agent and settles on its stage; a card of lines that come in one by one; the
-     pills; the oak plinth under the stages ("What never changes"); the five levels of the researchers' scale above the stages; the
-     twenty nights in test; the planning agent's ticket passing from Jun's helper.
+     the five stages (src/stages.js) stand on the floor, filling the wall (FL.big) or smaller at the right (FL.small), Anil's
+     workload agent at the upper left with its badge, the one person the moment needs below it, facing the stages;
+     the workload agent's answer for Health's heads of school; a task's tag, which leaves the agent and settles on its stage; a card
+     of lines that come in one by one; the pills; the oak plinth under the stages ("What never changes"); the five levels of the
+     researchers' scale above the stages; the fourteen nights in test; the planning agent's ticket passing from Jun's helper.
    Colours keep the module's meanings: blue tools and structure (the stages, the gates, the limits), violet the model, orange data
    coming back, green a check that passes or a gate passed, amber a check that fails, a loop, or a task moved down a stage. */
 
@@ -27,15 +27,15 @@ function fs_agent(ctx,t,o){o=o||{};const P_=o.at||FL.agent,a=o.a==null?1:o.a;if(
   const hy=P_.y+P_.r+4,drop=o.drop||46;
   if(o.glow>0){const w=ag_tw(ctx,o.name,{w:700,size:28})+48;ctx.save();ctx.globalAlpha*=o.glow;ctx.shadowColor=rgba(AG.blue,0.8);ctx.shadowBlur=26;ctx.strokeStyle=rgba(AG.blue,0.9);
     ctx.lineWidth=4;rr(ctx,P_.x-w/2-6,hy+drop-6,w+12,70,14);ctx.stroke();ctx.restore();}
-  ag_badge(ctx,P_.x,hy,o.name||"census agent",{t,drop});ctx.restore();}
+  ag_badge(ctx,P_.x,hy,o.name||"workload agent",{t,drop});ctx.restore();}
 // the one person a moment needs, below the agent, facing the stages; o.p (gaze, nod, talk), o.a; people fade whole
 function fs_who(ctx,who,t,o){o=o||{};const a=o.a==null?1:o.a;if(a<=0.01)return;const S=o.at||FL.person;
   withA(ctx,a,()=>ag_person(ctx,who,S.x+(o.dx||0),S.y,S.s,Object.assign({t,gaze:[4,-1]},o.p||{})));}
 
 /* ---------------------------------------------------------------- cards, tags, pills */
 function fs_card(ctx,x,y,w,kick,title,sub,o){o=o||{};return ag_textCard(ctx,x,y,w,{kick,title,sub},{kickCol:o.kickCol||AG.kick,edge:o.edge,edgeA:o.edgeA,tail:o.tail,a:o.a,k:o.k,icon:o.icon});}
-// the census count
-function fs_count(ctx,x,y,w,o){o=o||{};return fs_card(ctx,x,y,w,"Census day · 31 March 2026","18,412 students",o.sub||null,
+// the workload agent's answer for Health's heads of school: who teaches in each school this term, and how many are casual
+function fs_answer(ctx,x,y,w,o){o=o||{};return fs_card(ctx,x,y,w,"Health's heads of school","Who teaches in each school","and how many are casual, this term",
   {kickCol:AG.blue,edge:o.ok?AG.green:(o.warn?AG.amber:AG.blue),edgeA:0.6,icon:o.ok?"tick":null,a:o.a,k:o.k});}
 // a pill whose left edge is at x (ag_pill takes its middle)
 function fs_pillL(ctx,x,y,text,o){o=o||{};const w=ag_tw(ctx,text,{w:700,size:o.size||30})+(o.icon?96:56);return ag_pill(ctx,x+w/2,y,text,o);}
@@ -71,9 +71,9 @@ function fs_levels(ctx,stages,o){o=o||{};for(let i=0;i<5;i++){const la=o.p?clamp
     const b=ag_pill(ctx,S.cx,y,FS_LEVELS[i],{col:[86,92,100],a:la*(o.a==null?1:o.a),size:28});
     if(i===4&&o.cross>0){ctx.save();ctx.globalAlpha*=o.cross*la*(o.a==null?1:o.a);ctx.strokeStyle=rgba(AG.amber,0.95);ctx.lineWidth=4;ctx.lineCap="round";
       ctx.beginPath();ctx.moveTo(b.x+20,y);ctx.lineTo(b.x+20+(b.w-40)*ag_sine(o.cross),y);ctx.stroke();ctx.restore();}}}
-// the nights in test, one square each, filling green one by one (p 0 to n), with their dates under them
+// the nights in test, one square each, filling green one by one (p 0 to n), with the first and last dates under them (o.from, o.to)
 function fs_nights(ctx,x,y,n,p,o){o=o||{};const a=o.a==null?1:o.a;if(a<=0)return;const s=24,g=8;ctx.save();ctx.globalAlpha*=a;
   ag_box(ctx,x-28,y-26,n*(s+g)-g+56,s+26+70,22,{edge:AG.green,edgeA:0.35});      // on a card of its own, so its dates read by night
   for(let i=0;i<n;i++){const f=clamp(p-i,0,1),bx=x+i*(s+g);ag_box(ctx,bx,y,s,s,6,{edge:f>0.1?AG.green:[120,116,108],edgeA:0.3+0.6*f});
     if(f>0){ctx.fillStyle=rgba(AG.green,0.85*f);rr(ctx,bx+5,y+5,s-10,s-10,3);ctx.fill();}}
-  ag_T(ctx,"10 October",x,y+s+40,{w:600,size:28,col:AG.mut});ag_T(ctx,"29 October",x+n*(s+g)-g,y+s+40,{w:600,size:28,col:AG.mut,align:"right"});ctx.restore();}
+  ag_T(ctx,o.from||"16 October",x,y+s+40,{w:600,size:28,col:AG.mut});ag_T(ctx,o.to||"29 October",x+n*(s+g)-g,y+s+40,{w:600,size:28,col:AG.mut,align:"right"});ctx.restore();}

@@ -20,10 +20,11 @@ const NARR={
  {"id":"worked","gap":0.8,"text":"But the stages did their part: when restricted drivers crashed, fewer of those crashes were at night, or with passengers."},
  {"id":"first","gap":0.8,"text":"It was the world's first licence in stages, and every American state has one now."},
  {"id":"uni","gap":0.8,"text":"At the university, an agent earns its freedom the same way."},
- {"id":"census","gap":0.8,"text":"Jun's census agent works on the count the university reports to the government: 18,412 students.","say":"Jun's census agent works on the count the university reports to the government: eighteen thousand, four hundred and twelve students."},
+ {"id":"anil","gap":0.8,"text":"Anil's workload agent tells Health's heads of school how many people teach in each school this term, and how many are casual."},
  {"id":"risk","gap":0.3,"text":"Given every right at once, like a full licence at fifteen,"},
- {"id":"risk2","gap":0.8,"text":"it could change how that number is made, alone, at night, before it had shown it could."},
- {"id":"stage","gap":0.8,"text":"So its freedom comes a stage at a time, for each kind of task, and the team can stand behind the number."}
+ {"id":"risk2","gap":0.3,"text":"it could change how those numbers are made, alone, at night, before it had shown it could,"},
+ {"id":"harm","gap":0.8,"text":"and the heads of school would plan the next semester on numbers no one had checked."},
+ {"id":"stage","gap":0.8,"text":"So its freedom comes a stage at a time, for each kind of task, and the team can stand behind its answers."}
 ]},
 "stages":{"name":"Five stages and their gates","lead":0.9,"tail":1.0,"vo":[
  {"id":"road","gap":0.8,"text":"An agent's road, from a junior assistant to a team contributor, has five stages."},
@@ -45,27 +46,29 @@ const NARR={
  {"id":"notswitch","gap":0.8,"text":"Five stages, not a switch."}
 ]},
 "tasks":{"name":"One agent, four stages","lead":0.9,"tail":1.0,"vo":[
- {"id":"own","gap":0.8,"text":"Jun's census agent has had its own identity since An agent on the team."},
+ {"id":"own","gap":0.8,"text":"Anil's workload agent has had its own identity since September."},
  {"id":"notone","gap":0.8,"text":"But it isn't at one stage: each kind of task has its own."},
- {"id":"word","gap":0.8,"text":"What a census word means: stage one. It only suggests, and Mei decides."},
- {"id":"question","gap":0.8,"text":"A new question about the count: stage three. It works alone in its own schema, and Jun checks the result against the plan."},
+ {"id":"word","gap":0.8,"text":"What a word about staff means: stage one. It only suggests, and HR decides."},
+ {"id":"question","gap":0.8,"text":"A new question about teaching staff: stage three. It works alone in its own schema, and Anil checks the result against the plan."},
  {"id":"fix","gap":0.8,"text":"Fixing a model: stage four. It proposes a pull request, Jun reviews it, and Noor approves the change to production."},
  {"id":"night","gap":0.8,"text":"Finding why the night build failed, in test: stage five. It works alone, within its mandate, and reports by morning."},
- {"id":"prod","gap":0.8,"text":"When the night build fails in production, it still finds the cause, but it only drafts the fix, and Noor approves it."},
+ {"id":"prod","gap":0.8,"text":"In production, the same task is at stage four: it finds the cause and drafts the fix, and Noor approves it."},
  {"id":"rerun","gap":0.8,"text":"It never just runs the build again: a plain job does that."},
  {"id":"driver","gap":0.8,"text":"Like a restricted driver, free by day but not at night, the same task has more freedom in test than in production."},
- {"id":"rule","gap":0.8,"text":"Identity belongs to the agent. The stage belongs to each kind of task."}
+ {"id":"rule","gap":0.8,"text":"Identity belongs to the agent. The stage belongs to each kind of task, in each place."}
 ]},
 "down":{"name":"Down a stage, and back","lead":0.9,"tail":1.0,"vo":[
- {"id":"loop","gap":0.3,"text":"In How it goes wrong, the night build failed in test,"},
- {"id":"rounds","gap":0.8,"text":"and the agent ran all night: ten rounds, the same error."},
- {"id":"moved","gap":0.8,"text":"The next day, Jun moved that night task down a stage, from five to four."},
- {"id":"four","gap":0.8,"text":"Each night it waited for Jun to start it, and only proposed its fix."},
+ {"id":"oct","gap":0.8,"text":"One night in October, the build failed in test, and the agent set to work on it alone, as agreed."},
+ {"id":"other","gap":0.8,"text":"To make it pass, it also changed a model that wasn't its own, one that other teams' reports are built on."},
+ {"id":"test","gap":0.8,"text":"It was only in test, and nothing reached production; Jun saw it in the morning."},
+ {"id":"moved","gap":0.8,"text":"That day, Anil moved the night task down a stage, from five to four."},
+ {"id":"four","gap":0.8,"text":"Each time the build failed, it waited for Anil to start it, and only proposed its fix."},
  {"id":"only","gap":0.8,"text":"Only that task moved; its other tasks kept their stages."},
  {"id":"back","gap":0.3,"text":"To go back up, it had to pass the gate again:"},
- {"id":"limits","gap":0.3,"text":"limits on rounds, time and money, a plain check before it starts,"},
- {"id":"nights","gap":0.8,"text":"and twenty nights in test without a miss."},
- {"id":"signed","gap":0.8,"text":"On the thirtieth of October, Jun signed its mandate, and the night task went back up."},
+ {"id":"folders","gap":0.3,"text":"the folders it may change, written down and held by the tools;"},
+ {"id":"limits","gap":0.3,"text":"limits on rounds, time and money, and a plain check before it starts;"},
+ {"id":"nights","gap":0.8,"text":"and fourteen nights in test without a miss."},
+ {"id":"signed","gap":0.8,"text":"On the thirtieth of October, Anil signed its mandate, and the night task went back up."},
  {"id":"keeps","gap":0.8,"text":"A step down for one task, not a switch turned off: the team kept its help while it earned the task back."}
 ]},
 "never":{"name":"What never changes","lead":0.9,"tail":1.0,"vo":[
@@ -82,6 +85,7 @@ const NARR={
 "close":{"name":"One kind of task at a time","lead":0.9,"tail":1.0,"vo":[
  {"id":"nz","gap":0.8,"text":"In New Zealand, freedom on the road came a stage at a time, with the riskiest driving last."},
  {"id":"earned","gap":0.8,"text":"An agent earns its freedom the same way: each kind of task through its own gates, and back down a stage when something goes wrong."},
+ {"id":"map","gap":0.8,"text":"Each stage is written on the university's map, beside its kind of task."},
  {"id":"monday","gap":0.8,"text":"On the second of November, Planning's tickets passed from Jun's helper, on his sign-in, to the planning agent, with a name of its own."},
  {"id":"next","gap":0.8,"text":"The films that follow take it along that road."},
  {"id":"count","gap":0.8,"text":"The agents do more as they earn it, and the team still stands behind every number."},
