@@ -92,7 +92,7 @@ scene("ward",(ctx,S,t,sc)=>{const c=sc.cues,FT=t+sc.start,P=rf_once(sc,"P",()=>(
         a:ag_io(tt,P.nine-0.2,c.uni-0.6,0.4),k:ag_spr(tt,P.nine-0.2)});}},
     // at the university, Planning's new agent raises the same question: what should it be able to reach? A person's rights reach the
     // whole shelf, approving and changing production included; the rights of its work reach only what each of its steps needs
-    {at:c.uni-0.4,place:"rfLab",keys:[[c.uni-0.4,960,540,1]],push:0,draw:(x,tt)=>{const out=1-ag_in(tt,c.breath+0.6,0.8),M=RL.mid;
+    {at:c.uni-0.4,place:"rfLab",keys:[[c.uni-0.4,960,540,1]],push:0,draw:(x,tt)=>{const out=1-ag_in(tt,c.breath-0.2,0.6),M=RL.mid;
       withA(x,out,()=>{rf_agent(x,FT,{at:M,a:ag_in(tt,c.uni+0.2,0.6),think:ag_io(tt,P.reachQ,c.shelf,0.5)});ag_roomLight(x,1);
         rf_card(x,560,446,800,"The same question","What should it be able to reach?",null,{kickCol:AG.violet,a:ag_io(tt,P.same,c.shelf-0.3,0.4),k:ag_spr(tt,P.same)});
         const sh=rf_shelf(x,110,446,{a:ag_in(tt,P.persons,0.4),k:ag_spr(tt,P.persons),lit:clamp((tt-P.whole)/1.6,0,1),edge:ag_in(tt,P.whole,0.5),dim:ag_in(tt,P.cant,0.6)});
@@ -123,7 +123,7 @@ scene("borrowed",(ctx,S,t,sc)=>{const c=sc.cues,FT=t+sc.start,P=rf_once(sc,"P",(
       rf_who(x,"clara",FT,400,730,0.85,{a:ag_in(tt,c.ask,0.6),p:{gaze:[4,-1]}});ag_roomLight(x,1);
       rf_card(x,110,140,560,"Thursday 22 October","Clara Jensen · Planning",null,{kickCol:AG.blue,a:ag_in(tt,P.clara,0.4),k:ag_spr(tt,P.clara)});
       rf_pillL(x,110,332,"the simple way",{a:ag_in(tt,P.simple,0.4)});
-      rf_card(x,720,300,700,null,"“Give it what Jun's helper had. It worked.”",null,{tail:{side:"left",at:0.75,px:520,py:600},a:ag_in(tt,c.quote,0.4),k:ag_spr(tt,c.quote)});
+      rf_card(x,720,300,700,null,"“Give it what Jun's helper had. It\u00a0worked.”",null,{tail:{side:"left",at:0.75,px:520,py:600},a:ag_in(tt,c.quote,0.4),k:ag_spr(tt,c.quote)});
       RF_KICK(x);}},
     // all year, Jun's helper drafted Planning's tickets on Jun's own sign-in, with every right he has: 46, gathered over the years.
     // Some for his work today, some only a person should use, some left from old work. Copying them would fail twice
@@ -144,8 +144,8 @@ scene("borrowed",(ctx,S,t,sc)=>{const c=sc.cues,FT=t+sc.start,P=rf_once(sc,"P",(
       rf_pillL(x,1000,644,"for a report in 2024",{col:[96,100,108],a:ag_io(tt,P.report,c.twice-0.3,0.4)});
       // copying them would fail twice: too wide, and made for a person's years, which the agent doesn't have
       rf_rows(x,1000,540,760,{kick:"Copying them would fail twice",kickCol:AG.amber},[
-        {lab:"1",t:"Too wide: what only people may do, and tables no ticket needs",a:ag_in(tt,P.wide,0.4)},
-        {lab:"2",t:"Grown from a person's years: the agent has none",a:ag_in(tt,P.years,0.4)}],
+        {lab:"1",t:"Too wide: what only people may do, and tables no ticket needs",ta:ag_in(tt,P.wide,0.4)},
+        {lab:"2",t:"Grown from a person's years: the agent has none",ta:ag_in(tt,P.years,0.4)}],
         {labW:44,edge:AG.amber,a:ag_in(tt,c.twice+0.2,0.4),k:ag_spr(tt,c.twice+0.2)});
       RF_KICK(x);}},
     // so Noor and Sam went the other way: from the work to the rights
@@ -160,14 +160,11 @@ scene("borrowed",(ctx,S,t,sc)=>{const c=sc.cues,FT=t+sc.start,P=rf_once(sc,"P",(
 // a step's card: what it reads, writes and calls, each line coming in on its word (u [3]); o.a, o.k
 function rf_stepCard(x,name,reads,writes,calls,u,o){return rf_rows(x,720,120,1100,{kick:"Step · "+name},[
   {lab:"READS",t:reads,ta:u[0]},{lab:"WRITES",t:writes,ta:u[1]},{lab:"CALLS",t:calls,ta:u[2],mute:true}],{labW:170,a:o.a,k:o.k});}
-// the planning contributor's rights, each with the step that needs it; o.chips [6], o.glow, o.drawer (0 to 1: a drawer's handle under it)
+// the planning contributor's rights, each with the step that needs it; o.chips [6], o.glow
 const RF_RIGHTS=[["read the ticket","draft the change"],["read what the change touches","draft the change"],["write its own branch","draft the change"],
   ["read production, names masked","build it in development"],["write its own development schema","build it in development"],["write one pull request","open a pull request"]];
 function rf_rightsCard(x,o){const b=rf_rows(x,720,120,1100,{kick:"Its rights · made from its steps"},RF_RIGHTS.map(([t,ch],i)=>({t,chip:ch,chipA:o.chips?o.chips[i]:1,
     a:o.rows?o.rows[i]:1})),{a:o.a,k:o.k,glow:o.glow||0,glowCol:o.glowCol,edge:o.edge,edgeA:o.edgeA});
-  // like the drawer: a steel handle under its middle, and a label plate
-  const d=(o.drawer||0)*(o.a==null?1:o.a);if(d>0){x.save();x.globalAlpha*=d;const hx=b.x+b.w/2,hy=b.y+b.h+16;
-    ag_soft(x,cc=>ag_rect(cc,hx-110,hy-10,220,22,11),ag_lt(RFW.steel,0.1),[255,255,255],hx+60,hy-10,140,"rgba(40,46,46,0.3)",6);x.restore();}
   return b;}
 scene("steps",(ctx,S,t,sc)=>{const c=sc.cues,FT=t+sc.start,P=rf_once(sc,"P",()=>({pa:wAt(sc,"monday","the planning agent"),map:wAt(sc,"monday","on the map"),
     role:wAt(sc,"monday","planning contributor"),svc:wAt(sc,"service","one service"),seven:wAt(sc,"service","seven steps"),three:wAt(sc,"three","three of them"),
@@ -198,15 +195,17 @@ scene("steps",(ctx,S,t,sc)=>{const c=sc.cues,FT=t+sc.start,P=rf_once(sc,"P",()=>
         cw(1),{a:ag_io(tt,c.build+0.2,c.open-0.3,0.4)});
       rf_stepCard(x,"open a pull request","its change and its results","one pull request","repository · language model",cw(2),{a:ag_io(tt,c.open+0.2,c.exactly-0.3,0.4)});
       // its rights are exactly those, each naming the step that needs it; like the drawer; the map makes the list from the steps
-      rf_rightsCard(x,{a:ag_in(tt,P.ex,0.4),k:ag_spr(tt,P.ex),chips:[0,1,2,3,4,5].map(i=>ag_in(tt,P.names+0.25*i,0.4)),drawer:ag_in(tt,P.drawerW,0.5),
+      rf_rightsCard(x,{a:ag_in(tt,P.ex,0.4),k:ag_spr(tt,P.ex),chips:[0,1,2,3,4,5].map(i=>ag_in(tt,P.names+0.25*i,0.4)),
         glow:ag_io(tt,P.nothing,P.nothing+2.4,0.5),glowCol:AG.green});
+      // like the drawer on the ward: filled from the order, not from the shelf
+      rf_frame(x,432,164,238,206,(cc,fx,fy,fw,fh)=>rf_drawerPic(cc,fx,fy,fw,fh),{a:ag_io(tt,P.drawerW-0.2,c.short-0.2,0.5),k:ag_spr(tt,P.drawerW-0.2)});
       rf_pillL(x,110,470,"the map makes it, from the steps",{col:AG.blue,a:ag_io(tt,P.mapm,c.grants-0.3,0.4)});
       rf_pillL(x,110,470,"Sam's grants: this list only",{icon:"tick",col:AG.green,a:ag_in(tt,P.grants,0.4)});
       RF_KICK(x);}}
   ],0.6);});
 
 /* ---------------------------------------------------------------- 4 · What it reads, and in what order */
-scene("reads",(ctx,S,t,sc)=>{const c=sc.cues,FT=t+sc.start,P=rf_once(sc,"P",()=>({order:wAt(sc,"part","the order matters"),gov:wAt(sc,"first","the governed context"),
+scene("reads",(ctx,S,t,sc)=>{const c=sc.cues,FT=t+sc.start,P=rf_once(sc,"P",()=>({part:wAt(sc,"part","part of its rights"),order:wAt(sc,"part","the order matters"),gov:wAt(sc,"first","the governed context"),
     m1:wAt(sc,"first","its place on the map"),m2:wAt(sc,"first","the glossary"),m3:wAt(sc,"first","the business and data rules"),m4:wAt(sc,"first","the data's own descriptions"),
     own:wAt(sc,"owner","an owner"),rev:wAt(sc,"owner","through review"),mem:wAt(sc,"second","the team's memory"),learned:wAt(sc,"second","what agents learned"),
     sess:wAt(sc,"second","earlier sessions"),kept:wAt(sc,"second","kept by"),canw:wAt(sc,"wrong","can be wrong"),nobody:wAt(sc,"wrong","nobody checks"),
@@ -216,10 +215,13 @@ scene("reads",(ctx,S,t,sc)=>{const c=sc.cues,FT=t+sc.start,P=rf_once(sc,"P",()=>
     {at:0,place:"rfLab",keys:[[0,960,540,1]],push:0,draw:(x,tt)=>{
       rf_agent(x,FT,{think:ag_io(tt,P.dis,P.win+0.6,0.5)});ag_roomLight(x,1);
       const ok=ag_in(tt,P.win,0.5),dimB=0.5*ag_in(tt,P.win,0.5);
+      // what a role reads is part of its rights, and the order matters
+      rf_pillL(x,110,470,"what it reads is part of its rights",{col:AG.blue,a:ag_io(tt,P.part,c.second-0.3,0.4)});
+      rf_pillL(x,110,548,"and the order matters",{col:AG.blue,a:ag_io(tt,P.order,c.second-0.3,0.4)});
       // first, the governed context, each with an owner, changed only through review
       rf_rows(x,720,120,580,{kick:"1 · Governed context"},[{t:"its place on the map",icon:"dot",a:ag_in(tt,P.m1,0.4)},{t:"the glossary",icon:"dot",a:ag_in(tt,P.m2,0.4)},
         {t:"the business and data rules",icon:"dot",a:ag_in(tt,P.m3,0.4)},{t:"the data's own descriptions",icon:"dot",a:ag_in(tt,P.m4,0.4)}],
-        {a:ag_in(tt,P.order,0.4),k:ag_spr(tt,P.order),edge:ok>0.5?AG.green:AG.blue,edgeA:0.5+0.3*ok,glow:ok*0.7,glowCol:AG.green});
+        {a:ag_in(tt,P.gov-0.2,0.4),k:ag_spr(tt,P.gov-0.2),edge:ok>0.5?AG.green:AG.blue,edgeA:0.5+0.3*ok,glow:ok*0.7,glowCol:AG.green});
       rf_pillL(x,720,452,"each has an owner",{icon:"tick",col:AG.blue,a:ag_in(tt,P.own,0.4)});
       rf_pillL(x,720,530,"changes only through review",{icon:"tick",col:AG.blue,a:ag_in(tt,P.rev,0.4)});
       // second, the team's memory: it helps, but it can be wrong, and nobody checks every line of it
@@ -237,7 +239,7 @@ scene("reads",(ctx,S,t,sc)=>{const c=sc.cues,FT=t+sc.start,P=rf_once(sc,"P",()=>
       rf_line(x,390,700,390,738,clamp((tt-P.ownr+0.2)/0.4,0,1),AG.blue,{lw:3,head:true});
       rf_pillL(x,110,782,"the definition's owner sees it",{col:AG.blue,a:ag_in(tt,P.ownr,0.4)});
       // like the pharmacist with the doctor's own order: the original first, a copy only second
-      rf_frame(x,1290,560,520,264,(cc,fx,fy,fw,fh)=>rf_originalPic(cc,fx,fy,fw,fh),{a:ag_in(tt,P.orig,0.5),k:ag_spr(tt,P.orig)});
+      rf_frame(x,1310,572,480,240,(cc,fx,fy,fw,fh)=>rf_originalPic(cc,fx,fy,fw,fh),{a:ag_in(tt,P.orig,0.5),k:ag_spr(tt,P.orig)});
       RF_KICK(x);}}
   ],0.6);});
 
@@ -255,7 +257,7 @@ scene("left",(ctx,S,t,sc)=>{const c=sc.cues,FT=t+sc.start,P=rf_once(sc,"P",()=>(
       const others=[0,4,5,6],at=[P.tk,P.rv,P.ap,P.rl],who=[P.tkw,P.rvw,P.apw,P.rlw],ends=[c.review,c.approve,c.release,c.word];
       rf_chain(x,{p:[0,1,2,3,4,5,6].map(i=>clamp((tt-c.left-0.1*i)/0.7,0,1)),col:[AG.amber,AG.blue,AG.blue,AG.blue,AG.amber,AG.amber,AG.amber],
         ek:[0,1,2,3,4,5,6].map(i=>{const k=others.indexOf(i);return k<0?1:ag_in(tt,P.four+0.2*k,0.5);}),
-        lit:[0,1,2,3,4,5,6].map(i=>{const k=others.indexOf(i);return k<0?0.3:Math.max(ag_io(tt,P.four+0.2*k,P.four+1.6+0.2*k,0.4),ag_io(tt,at[k],ends[k]-0.2,0.4),ag_io(tt,P.n1,c.falls,0.5));}),
+        lit:[0,1,2,3,4,5,6].map(i=>{const k=others.indexOf(i);return k<0?0.3:Math.max(ag_io(tt,P.four+0.2*k,P.four+1.6+0.2*k,0.4),ag_io(tt,at[k],ends[k]-0.2,0.4),ag_io(tt,P.n1,c.falls,0.5),k>0?ag_in(tt,P.chk+0.4,0.5):0);}),
         roles:ag_in(tt,P.roles,0.5),who:[0,1,2,3,4,5,6].map(i=>{const k=others.indexOf(i);return k<0?0:ag_in(tt,who[k],0.4);}),bracket:ag_in(tt,c.left+0.5,0.5)});
       rf_card(x,720,130,620,"What's left out","Written down too, with the reason",null,{kickCol:AG.amber,edge:AG.amber,edgeA:0.5,a:ag_io(tt,P.left,c.word-0.3,0.4),k:ag_spr(tt,P.left)});
       // and what a word means is decided by its owner, such as Mei for the students' words, before it goes into the glossary
@@ -265,13 +267,13 @@ scene("left",(ctx,S,t,sc)=>{const c=sc.cues,FT=t+sc.start,P=rf_once(sc,"P",()=>(
       const nv=[P.n1,P.n2,P.n3,P.n4],ns=["never approves","never releases","never changes what a word means","never writes to production"];
       ns.forEach((s,i)=>rf_pillL(x,720,168+i*80,s,{icon:"lock",col:AG.amber,a:ag_io(tt,nv[i],c.ward-0.3,0.4)}));
       // nobody had to forbid each one: separation of duties falls out of the steps
-      rf_card(x,1380,140,440,null,"Separation of duties","falls out of the steps",{edge:AG.green,edgeA:0.6,icon:"tick",a:ag_io(tt,P.sod,c.check-0.3,0.4),k:ag_spr(tt,P.sod)});
+      rf_card(x,1320,140,520,null,"Separation of duties","falls out of the steps",{edge:AG.green,edgeA:0.6,icon:"tick",a:ag_io(tt,P.sod,c.check-0.3,0.4),k:ag_spr(tt,P.sod)});
       // as on the ward: one ordered, one filled, one gave
-      rf_frame(x,740,150,560,300,(cc,fx,fy,fw,fh)=>rf_triadPic(cc,fx,fy,fw,fh),{a:ag_io(tt,P.ord-0.2,c.check-0.3,0.5),k:ag_spr(tt,P.ord-0.2)});
+      rf_frame(x,720,150,520,280,(cc,fx,fy,fw,fh)=>rf_triadPic(cc,fx,fy,fw,fh),{a:ag_io(tt,P.ord-0.2,c.check-0.3,0.5),k:ag_spr(tt,P.ord-0.2)});
       // and a check fails the map if a step only people do is given to a role an agent fills
       rf_card(x,720,130,1000,"The map's check","A step only people do, given to a role an agent fills",null,{kickCol:AG.blue,edge:AG.amber,edgeA:0.6,
         a:ag_in(tt,P.chk,0.4),k:ag_spr(tt,P.chk)});
-      ag_verdict(x,960,400,"the map fails","fail",ag_in(tt,P.fills+0.3,0.4));
+      ag_verdict(x,1220,400,"the map fails","fail",ag_in(tt,P.fills+0.3,0.4));
       RF_KICK(x);}}
   ],0.6);});
 
@@ -285,7 +287,7 @@ scene("change",(ctx,S,t,sc)=>{const c=sc.cues,FT=t+sc.start,P=rf_once(sc,"P",()=
   ag_shots(ctx,S,t,sc.dur,[
     {at:0,place:"rfLab",keys:[[0,960,540,1]],push:0,draw:(x,tt)=>{
       // Noor comes in from the right while the role changes, and leaves when it's done
-      const nx=tt<c.asks?rf_slide(tt,P.noor-0.4,2150,1690,1.3):rf_slide(tt,c.asks-0.2,1690,2150,1.3),na=ag_in(tt,P.noor-0.4,0.5)*(1-ag_in(tt,c.asks+0.4,0.6));
+      const nx=tt<c.asks-0.2?rf_slide(tt,P.noor-0.4,2150,1690,1.3):rf_slide(tt,c.asks-0.2,1690,2150,1.3),na=ag_in(tt,P.noor-0.4,0.5)*(1-ag_in(tt,c.asks+0.4,0.6));
       rf_agent(x,FT,{think:ag_io(tt,P.more,P.stops+0.4,0.5)});if(na>0)rf_who(x,"noor",FT,nx,735,0.7,{a:na,p:{flip:true,gaze:[4,0]}});ag_roomLight(x,1);
       // work changes, and the rights follow it: the work, its steps on the map, its rights, its tools
       rf_flow(x,720,160,[{t:"the work",a:ag_in(tt,c.follow,0.4)},{t:"its steps",a:ag_in(tt,P.follow-0.2,0.4)},{t:"its rights",a:ag_in(tt,P.follow+0.2,0.4)},

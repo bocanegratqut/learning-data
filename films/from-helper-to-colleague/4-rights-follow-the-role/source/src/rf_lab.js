@@ -160,6 +160,17 @@ function rf_originalPic(c,x,y,w,h){c.fillStyle=rgba(RFW.cream,1);c.fillRect(x,y,
   rf_order(c,x+w*0.27,y+h*0.5,w*0.38,{h:h*0.56,r:-0.04,title:"ORDER",seed:3});rf_order(c,x+w*0.73,y+h*0.5,w*0.38,{h:h*0.56,r:0.05,title:"COPY",copy:true,seed:8});
   for(const [nx,n,col] of [[0.27,"1",AG.green],[0.73,"2",AG.mut]]){c.fillStyle=rgba(col,0.95);c.beginPath();c.arc(x+w*nx,y+h*0.1+4,20,0,TAU);c.fill();
     ag_T(c,n,x+w*nx,y+h*0.1+14,{w:800,size:28,align:"center",col:AG.white});}}
+// a patient's drawer filled from the order: the order, an arrow, the drawer with its doses, each under its word
+function rf_drawerPic(c,x,y,w,h){c.fillStyle=rgba(RFW.cream,1);c.fillRect(x,y,w,h);const cy=y+h*0.42;
+  rf_order(c,x+w*0.25,cy,w*0.34,{h:h*0.42,r:-0.04,nowords:true,lines:3,seed:4});rf_arrow(c,x+w*0.5,cy,1);
+  // the drawer, open: its tray seen from above (dark inside, the doses in it), then its front nearer us, with its handle
+  {const dw=w*0.38,dx=x+w*0.75-dw/2,ty0=cy-h*0.17,ty1=cy+h*0.04,fh=h*0.13;
+    c.save();c.beginPath();c.moveTo(dx+dw*0.08,ty0);c.lineTo(dx+dw*0.92,ty0);c.lineTo(dx+dw,ty1);c.lineTo(dx,ty1);c.closePath();
+    c.fillStyle="rgba(58,64,66,0.78)";c.fill();c.strokeStyle=rgba(ag_lt(RFW.steel,0.3),1);c.lineWidth=3;c.stroke();c.clip();
+    for(let i=0;i<3;i++)rf_packet(c,dx+dw*(0.24+0.26*i),(ty0+ty1)/2+2,w*0.085,{r:(i-1)*0.07});c.restore();
+    ag_soft(c,cc=>ag_rect(cc,dx,ty1,dw,fh,6),ag_lt(RFW.steel,0.12),[255,255,255],dx+dw,ty1,160,"rgba(40,46,46,0.3)",6);
+    c.fillStyle=rgba(ag_dk(RFW.steel,0.35),1);rr(c,dx+dw/2-16,ty1+fh-14,32,7,3.5);c.fill();}
+  [["order",0.25],["drawer",0.75]].forEach(([s,u])=>ag_T(c,s,x+w*u,y+h*0.86,{w:700,size:28,align:"center",col:AG.ink}));}
 // on the ward, three hands: the doctor's order, the pharmacist's drawer, the nurse's cup, each under its word
 function rf_triadPic(c,x,y,w,h){c.fillStyle=rgba(RFW.cream,1);c.fillRect(x,y,w,h);const cy=y+h*0.42;
   rf_order(c,x+w*0.18,cy,w*0.22,{h:h*0.42,r:-0.04,nowords:true,lines:3,seed:4});

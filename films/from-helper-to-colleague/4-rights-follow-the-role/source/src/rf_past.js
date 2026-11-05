@@ -192,10 +192,12 @@ function rf_cart(ctx,o){o=o||{};const C=RF_PH.cart,a=o.a==null?1:o.a;if(a<=0)ret
   // the body: pale steel, and its top rail
   ag_soft(ctx,cc=>ag_rect(cc,C.x,C.y,C.w,base-C.y,12),RFW.steel,[255,255,255],C.x+C.w,C.y,600,"rgba(40,46,46,0.32)",16);
   ctx.fillStyle=rgba(ag_lt(RFW.steel,0.4),1);ctx.fillRect(C.x-10,C.y-12,C.w+20,16);
+  // the drawer under an open one keeps its front, but its label goes as the open drawer's front comes down over it
+  const under=o.open&&o.open[1]>0.001?o.open[0]+C.cols:-1,uA=under>=0?1-clamp(ag_sine(o.open[1])*3,0,1):1;
   const front=(dx,dy,w,h,k)=>{ag_soft(ctx,cc=>ag_rect(cc,dx,dy,w,h,6),ag_lt(RFW.steel,0.12),[255,255,255],dx+w,dy,200,"rgba(40,46,46,0.25)",8);
     ctx.fillStyle=rgba(ag_dk(RFW.steel,0.35),1);rr(ctx,dx+w/2-26,dy+h-26,52,10,5);ctx.fill();
     const lit=o.lit===k;ctx.fillStyle=lit?rgba(AG.blue,0.18):rgba(RFW.paper,1);rr(ctx,dx+14,dy+12,w-28,44,6);ctx.fill();
-    ag_T(ctx,"Bed "+(k+1),dx+w/2,dy+45,{w:700,size:28,align:"center",col:lit?AG.blue:AG.ink});};
+    const la=k===under?uA:1;if(la>0.01)ag_T(ctx,"Bed "+(k+1),dx+w/2,dy+45,{w:700,size:28,align:"center",col:lit?AG.blue:AG.ink,a:la});};
   const out=[];let k=0,op=null;
   for(let r=0;r<C.rows;r++)for(let q=0;q<C.cols;q++,k++){const dx=x0+q*dw,dy=top+r*dh,w=dw-12,h=dh-14;out.push({x:dx,y:dy,w,h,cx:dx+w/2,cy:dy+h/2});
     if(o.open&&o.open[0]===k&&o.open[1]>0.001){op={k,dx,dy,w,h};ctx.fillStyle="rgba(30,34,36,0.55)";rr(ctx,dx,dy,w,h,6);ctx.fill();}else front(dx,dy,w,h,k);}
