@@ -51,7 +51,7 @@ function rd_statement(ctx,S,a,lines,o){o=o||{};if(a<=0.004)return;md_veil(ctx,S,
    closes (o.code back to 0) before his next question (o.q2) and its answer (o.ans2) come in under the first. Its bubbles keep their
    size while their words are typed, so nothing below them moves. */
 const RD_Q1="What has casual teaching cost Health this semester, so far?",RD_Q2="And Semester 1?";
-const RD_SQL=["SELECT faculty_name, MEASURE(casual_teaching_cost)","FROM university.prod_marts.casual_teaching_cost","WHERE faculty_name = 'Health'","  AND teaching_period = '2026-S2'","GROUP BY faculty_name"];
+const RD_SQL=["SELECT faculty_name, MEASURE(casual_teaching_cost)","FROM university.prod_marts.casual_teaching_cost","WHERE faculty_name = 'Faculty of Health'","  AND teaching_period = '2026-S2'","GROUP BY faculty_name"];
 // a question in a bubble at the right of the body, its right edge at x; u how much is typed. Returns its height
 function rd_bubble(c,x,y,maxW,s,u,a){const f={w:600,size:32},ls=md_wrap(c,s,maxW-56,f),bw=Math.max(...ls.map(l=>md_tw(c,l,f)))+56,bh=ls.length*44+36;if(a<=0.004)return bh;
   c.save();c.globalAlpha*=a;c.fillStyle="rgba(120,200,255,0.13)";rr(c,x-bw,y,bw,bh,24);c.fill();c.strokeStyle=rgba(MD.flow,0.55);c.lineWidth=1.6;rr(c,x-bw,y,bw,bh,24);c.stroke();
@@ -142,7 +142,7 @@ function rd_pageRules(c,x,y,w,p){const cw=(w-24)/2;
   const rd=ag_in(p.reads||0,0,0.5);if(rd>0){c.save();c.globalAlpha*=rd;const gy=y+340;md_card(c,x,gy,w,110,{dash:true,edge:MD.personal});md_icon(c,"table",x+52,gy+55,38,MD.personal);
     md_T(c,"casual claims · one row per claim",x+96,gy+64,{w:600,size:28,col:MD.soft});const nw=md_tw(c,"not in its data",{w:700,size:28})+88;md_tag(c,x+w-24-nw,gy+55,"not in its data",{col:MD.personal,icon:"lock"});c.restore();}}
 // its examples: questions Finance asks, each with the query that answers it
-const RD_EX=[["Casual teaching cost for Health, this semester?",["SELECT MEASURE(casual_teaching_cost)","WHERE faculty_name = 'Health' …"]],
+const RD_EX=[["Casual teaching cost for Health, this semester?",["SELECT MEASURE(casual_teaching_cost)","WHERE faculty_name = 'Faculty of Health' …"]],
   ["Each faculty's casual teaching cost, Semester 1?",["SELECT faculty_name, MEASURE(…)","WHERE teaching_period = '2026-S1' …"]]];
 function rd_pageExamples(c,x,y,w,p){RD_EX.forEach(([q,sql],i)=>{const a=clamp((p.n||0)-i,0,1);if(a<=0.004)return;const ey=y+i*226;c.save();c.globalAlpha*=ag_sine(a);
   md_card(c,x,ey,w,204,{});md_icon(c,"query",x+46,ey+48,34,MD.flow);md_T(c,q,x+84,ey+58,{w:700,size:30});

@@ -228,7 +228,9 @@ project/
 │                             platform-results/: a night's checks on the platform, in the scorecard;
 │                             census-by-level/: a job, from its one-page plan to its pull request;
 │                             agents-on-databricks/: the census-day count as a function, a Genie
-│                             Agent and an agent's evaluation cases (Databricks only)
+│                             Agent and an agent's evaluation cases (Databricks only);
+│                             reports-on-demand/: Finance's Genie Agent for casual teaching cost and
+│                             the fortnightly dashboard (Databricks only)
 ├── AGENTS.md                 what an AI agent may and may not do here, and its access
 ├── CODEOWNERS                [generated] who reviews a change, from the owners in the metadata. An
 │                             example here: GitHub reads it only at a repository's root

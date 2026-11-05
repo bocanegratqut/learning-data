@@ -139,8 +139,8 @@ window.CAPTIONS=Object.assign(window.CAPTIONS||{},{
 "En la universidad, las preguntas que se repiten tienen un tablero.",
 "Every other question is answered when it's asked, from good models and their context, built once.":
 "Cualquier otra pregunta se responde cuando se hace, desde buenos modelos y su contexto, construidos una vez.",
-"And Health's casual teaching budget was set from this semester's numbers, in a morning, not a week.":
-"Y el presupuesto de docencia ocasional de Salud se fijó con las cifras de este semestre, en una mañana, no en una semana.",
+"And Health's casual teaching budget was set from this year's numbers, in a morning, not a week.":
+"Y el presupuesto de docencia ocasional de Salud se fijó con las cifras de este año, en una mañana, no en una semana.",
 "None of these ideas is new; the tools now make them easier.":
 "Ninguna de estas ideas es nueva; las herramientas ahora las hacen más fáciles.",
 "So don't reinvent the wheel: investigate, adapt, implement and iterate, starting from the official docs, linked on this page.":

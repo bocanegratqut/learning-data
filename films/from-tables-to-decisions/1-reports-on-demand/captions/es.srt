@@ -263,21 +263,21 @@ En la universidad, las preguntas que se repiten tienen un tablero.
 Cualquier otra pregunta se responde cuando se hace, desde buenos modelos y su contexto, construidos una vez.
 
 67
-00:05:53,435 --> 00:05:58,877
-Y el presupuesto de docencia ocasional de Salud se fijó con las cifras de este semestre, en una mañana, no en una semana.
+00:05:53,435 --> 00:05:58,606
+Y el presupuesto de docencia ocasional de Salud se fijó con las cifras de este año, en una mañana, no en una semana.
 
 68
-00:06:00,177 --> 00:06:03,755
+00:05:59,906 --> 00:06:03,484
 Ninguna de estas ideas es nueva; las herramientas ahora las hacen más fáciles.
 
 69
-00:06:04,655 --> 00:06:12,653
+00:06:04,384 --> 00:06:12,382
 Así que no reinventes la rueda: investiga, adapta, implementa e itera, empezando por la documentación oficial, enlazada en esta página.
 
 70
-00:06:13,953 --> 00:06:17,638
+00:06:13,682 --> 00:06:17,367
 Pide la respuesta; deja los tableros para las preguntas que se repiten.
 
 71
-00:06:19,338 --> 00:06:25,107
+00:06:19,067 --> 00:06:24,836
 Después: el costo de la docencia ocasional, definido en formato abierto, para que todos lo cuenten igual.

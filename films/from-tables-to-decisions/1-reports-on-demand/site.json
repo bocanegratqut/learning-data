@@ -99,6 +99,14 @@
         "line_es": "El botón Ask Genie de un tablero publicado, vinculado a un Genie Agent que ya existe.",
         "href": "https://docs.databricks.com/aws/en/dashboards/genie-spaces",
         "href_es": "https://learn.microsoft.com/es-es/azure/databricks/dashboards/genie-spaces"
+      },
+      {
+        "title": "Unity Catalog metric views",
+        "title_es": "Vistas de métricas del catálogo de Unity",
+        "line": "A measure defined once, then queried from dashboards, Genie Agents and SQL, grouped by any of its fields.",
+        "line_es": "Una medida definida una vez, y consultada desde tableros, Genie Agents y SQL, agrupada por cualquiera de sus campos.",
+        "href": "https://docs.databricks.com/aws/en/metric-views/",
+        "href_es": "https://learn.microsoft.com/es-es/azure/databricks/metric-views/"
       }
     ]
   }

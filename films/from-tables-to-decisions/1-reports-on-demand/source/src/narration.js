@@ -72,7 +72,7 @@ const NARR={
  {"id":"then","gap":0.8,"text":"In 1936, the question everyone asked got a machine of its own, and anyone could ask it, at any hour.","say":"In nineteen thirty-six, the question everyone asked got a machine of its own, and anyone could ask it, at any hour."},
  {"id":"uni","gap":0.8,"text":"At the university, the questions that come back have one dashboard."},
  {"id":"every","gap":0.8,"text":"Every other question is answered when it's asked, from good models and their context, built once."},
- {"id":"budget","gap":0.8,"text":"And Health's casual teaching budget was set from this semester's numbers, in a morning, not a week."},
+ {"id":"budget","gap":0.8,"text":"And Health's casual teaching budget was set from this year's numbers, in a morning, not a week."},
  {"id":"old","gap":0.8,"text":"None of these ideas is new; the tools now make them easier."},
  {"id":"docs","gap":0.8,"text":"So don't reinvent the wheel: investigate, adapt, implement and iterate, starting from the official docs, linked on this page."},
  {"id":"takeaway","gap":0.8,"text":"Ask for the answer; keep dashboards for the questions that come back."},

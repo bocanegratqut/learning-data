@@ -83,10 +83,11 @@ scene("clock",(ctx,S,t,sc)=>{
       md_tag(c,180,838,"40 pages · emailed every pay day",{a:ag_in(tt,T.tForty,0.5)});
       rd_need(c,880,250,{kick:"Any other question",q:"Casual hours in Health's second-year units?",w:860,edge:null,before:"A report of its own",a:ag_in(tt,T.tWeek,0.5),k:tt-T.tWeek,wk:clamp((tt-T.tWk+0.6)/1.6,0,1)});})},
     // now any question is answered when it's asked; the questions that come back have a dashboard of their own
-    {at:T.tNow-0.3,later:true,dis:0.45,place:"map",keys:[[0,960,540,1]],push:0.02,draw:(c,tt)=>{
-      md_map(c,tt,{lit:[].concat(tt>T.tNow+0.4?["genie","gold"]:[],tt>T.tDash?["dash"]:[]),dim:["hr","fin","sis","lms","fabric","apps"]});
+    // the map leaves before the title card comes in, so no word of it shows under the title's
+    {at:T.tNow-0.3,later:true,dis:0.45,place:"map",keys:[[0,960,540,1]],push:0.02,draw:(c,tt)=>{const fo=1-ag_in(tt,sc.cues.breath-0.5,0.6);
+      md_map(c,tt,{a:fo,lit:[].concat(tt>T.tNow+0.4?["genie","gold"]:[],tt>T.tDash?["dash"]:[]),dim:["hr","fin","sis","lms","fabric","apps"]});
       rd_scr(c,S,()=>{md_tag(c,1440,860,"any question, when it's asked",{col:MD.flow,a:ag_in(tt,T.tNow+0.4,0.5)*(1-ag_in(tt,T.tDash-0.3,0.4))});
-        md_tag(c,1440,860,"the questions that come back",{col:MD.layer.gold,a:ag_in(tt,T.tDash,0.5)});});}}
+        md_tag(c,1440,860,"the questions that come back",{col:MD.layer.gold,a:ag_in(tt,T.tDash,0.5)*fo});});}}
   ],0.5);
   md_title(ctx,S,t,sc.cues.breath,"Reports on demand","answers when they're asked, dashboards for what comes back","FILM 1 OF 3 · FROM TABLES TO DECISIONS");
 });
@@ -207,7 +208,7 @@ scene("close",(ctx,S,t,sc)=>{
       md_map(c,tt,{lit:[].concat(["dash"],tt>T.tGood?["gold","genie"]:[]),dim:["hr","fin","sis","lms","fabric","apps"]});
       rd_scr(c,S,()=>{md_tag(c,960,862,"one dashboard: the questions that come back",{col:MD.layer.gold,align:"center",a:rd_io(tt,T.tOne,T.tEvery-0.2,0.4,0.35)});
         md_tag(c,960,862,"every other question: Genie, from good models and their context",{col:MD.flow,align:"center",a:ag_in(tt,T.tGood,0.5)});});}},
-    // and Health's casual teaching budget, set from this semester's numbers, in a morning, not a week
+    // and Health's casual teaching budget, set from this year's numbers, in a morning, not a week
     {at:T.tBudget-0.25,place:"rdOffice",keys:[[0,960,540,1]],push:0.02,draw:(c,tt)=>{rd_rohan(c,tt,[8,0],0.5);
       rd_scr(c,S,()=>{md_textCard(c,760,268,760,RD_BUDGET,{edge:MD.dom.finance,a:ag_in(tt,T.tBudget,0.5),k:tt-T.tBudget});
         md_pill(c,1140,520,"set in a morning, not a week",{col:MD.pass,icon:"tick",a:ag_in(tt,T.tMorning-0.2,0.5),k:tt-T.tMorning+0.2});});}},
